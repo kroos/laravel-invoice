@@ -83,12 +83,24 @@ foreach ($cate as $key) {
 			</div>
 		</div>
 
+		@if(auth()->user()->id_group == 1)
+
 		<div class="form-group {!! ( count($errors->get('commission')) ) >0 ? 'has-error' : '' !!}">
 			{!! Form::label('comm', 'Commission (RM) :', ['class' => 'col-sm-2 control-label']) !!}
 			<div class="col-sm-10">
 				{!! Form::input('text', 'commission', @$value, ['class' => 'form-control', 'placeholder' => 'Commission (RM)', 'id' => 'comm']) !!}
 			</div>
 		</div>
+
+		@else
+
+		<!-- <div class="form-group {!! ( count($errors->get('commission')) ) >0 ? 'has-error' : '' !!}"> -->
+			<!-- <div class="col-sm-10"> -->
+				{!! Form::input('hidden', 'commission', @$value, ['class' => 'form-control', 'placeholder' => 'Commission (RM)', 'id' => 'comm']) !!}
+			<!-- </div> -->
+		<!-- </div> -->
+
+		@endif
 
 		<div class="form-group {!! ( count($errors->get('quantity')) ) >0 ? 'has-error' : '' !!}">
 			{!! Form::label('quan', 'Quantity :', ['class' => 'col-sm-2 control-label']) !!}
