@@ -76,21 +76,21 @@ $iret = 0;
 $icomm = 0;
 $pdf->SetFont('Arial', '', 6);
 foreach ($search as $k) :
-	$pdf->Cell(10, 15, $k->id, 1, 0,'C');
-	$pdf->Cell(35, 15, App\Product::findOrFail($k->id_product)->product, 1, 0,'C');
-	$pdf->Cell(20, 15, $k->commission_on, 1, 0,'C');
-	$pdf->Cell(20, 15, number_format($k->retail, 2), 1, 0,'C');
-	$pdf->Cell(20, 15, number_format($k->commission, 2), 1, 0,'C');
-	$pdf->Cell(10, 15, $k->quantity, 1, 0,'C');
-	$pdf->Cell(20, 15, number_format($k->quantity*$k->retail, 2), 1, 0, 'C');	$iret = $iret + ($k->quantity*$k->retail);
-	$pdf->Cell(30, 15, number_format($k->quantity*$k->commission, 2), 1, 0, 'C');	$icomm = $icomm + ($k->quantity*$k->commission);
+	$pdf->Cell(10, 27, $k->id, 1, 0,'C');
+	$pdf->Cell(35, 27, App\Product::findOrFail($k->id_product)->product, 1, 0,'C');
+	$pdf->Cell(20, 27, $k->commission_on, 1, 0,'C');
+	$pdf->Cell(20, 27, number_format($k->retail, 2), 1, 0,'C');
+	$pdf->Cell(20, 27, number_format($k->commission, 2), 1, 0,'C');
+	$pdf->Cell(10, 27, $k->quantity, 1, 0,'C');
+	$pdf->Cell(20, 27, number_format($k->quantity*$k->retail, 2), 1, 0, 'C');	$iret = $iret + ($k->quantity*$k->retail);
+	$pdf->Cell(30, 27, number_format($k->quantity*$k->commission, 2), 1, 0, 'C');	$icomm = $icomm + ($k->quantity*$k->commission);
 
 	$imge = App\Product::findOrFail($k->id_product)->productimage;
 	foreach ($imge as $imu ) {
-		$pdf->Cell(0, 15, $pdf->Image(base64ToImage($imu->image, $imu->mime), $pdf->GetX()+4, $pdf->GetY()+1), 1, 2, 'C');
+		$pdf->Cell(0, 27, $pdf->Image(base64ToImage($imu->image, $imu->mime), $pdf->GetX()+0, $pdf->GetY()+0), 1, 2, 'C');
 	}
 
-	$pdf->Cell(0, 0, '', 1, 1, 'C');
+	$pdf->Cell(0, 0, '', 0, 1, 'C');
 endforeach;
 
 

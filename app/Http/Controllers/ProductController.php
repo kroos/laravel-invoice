@@ -53,12 +53,11 @@ class ProductController extends Controller
 	*/
 	public function store(ProductFormRequest $request)
 	{
-		// dd($request->except('image'));
-		// insert data 1st part
 		$prdt = Product::create(request([
 				'id_user', 'product', 'id_category', 'retail', 'commission', 'active'
 			]));
-
+		$i = 1;
+		$o = 1;
 		foreach($request->file('image') as $file){
 
 			$mime = $file->getMimeType();
@@ -74,18 +73,22 @@ class ProductController extends Controller
 
 			$imag->save();
 
-			$img = ProductImage::create([
-				// 'id_user' => auth()->user()->id,
-				'id_product' => $prdt->id,
-				'image' => base64_encode( file_get_contents( storage_path().'/uploads/'.$filename ) ),
-				'mime' => $mime
-			]);
+			$imh = ProductImage::where('image', base64_encode( file_get_contents( storage_path().'/uploads/'.$filename ) ));
+
+			// if image already existed in the database
+			if($imh->count() < 1) {
+				$img = ProductImage::create([
+					'id_product' => $prdt->id,
+					'image' => base64_encode( file_get_contents( storage_path().'/uploads/'.$filename ) ),
+					'mime' => $mime,
+				]);
+			}
 		}
+
+		// clean up
 		$files = File::allFiles(storage_path('uploads/images'));
 		File::delete($files);
 
-		Session::flash('flash_message', 'Data successfully added!');
-	
 		return redirect()->back();		// redirect back to original route
 	}
 	
