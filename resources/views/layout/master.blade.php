@@ -41,7 +41,7 @@
 <link href="https://cdn.datatables.net/responsive/2.1.1/css/responsive.bootstrap.min.css" rel="stylesheet" />
 
 <!-- ucwords -->
-<script src="/public/js/ucwords.js/"></script>
+<script src="/public/js/ucwords.js"></script>
 
 <!-- chained dropdown -->
 <script src="/public/js/jquery.chained.min.js" type="text/javascript" ></script>
