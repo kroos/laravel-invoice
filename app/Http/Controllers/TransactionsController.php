@@ -106,16 +106,22 @@ class TransactionsController extends Controller
 
 		Session::flash('flash_message', 'Data searching completed and we have emailed you a copy of report!');
 
-		$files = File::allFiles(storage_path().'/uploads/pdf');
-
 		// clean up
-		foreach ($files as $l){
+		$files1 = File::allFiles(storage_path().'/uploads/pdf');
+		foreach ($files1 as $l){
 			// echo File::extension($l).'<br />';
 			if (File::extension($l) == 'pdf') {
 				// echo $l.'<br />';
 				File::delete($l);
 			}
 		}
+		$files2 = File::allFiles(storage_path('uploads/pdfimages'));
+		foreach($files2 as $h) {
+			if (File::extension($h) != 'txt') {
+				// echo $l.'<br />';
+				File::delete($h);
+		}
+
 		return redirect(route('transactions.print'));
 	}
 

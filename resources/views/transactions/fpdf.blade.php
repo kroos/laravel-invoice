@@ -115,8 +115,4 @@ $filename = $nam->name.'_'.my(request('commission_on')).'.pdf';
 // $pdf->Output('I', $filename);		// <-- kalau nak bukak secara direct saja
 // $pdf->Output('D', $filename);			// <-- semata mata 100% download
 $pdf->Output('F', storage_path().'/uploads/pdf/'.$filename);			// <-- send through email
-
-$files = File::allFiles(storage_path('uploads/pdfimages'));
-// dd($files);
-File::delete($files);
 ?>

@@ -86,8 +86,12 @@ class ProductController extends Controller
 		}
 
 		// clean up
-		$files = File::allFiles(storage_path('uploads/images'));
-		File::delete($files);
+		$files2 = File::allFiles(storage_path('uploads/images'));
+		foreach($files2 as $h) {
+			if (File::extension($h) != 'txt') {
+				// echo $l.'<br />';
+				File::delete($h);
+		}
 
 		return redirect()->back();		// redirect back to original route
 	}
