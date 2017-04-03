@@ -120,8 +120,8 @@ class TransactionsController extends Controller
 			if (File::extension($h) != 'txt') {
 				// echo $l.'<br />';
 				File::delete($h);
+			}
 		}
-
 		return redirect(route('transactions.print'));
 	}
 

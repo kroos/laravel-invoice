@@ -91,6 +91,7 @@ class ProductController extends Controller
 			if (File::extension($h) != 'txt') {
 				// echo $l.'<br />';
 				File::delete($h);
+			}
 		}
 
 		return redirect()->back();		// redirect back to original route

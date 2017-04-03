@@ -48,13 +48,17 @@ foreach ($cate as $key) {
 	$r[$key->id] = $key->category;
 }
 ?>
+
+<div class="panel panel-default">
+<div class="panel-heading">Tambah produk untuk komisen</div>
+	<div class="panel-body">
 		<div class="form-group {!! ( count($errors->get('commission_on')) ) >0 ? 'has-error' : '' !!}">
 			{!! Form::label('date', 'Commission On :', ['class' => 'col-sm-2 control-label']) !!}
 			<div class="col-sm-10">
 				{!! Form::input('text', 'commission_on', @$value, ['class' => 'form-control', 'placeholder' => 'Month', 'id' => 'date']) !!}
 			</div>
 		</div>
-
+		
 		<!-- for searching product, based on categories of product -->
 		<div class="form-group {!! ( count($errors->get('id_category')) ) >0 ? 'has-error' : '' !!}">
 			{!! Form::label('cate', 'Category :', ['class' => 'col-sm-2 control-label']) !!}
@@ -62,7 +66,7 @@ foreach ($cate as $key) {
 				{!! Form::select('id_category', $r, NULL, ['class' => 'form-control', 'placeholder' => 'Choose Category', 'id' => 'cate']) !!}
 			</div>
 		</div>
-
+		
 		<div class="form-group {!! ( count($errors->get('id_product')) ) >0 ? 'has-error' : '' !!}">
 			{!! Form::label('pro', 'Product :', ['class' => 'col-sm-2 control-label']) !!}
 			<div class="col-sm-10">
@@ -72,49 +76,51 @@ foreach ($cate as $key) {
 					<option value="{!! $kl->id !!}" class="{!! $kl->id_category !!}">{!! $kl->product !!}</option>
 				@endforeach
 			</select>
-
+		
 			</div>
 		</div>
-
+		
 		<div class="form-group {!! ( count($errors->get('retail')) ) >0 ? 'has-error' : '' !!}">
 			{!! Form::label('ret', 'Retail (RM) :', ['class' => 'col-sm-2 control-label']) !!}
 			<div class="col-sm-10">
 				{!! Form::input('text', 'retail', @$value, ['class' => 'form-control', 'placeholder' => 'Retail (RM)', 'id' => 'ret']) !!}
 			</div>
 		</div>
-
+		
 		@if(auth()->user()->id_group == 1)
-
+		
 		<div class="form-group {!! ( count($errors->get('commission')) ) >0 ? 'has-error' : '' !!}">
 			{!! Form::label('comm', 'Commission (RM) :', ['class' => 'col-sm-2 control-label']) !!}
 			<div class="col-sm-10">
 				{!! Form::input('text', 'commission', @$value, ['class' => 'form-control', 'placeholder' => 'Commission (RM)', 'id' => 'comm']) !!}
 			</div>
 		</div>
-
+		
 		@else
-
+		
 		<!-- <div class="form-group {!! ( count($errors->get('commission')) ) >0 ? 'has-error' : '' !!}"> -->
 			<!-- <div class="col-sm-10"> -->
 				{!! Form::input('hidden', 'commission', @$value, ['class' => 'form-control', 'placeholder' => 'Commission (RM)', 'id' => 'comm']) !!}
 			<!-- </div> -->
 		<!-- </div> -->
-
+		
 		@endif
-
+		
 		<div class="form-group {!! ( count($errors->get('quantity')) ) >0 ? 'has-error' : '' !!}">
 			{!! Form::label('quan', 'Quantity :', ['class' => 'col-sm-2 control-label']) !!}
 			<div class="col-sm-10">
 				{!! Form::input('text', 'quantity', @$value, ['class' => 'form-control', 'placeholder' => 'Quantity', 'id' => 'quan']) !!}
 			</div>
 		</div>
-
+		
 		<div class="form-group">
 			<div class="col-sm-offset-2 col-sm-10">
 				{!! Form::submit('Save', ['class' => 'btn btn-primary']) !!}
 			</div>
 		</div>
-	{!! Form::close() !!}
+			{!! Form::close() !!}
+		</div>
+	</div>
 </div>
 
 

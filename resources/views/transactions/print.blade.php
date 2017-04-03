@@ -21,6 +21,11 @@
 
 	{!! Form::open(['route' => 'transactions.printstore', 'class' => 'form-horizontal']) !!}
 
+<div class="panel panel-default">
+<div class="panel-heading">print komisen bulanan</div>
+	<div class="panel-body">
+
+
 @if(auth()->user()->id_group == 1)
 
 <?php
@@ -30,32 +35,32 @@ foreach($t as $g) {
 	$h[$g->id] = $g->name;
 }
 ?>
-
 		<div class="form-group {!! ( count($errors->get('id_user')) ) >0 ? 'has-error' : '' !!}">
 			{!! Form::label('us', 'User :', ['class' => 'col-sm-2 control-label']) !!}
 			<div class="col-sm-10">
 				{!! Form::select('id_user', $h, NULL, ['class' => 'form-control', 'placeholder' => 'Choose User', 'id' => 'us']) !!}
 			</div>
 		</div>
-@else
-	{!! Form::hidden('id_user', auth()->user()->id) !!}
-@endif
-
+		@else
+			{!! Form::hidden('id_user', auth()->user()->id) !!}
+		@endif
+		
 		<div class="form-group {!! ( count($errors->get('commission_on')) ) >0 ? 'has-error' : '' !!}">
 			{!! Form::label('date', 'Commission On :', ['class' => 'col-sm-2 control-label']) !!}
 			<div class="col-sm-10">
 				{!! Form::input('text', 'commission_on', @$value, ['class' => 'form-control', 'placeholder' => 'Month', 'id' => 'date']) !!}
 			</div>
 		</div>
-
+		
 		<div class="form-group">
 			<div class="col-sm-offset-2 col-sm-10">
 				{!! Form::submit('Save', ['class' => 'btn btn-primary']) !!}
 			</div>
 		</div>
-	{!! Form::close() !!}
+			{!! Form::close() !!}
+		</div>
+	</div>
 </div>
-
 
 
 <div class="row ">

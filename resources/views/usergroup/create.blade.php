@@ -14,19 +14,24 @@
 	@include('partial.info')
 
 	{!! Form::open(['route' => 'usergroup.store', 'class' => 'form-horizontal']) !!}
-		<div class="form-group {!! ( count($errors->get('group')) ) >0 ? 'has-error' : '' !!}">
+
+<div class="panel panel-default">
+<div class="panel-heading">tambah kumpulan pengguna</div>
+	<div class="panel-body">
+	<div class="form-group {!! ( count($errors->get('group')) ) >0 ? 'has-error' : '' !!}">
 			{!! Form::label('ug', 'User Group :', ['class' => 'col-sm-2 control-label']) !!}
 			<div class="col-sm-10">
 				{!! Form::input('text', 'group', @$value, ['class' => 'form-control', 'placeholder' => 'User Group', 'id' => 'ug']) !!}
 			</div>
 		</div>
-
+		
 		<div class="form-group">
 			<div class="col-sm-offset-2 col-sm-10">
 				{!! Form::submit('Save', ['class' => 'btn btn-primary']) !!}
 			</div>
 		</div>
-	{!! Form::close() !!}
+			{!! Form::close() !!}</div>
+</div>
 </div>
 
 <div class="row ">

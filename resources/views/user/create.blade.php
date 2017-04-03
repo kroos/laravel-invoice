@@ -15,58 +15,62 @@
 
 	{!! Form::open(['route' => 'user.store', 'class' => 'form-horizontal']) !!}
 
-		<div class="form-group {!! ( count($errors->get('name')) ) >0 ? 'has-error' : '' !!}">
+<div class="panel panel-default">
+<div class="panel-heading">tambah pengguna</div>
+	<div class="panel-body">
+	<div class="form-group {!! ( count($errors->get('name')) ) >0 ? 'has-error' : '' !!}">
 			{!! Form::label('nam', 'Name :', ['class' => 'col-sm-2 control-label']) !!}
 			<div class="col-sm-10">
 				{!! Form::input('text', 'name', @$value, ['class' => 'form-control put', 'placeholder' => 'Name', 'id' => 'nam']) !!}
 			</div>
 		</div>
-
+		
 		<div class="form-group {!! ( count($errors->get('email')) ) >0 ? 'has-error' : '' !!}">
 			{!! Form::label('email', 'Email :', ['class' => 'col-sm-2 control-label']) !!}
 			<div class="col-sm-10">
 				{!! Form::input('text', 'email', @$value, ['class' => 'form-control', 'placeholder' => 'Email', 'id' => 'email']) !!}
 			</div>
 		</div>
-
+		
 		<div class="form-group {!! ( count($errors->get('password')) ) >0 ? 'has-error' : '' !!}">
 			{!! Form::label('pass', 'Password :', ['class' => 'col-sm-2 control-label']) !!}
 			<div class="col-sm-10">
 				{!! Form::input('password', 'password', @$value, ['class' => 'form-control', 'placeholder' => 'Password', 'id' => 'pass']) !!}
 			</div>
 		</div>
-
+		
 		<div class="form-group {!! ( count($errors->get('password_confirmation')) ) >0 ? 'has-error' : '' !!}">
 			{!! Form::label('us', 'Password :', ['class' => 'col-sm-2 control-label']) !!}
 			<div class="col-sm-10">
 				{!! Form::input('password', 'password_confirmation', @$value, ['class' => 'form-control', 'placeholder' => 'Password Confirmation', 'id' => 'us']) !!}
 			</div>
 		</div>
-
-<?php
-foreach ($gr as $key) {
-	$lm[$key->id] = $key->group;
-}
-?>
-
+		
+		<?php
+		foreach ($gr as $key) {
+			$lm[$key->id] = $key->group;
+		}
+		?>
+		
 		<div class="form-group {!! ( count($errors->get('id_group')) ) >0 ? 'has-error' : '' !!}">
 			{!! Form::label('ug', 'User Group :', ['class' => 'col-sm-2 control-label']) !!}
 			<div class="col-sm-10">
 				{!! Form::select('id_group', $lm, NULL,['class' => 'form-control', 'id' => 'ug', 'placeholder' => 'Choose User Group']) !!}
 			</div>
 		</div>
-
-
-
-
-
-
+		
+		
+		
+		
+		
+		
 		<div class="form-group">
 			<div class="col-sm-offset-2 col-sm-10">
 				{!! Form::submit('Save', ['class' => 'btn btn-primary']) !!}
 			</div>
 		</div>
-	{!! Form::close() !!}
+			{!! Form::close() !!}</div>
+</div>
 </div>
 
 <div class="row ">

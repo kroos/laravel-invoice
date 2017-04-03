@@ -16,62 +16,66 @@
 	{!! Form::open(['route' => 'product.store', 'class' => 'form-horizontal', 'files' => true]) !!}
 	{!! Form::hidden('id_user', auth()->id()) !!}
 
-
-		<div class="form-group {!! ( count($errors->get('product')) ) >0 ? 'has-error' : '' !!}">
-			{!! Form::label('pr', 'Product :', ['class' => 'col-sm-2 control-label']) !!}
-			<div class="col-sm-10">
-				{!! Form::input('text', 'product', @$value, ['class' => 'form-control', 'placeholder' => 'Product', 'id' => 'pr']) !!}
+<div class="panel panel-default">
+<div class="panel-heading">Tambah produk</div>
+<div class="panel-body">
+	<div class="form-group {!! ( count($errors->get('product')) ) >0 ? 'has-error' : '' !!}">
+		{!! Form::label('pr', 'Product :', ['class' => 'col-sm-2 control-label']) !!}
+		<div class="col-sm-10">
+			{!! Form::input('text', 'product', @$value, ['class' => 'form-control', 'placeholder' => 'Product', 'id' => 'pr']) !!}
+		</div>
+	</div>
+	
+	<div class="form-group {!! ( count($errors->get('retail')) ) >0 ? 'has-error' : '' !!}">
+		{!! Form::label('co', 'Retail :', ['class' => 'col-sm-2 control-label']) !!}
+		<div class="col-sm-10">
+			{!! Form::input('text', 'retail', @$value, ['class' => 'form-control', 'placeholder' => 'Retail in RM', 'id' => 'co']) !!}
+		</div>
+	</div>
+	
+	<div class="form-group {!! ( count($errors->get('commission')) ) >0 ? 'has-error' : '' !!}">
+		{!! Form::label('com', 'Commission :', ['class' => 'col-sm-2 control-label']) !!}
+		<div class="col-sm-10">
+			{!! Form::input('text', 'commission', @$value, ['class' => 'form-control', 'placeholder' => 'Commission in RM', 'id' => 'com']) !!}
+		</div>
+	</div>
+	<?php
+	foreach ($cate as $key) {
+	 	$r[$key->id] = $key->category;
+	 }
+	?>
+	<div class="form-group {!! ( count($errors->get('id_category')) ) >0 ? 'has-error' : '' !!}">
+		{!! Form::label('cat', 'Category :', ['class' => 'col-sm-2 control-label']) !!}
+		<div class="col-sm-10">
+			{!! Form::select('id_category', $r, NULL, ['class' => 'form-control', 'placeholder' => 'Choose Category', 'id' => 'cat']) !!}
+		</div>
+	</div>
+	
+	<div class="form-group {!! ( count($errors->get('image[]')) ) >0 ? 'has-error' : '' !!}">
+		{!! Form::label('img', 'Image :', ['class' => 'col-sm-2 control-label']) !!}
+		<div class="col-sm-10">
+		{!! Form::file('image[]', ['id' => 'img', 'multiple' => 'multiple']) !!}
+		</div>
+	</div>
+	
+	
+	<div class="form-group">
+		<div class="col-sm-offset-2 col-sm-10">
+			<div class="checkbox">
+				<label>
+					{!! Form::input('checkbox', 'active', TRUE, @$value) !!}&nbsp;Active
+				</label>
 			</div>
 		</div>
-
-		<div class="form-group {!! ( count($errors->get('retail')) ) >0 ? 'has-error' : '' !!}">
-			{!! Form::label('co', 'Retail :', ['class' => 'col-sm-2 control-label']) !!}
-			<div class="col-sm-10">
-				{!! Form::input('text', 'retail', @$value, ['class' => 'form-control', 'placeholder' => 'Retail in RM', 'id' => 'co']) !!}
-			</div>
+	</div>
+	<div class="form-group">
+		<div class="col-sm-offset-2 col-sm-10">
+			{!! Form::submit('Save', ['class' => 'btn btn-primary']) !!}
 		</div>
-
-		<div class="form-group {!! ( count($errors->get('commission')) ) >0 ? 'has-error' : '' !!}">
-			{!! Form::label('com', 'Commission :', ['class' => 'col-sm-2 control-label']) !!}
-			<div class="col-sm-10">
-				{!! Form::input('text', 'commission', @$value, ['class' => 'form-control', 'placeholder' => 'Commission in RM', 'id' => 'com']) !!}
-			</div>
-		</div>
-<?php
-foreach ($cate as $key) {
- 	$r[$key->id] = $key->category;
- }
-?>
-		<div class="form-group {!! ( count($errors->get('id_category')) ) >0 ? 'has-error' : '' !!}">
-			{!! Form::label('cat', 'Category :', ['class' => 'col-sm-2 control-label']) !!}
-			<div class="col-sm-10">
-				{!! Form::select('id_category', $r, NULL, ['class' => 'form-control', 'placeholder' => 'Choose Category', 'id' => 'cat']) !!}
-			</div>
-		</div>
-
-		<div class="form-group {!! ( count($errors->get('image[]')) ) >0 ? 'has-error' : '' !!}">
-			{!! Form::label('img', 'Image :', ['class' => 'col-sm-2 control-label']) !!}
-			<div class="col-sm-10">
-			{!! Form::file('image[]', ['id' => 'img', 'multiple' => 'multiple']) !!}
-			</div>
-		</div>
-
-
-		<div class="form-group">
-			<div class="col-sm-offset-2 col-sm-10">
-				<div class="checkbox">
-					<label>
-						{!! Form::input('checkbox', 'active', TRUE, @$value) !!}&nbsp;Active
-					</label>
-				</div>
-			</div>
-		</div>
-		<div class="form-group">
-			<div class="col-sm-offset-2 col-sm-10">
-				{!! Form::submit('Save', ['class' => 'btn btn-primary']) !!}
-			</div>
-		</div>
-	{!! Form::close() !!}
+	</div>
+		{!! Form::close() !!}
+	</div>
+</div>
 </div>
 
 <div class="row ">

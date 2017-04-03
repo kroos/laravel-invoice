@@ -14,7 +14,7 @@
 	@include('partial.errorform')
 	@include('partial.info')
 
-	<div class="row"><a href="{!! route('user.create') !!}" class="btn btn-info">Back to users</a></div>
+	<div class="row"><p><a href="{!! route('user.create') !!}" class="btn btn-info">Back to users</a></p></div>
 
 	{!! Form::model($users, [
 						'route' => [
@@ -25,7 +25,9 @@
 						'class' => 'form-horizontal'
 					]) !!}
 
-
+<div class="panel panel-default">
+<div class="panel-heading">edit pengguna</div>
+	<div class="panel-body">
 		<div class="form-group {!! ( count($errors->get('name')) ) >0 ? 'has-error' : '' !!}">
 			{!! Form::label('nam', 'Name :', ['class' => 'col-sm-2 control-label']) !!}
 			<div class="col-sm-10">
@@ -73,6 +75,8 @@ foreach ($gr as $key) {
 			</div>
 		</div>
 	{!! Form::close() !!}
+</div>
+</div>
 </div>
 
 @endsection
