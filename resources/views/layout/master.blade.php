@@ -30,7 +30,7 @@
 <![endif]-->
 
 <!-- Extra stylesheet -->
-<link href="/public/css/style.css" rel="stylesheet">
+<link href="/css/style.css" rel="stylesheet">
 
 <!-- datatables : https://datatables.net/extensions/responsive/examples/styling/bootstrap.html -->
 <script src="https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js" type="text/javascript" ></script>
@@ -41,10 +41,10 @@
 <link href="https://cdn.datatables.net/responsive/2.1.1/css/responsive.bootstrap.min.css" rel="stylesheet" />
 
 <!-- ucwords -->
-<script src="/public/js/ucwords.js"></script>
+<script src="/js/ucwords.js"></script>
 
 <!-- chained dropdown -->
-<script src="/public/js/jquery.chained.min.js" type="text/javascript" ></script>
+<script src="/js/jquery.chained.min.js" type="text/javascript" ></script>
 
 <!-- jquery ui -->
 <!-- <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">

@@ -51,10 +51,16 @@ class TransactionsController extends Controller
 	public function create()
 	{
 		// retrieve all data from product that is active
+		$co_om = date('Y-m');
 		$pro = Product::where(['active' => 1])->get();
 		$cate = Categories::where(['active' => 1])->get();
-		$trans = Transactions::where(['id_user' => auth()->user()->id, 'deleted_at' => NULL])->orderBy('commision_on')->get();
-		// dd($cate);
+		$trans = Transactions::where([
+										'id_user' => auth()->user()->id,
+										'deleted_at' => NULL,
+										'commision_on' => $co_om,
+				])
+				->groupBy('commision_on')
+				->get();
 		return view('transactions.create', compact(['pro', 'cate', 'trans']));
 	}
 	
