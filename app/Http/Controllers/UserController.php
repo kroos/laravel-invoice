@@ -19,6 +19,7 @@ class UserController extends Controller
 	function __construct()
 	{
 		$this->middleware('auth');
+		$this->middleware('admin', ['only' => ['create', 'store', 'destroy']]);
 	}
 	 /**
 	 * Display a listing of the resource.
@@ -114,7 +115,7 @@ class UserController extends Controller
 		// info when update success
 		Session::flash('flash_message', 'Data successfully edited!');
 	
-		return redirect(route('user.create'));      // redirect back to original route
+		return redirect(route('user.edit', $user->id));      // redirect back to original route
 	}
 	
 	 /**

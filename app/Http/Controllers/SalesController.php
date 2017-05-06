@@ -32,6 +32,7 @@ class SalesController extends Controller
 	function __construct()
 	{
 		$this->middleware('auth');
+		$this->middleware('notowned', ['only' => ['edit', 'update', 'destroy']]);
 	}
 
 	public function index()
