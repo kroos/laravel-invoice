@@ -48,6 +48,7 @@ class User extends Authenticatable
         }
     }
 
+    // invoice item can only be edited by its respective owner and Admin ONLY
     public function OwnerOfThisItem( $id )
     {
         // dd($id);
@@ -62,4 +63,18 @@ class User extends Authenticatable
             }
         }
     }
+
+    // no one can edit user bio except by him/herself ant the admin
+    public function notUser( $id ) {
+        if ( auth()->user()->id == $id ) {
+            return true;
+        } else {
+            if ( auth()->user()->id_group == 1 ) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+
 }

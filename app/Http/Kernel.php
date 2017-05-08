@@ -61,6 +61,7 @@ class Kernel extends HttpKernel
         // middleware for admin purpose
         'admin' => \App\Http\Middleware\RedirectIfNotAnAdmin::class,
         'notowned' => \App\Http\Middleware\RedirectIfThisItemIsDifferentOwner::class,
+        'userown' => \App\Http\Middleware\RedirectIfNotUser::class,
 
     ];
 }

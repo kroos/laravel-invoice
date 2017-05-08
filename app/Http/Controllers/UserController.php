@@ -20,6 +20,7 @@ class UserController extends Controller
 	{
 		$this->middleware('auth');
 		$this->middleware('admin', ['only' => ['create', 'store', 'destroy']]);
+		$this->middleware('userown', ['only' => ['edit', 'update', 'show']]);
 	}
 	 /**
 	 * Display a listing of the resource.
