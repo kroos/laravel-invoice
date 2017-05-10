@@ -12,6 +12,7 @@ use App\ProductCategory;
 use App\Payments;
 use App\SlipNumbers;
 use App\SalesTax;
+use App\SalesCustomers;
 
 // for manipulating image
 // http://image.intervention.io/
@@ -108,15 +109,28 @@ class SalesController extends Controller
 
 		###################################################
 		// customers part
-		$cust = Customers::create([
-				'id_sales' => $inv->id,
-				'client' => $request->client,
-				'client_address' => $request->client_address,
-				'client_poskod' => $request->client_poskod,
-				'client_phone' => $request->client_phone,
-				'client_email' => $request->client_email,
-			]);
+		if ( $request->client == NULL && $request->client_phone == NULL && $request->client_email == NULL && $request->repeatcust != NULL) {
+			$sacu = SalesCustomers::create([
+					'id_sales' => $inv->id,
+					'id_customer' => $request->repeatcust,
+				]);
 
+		} else {
+			if ( $request->repeatcust == NULL && $request->client != NULL && $request->client_phone != NULL && $request->client_email != NULL ) {
+				$cust = Customers::create([
+						'client' => $request->client,
+						'client_address' => $request->client_address,
+						'client_poskod' => $request->client_poskod,
+						'client_phone' => $request->client_phone,
+						'client_email' => $request->client_email,
+					]);
+				$sacu = SalesCustomers::create([
+						'id_sales' => $inv->id,
+						'id_customer' => $cust->id,
+					]);
+			}
+		}
+		
 		###################################################
 		// invoice part
 
@@ -236,15 +250,40 @@ class SalesController extends Controller
 
 		###################################################
 		// customers part
-		$cust = Customers::updateOrCreate(['id_sales' => $sales->id, 'deleted_at' => null],
+		// $cust = Customers::updateOrCreate(['id_sales' => $sales->id, 'deleted_at' => null],
+		// 		[
+		// 			'id_sales' => $sales->id,
+		// 			'client' => $request->client,
+		// 			'client_address' => $request->client_address,
+		// 			'client_poskod' => $request->client_poskod,
+		// 			'client_phone' => $request->client_phone,
+		// 			'client_email' => $request->client_email,
+		// 		]);
+
+		// // customers part
+		if ( $request->repeatcust != NULL ) {
+			$sacu = SalesCustomers::updateOrCreate(['id' => $request->repeatcust_id, 'deleted_at' => null],
 				[
-					'id_sales' => $sales->id,
-					'client' => $request->client,
-					'client_address' => $request->client_address,
-					'client_poskod' => $request->client_poskod,
-					'client_phone' => $request->client_phone,
-					'client_email' => $request->client_email,
+					'id_customer' => $request->repeatcust,
 				]);
+
+		// } else {
+		// 	if ( $request->repeatcust == NULL ) {
+		// 		$cust = Customers::create([
+		// 				'client' => $request->client,
+		// 				'client_address' => $request->client_address,
+		// 				'client_poskod' => $request->client_poskod,
+		// 				'client_phone' => $request->client_phone,
+		// 				'client_email' => $request->client_email,
+		// 				'id_sales' => $inv->id,
+		// 			]);
+		// 		$sacu = SalesCustomers::create([
+		// 				'id_sales' => $inv->id,
+		// 				'id_customer' => $cust->id,
+		// 			]);
+		// 	}
+		// }
+
 
 		###################################################
 		// invoice part

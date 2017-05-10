@@ -16,7 +16,7 @@ class Sales extends Model
 	}
 
 	public function customer() {
-		return $this->hasOne('App\Customers', 'id_sales');
+		return $this->hasOne('App\SalesCustomers', 'id_sales');
 	}
 
 	public function invitems() {

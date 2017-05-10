@@ -10,8 +10,6 @@ class CreateCustomersTable extends Migration
     {
         Schema::create('customers', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('id_sales');
-            $table->foreign('id_sales')->references('id')->on('sales');
             $table->text('client');
             $table->longText('client_address')->nullable();
             $table->string('client_poskod')->nullable();

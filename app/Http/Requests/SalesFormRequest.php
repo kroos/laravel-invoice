@@ -13,22 +13,23 @@ class SalesFormRequest extends FormRequest
 
 	public function rules()
 	{
-		// dd($request->all());
+		// dd($this->customers['id']);
 		return [
 			'id_user' => 'required',
 			'date_sale' => 'required|date_format:Y-m-d',
 			'serial.*.tracking_number' => 'alpha_num',
 			'image.*' => 'image|max:5000',
-			'client' => 'required',
+			'repeatcust' => 'required_without_all:client,client_phone',
+			'client' => 'required_without:repeatcust|unique:customers,client',
 			'client_address' => 'required_with:client_poskod',
 			'client_poskod' => 'required_with:client_address',
-			'client_phone' => 'required|numeric',
-			'client_email' => 'required|email',
-			'inv.*.id_product' => 'integer',
-			'inv.*.commission' => 'numeric',
-			'inv.*.retail' => 'numeric',
-			'inv.*.quantity' => 'integer',
-			'tax.*' => 'nullable',
+			'client_phone' => 'required_without:repeatcust|nullable|numeric',
+			'client_email' => 'required_without:repeatcust|nullable|email',
+			'inv.*.id_product' => 'required|integer',
+			'inv.*.commission' => 'required|numeric',
+			'inv.*.retail' => 'required|numeric',
+			'inv.*.quantity' => 'required|integer',
+			'tax.*' => 'nullable|integer',
 			'pay.*.id_bank' => 'integer|required_with:pay.*.date_payment,pay.*.amount',
 			'pay.*.date_payment' => 'date_format:Y-m-d|required_with:pay.*.id_bank,pay.*.amount',
 			'pay.*.amount' => 'numeric|required_with:pay.*.id_bank,pay.*.date_payment',

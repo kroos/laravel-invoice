@@ -11,6 +11,6 @@ class Customers extends Model
 	protected $dates = ['deleted_at'];
 
 	public function custsale() {
-		return $this->belongsTo('App\Sales');
+		return $this->hasMany('App\SalesCustomers', 'id_customer');
 	}
 }

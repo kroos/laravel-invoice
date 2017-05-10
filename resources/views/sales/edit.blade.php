@@ -104,38 +104,89 @@ endif;
 						<div class="panel-heading">Customer</div>
 						<div class="panel-body">
 <?php
-$cst = App\Customers::where(['id_sales' => $sales->id, 'deleted_at' => null])->first();
+$cst = App\SalesCustomers::where(['id_sales' => $sales->id])->first();
+$rcst = App\Customers::where(['id' => $cst->id_customer])->first();
+echo Form::hidden('repeatcust_id', $cst->id);
 ?>
-							<div class="form-group {!! ( count($errors->get('client')) ) >0 ? 'has-error' : '' !!}">
-								{!! Form::label('pel', 'Customer :', ['class' => 'col-sm-3 control-label']) !!}
-								<div class="col-sm-9">
-									{!! Form::input('text', 'client', $cst->client, ['class' => 'form-control', 'placeholder' => 'Customer Name', 'id' => 'pel']) !!}
+<!-- 							<p class="text-justify">Please fill up only 1 section. Select your <span style="color: red;">Returning Customer</span> or <span style="color: red;">New Customer</span>, but please dont fill both section.</p>
+ -->							<div class="row">
+								<div class="col-lg-12">
+									<div class="panel panel-default">
+										<div class="panel-heading">Returning Customer</div>
+										<div class="panel-body">
+											<div class="form-group <?php echo ( count($errors->get('repeatcust'))  > 0 ) ? 'has-error' : '' ?>">
+												<label for="custsel" class="col-sm-3 control-label">Select Existing Customer : </label>
+												<div class="col-sm-9">
+													<select name="repeatcust" id="custsel" class="form-control">
+														<option value="" data-client="" data-client_address="" data-client_poskod="" data-client_email="" data-client_phone="" >Choose Customer</option>
+														<?php $rc = \App\Customers::all() ?>
+														@if( $rc->count() > 0 )
+														@foreach( $rc as $ec ) :
+															<option value="{!! $ec->id !!}" data-client="{!! $ec->client !!}" data-client_address="{!! $ec->client_address !!}" data-client_poskod="{!! $ec->client_poskod !!}" data-client_email="{!! $ec->client_email !!}" data-client_phone="{!! $ec->client_phone !!}" {!! ( $ec->id == $cst->id_customer )? 'selected="selected"' : '' !!} >{!! $ec->client !!}</option>
+														@endforeach
+														@endif
+													</select>
+												</div>
+											</div>
+											<div class="form-group">
+												<label for="rt" class="col-sm-3 control-label" >Customer Info :</label>
+												<div class="col-sm-9">
+													<span id="client"><?=$rcst->client?></span>
+													<br />
+													<span id="address"><?=$rcst->client_address?></span>
+													<br />
+													<span id="poskod"><?=$rcst->client_poskod?></span>
+													<br />
+													<span id="phone"><?=$rcst->client_phone?></span>
+													<br />
+													<span id="email"><?=$rcst->client_email?></span>
+												</div>
+											</div>
+										</div>
+									</div>
 								</div>
 							</div>
-							<div class="form-group {!! ( count($errors->get('client_address')) ) >0 ? 'has-error' : '' !!}">
-								{!! Form::label('apel', 'Customer Address :', ['class' => 'col-sm-3 control-label']) !!}
-								<div class="col-sm-9">
-									{!! Form::textarea('client_address', $cst->client_address, ['class' => 'form-control', 'placeholder' => 'Customer Address', 'id' => 'apel']) !!}
+
+<!-- 							<div class="row">
+								<div class="col-lg-12">
+									<div class="panel panel-default">
+										<div class="panel-heading">New Customer</div>
+										<div class="panel-body">
+											<div class="form-group {!! ( count($errors->get('client'))  > 0 )? 'has-error' : '' !!}">
+												{!! Form::label('pel', 'Customer :', ['class' => 'col-sm-3 control-label']) !!}
+												<div class="col-sm-9">
+													{!! Form::input('text', 'client', @$value, ['class' => 'form-control', 'placeholder' => 'Customer', 'id' => 'pel']) !!}
+												</div>
+											</div>
+											<div class="form-group {!! ( count($errors->get('client_address')) ) >0 ? 'has-error' : '' !!}">
+												{!! Form::label('apel', 'Customer Address :', ['class' => 'col-sm-3 control-label']) !!}
+												<div class="col-sm-9">
+													{!! Form::textarea('client_address', @$value, ['class' => 'form-control', 'placeholder' => 'Customer Address', 'id' => 'apel']) !!}
+												</div>
+											</div>
+											<div class="form-group {!! ( count($errors->get('client_poskod')) ) >0 ? 'has-error' : '' !!}">
+												{!! Form::label('pos', 'Postcode :', ['class' => 'col-sm-3 control-label']) !!}
+												<div class="col-sm-9">
+													{!! Form::input('text', 'client_poskod', @$value, ['class' => 'form-control', 'placeholder' => 'Postcode', 'id' => 'pos']) !!}
+												</div>
+											</div>
+											<div class="form-group {!! ( count($errors->get('client_phone')) ) >0 ? 'has-error' : '' !!}">
+												{!! Form::label('tel', 'Phone :', ['class' => 'col-sm-3 control-label']) !!}
+												<div class="col-sm-9">
+													{!! Form::input('text', 'client_phone', @$value, ['class' => 'form-control', 'placeholder' => 'Phone', 'id' => 'tel']) !!}
+												</div>
+											</div>
+											<div class="form-group {!! ( count($errors->get('client_email')) ) >0 ? 'has-error' : '' !!}">
+												{!! Form::label('tela', 'Email :', ['class' => 'col-sm-3 control-label']) !!}
+												<div class="col-sm-9">
+													{!! Form::input('text', 'client_email', @$value, ['class' => 'form-control', 'placeholder' => 'Email', 'id' => 'tela']) !!}
+												</div>
+											</div>
+										</div>
+									</div>
 								</div>
-							</div>
-							<div class="form-group {!! ( count($errors->get('client_poskod')) ) >0 ? 'has-error' : '' !!}">
-								{!! Form::label('pos', 'Postcode :', ['class' => 'col-sm-3 control-label']) !!}
-								<div class="col-sm-9">
-									{!! Form::input('text', 'client_poskod', $cst->client_poskod, ['class' => 'form-control', 'placeholder' => 'Postcode', 'id' => 'pos']) !!}
-								</div>
-							</div>
-							<div class="form-group {!! ( count($errors->get('client_phone')) ) >0 ? 'has-error' : '' !!}">
-								{!! Form::label('tel', 'Phone :', ['class' => 'col-sm-3 control-label']) !!}
-								<div class="col-sm-9">
-									{!! Form::input('text', 'client_phone', $cst->client_phone, ['class' => 'form-control', 'placeholder' => 'Phone', 'id' => 'tel']) !!}
-								</div>
-							</div>
-							<div class="form-group {!! ( count($errors->get('client_email')) ) >0 ? 'has-error' : '' !!}">
-								{!! Form::label('tela', 'Email :', ['class' => 'col-sm-3 control-label']) !!}
-								<div class="col-sm-9">
-									{!! Form::input('text', 'client_email', $cst->client_email, ['class' => 'form-control', 'placeholder' => 'Email', 'id' => 'tela']) !!}
-								</div>
-							</div>
+							</div> -->
+
 						</div>
 					</div>
 				</div>
@@ -497,6 +548,24 @@ $(document).on('change', '#taxs', function () {
 	// update each time user change the value
 	update_tamount();
 	update_balance();
+});
+
+////////////////////////////////////////////////////////////////////////////////////
+// selecting series will auto populate comm and rate
+// $('#custsel').change(function() {		<---- cant use it for append
+$(document).on('change', '#custsel', function () {
+	selectedOption = $('option:selected', this);
+	var client = $('#client');
+	var address = $('#address');
+	var poskod = $('#poskod');
+	var email = $('#email');
+	var phone = $('#phone');
+
+	$(client).text( selectedOption.data('client') );
+	$(address).text( selectedOption.data('client_address') );
+	$(poskod).text( selectedOption.data('client_poskod') );
+	$(email).text( selectedOption.data('client_email') );
+	$(phone).text( selectedOption.data('client_phone') );
 });
 
 ////////////////////////////////////////////////////////////////////////////////////
