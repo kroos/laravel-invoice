@@ -1,3 +1,7 @@
+<?php
+// dd(App\Sales::invoice_product());
+?>
+
 @extends('layout.master')
 
 @section('content')
@@ -36,7 +40,7 @@
 <div class="row">
 	<div class="col-sm-12">
 	<label for="myChartproduct">Products Sold</label>
-		<canvas id="myChartproduct" width="100%" height="35"></canvas>
+		<canvas id="myChartproduct" width="100%" height="50"></canvas>
 	</div>
 </div>
 
@@ -52,21 +56,141 @@
 
 <?php
 if ( auth()->user()->id_group == 2 ) {
-	$user = DB::table('invoice_product')
+	$user = DB::table(
+					DB::Raw('
+								(SELECT
+									`users`.`name` AS `name`,
+									`users`.`color` AS `color`,
+									`sales`.`id` AS `id`,
+									`sales`.`date_sale` AS `date_sale`,
+									`products`.`product` AS `product`,
+									`sales_items`.`commission` AS `commission`,
+									`sales_items`.`retail` AS `retail`,
+									`sales_items`.`quantity` AS `quantity`,
+									round((`sales_items`.`retail` * `sales_items`.`quantity`),2) AS `TotalAmount`,
+									round((`sales_items`.`commission` * `sales_items`.`quantity`),2)AS `TotalCommission`,
+									`taxes`.`tax` AS `tax`,
+									ifnull(`taxes`.`amount`, 0)AS `tax_charges`,
+									round((round((`sales_items`.`retail` * `sales_items`.`quantity`),2)*(ifnull(`taxes`.`amount`, 0)/ 100)),2)AS `TotalTax`,
+									(round((`sales_items`.`retail` * `sales_items`.`quantity`),2) + round((round((`sales_items`.`retail` * `sales_items`.`quantity`),2)*(ifnull(`taxes`.`amount`, 0)/ 100)),2))AS `GrandTotal`
+								FROM
+									(
+										(
+											(
+												(
+													(
+														(
+															(`sales` JOIN `sales_items` ON((`sales_items`.`id_sales` = `sales`.`id`)))
+															JOIN `products` ON((`sales_items`.`id_product` = `products`.`id`)))
+														LEFT JOIN `users` ON((`sales`.`id_user` = `users`.`id`)))
+													LEFT JOIN `sales_taxes` ON((`sales_taxes`.`id_sales` = `sales`.`id`)))
+												LEFT JOIN `taxes` ON((`taxes`.`id` = `sales_taxes`.`id_tax`)))
+											LEFT JOIN `sales_customers` ON((`sales_customers`.`id_sales` = `sales`.`id`)))
+										LEFT JOIN `customers` ON((`customers`.`id` = `sales_customers`.`id_customer`)))
+								WHERE
+									(
+										ISNULL(`sales`.`deleted_at`)
+										AND ISNULL(`sales_items`.`deleted_at`)
+										AND ISNULL(`sales_taxes`.`deleted_at`)
+										AND ISNULL(`sales_customers`.`deleted_at`)
+									)
+								) AS invoice_product
+						')
+				)
 				->selectRaw('name, color')
 				->whereYear('date_sale', '=', Date('Y'))
 				->where(['name' => auth()->user()->name])
 				->groupBy('name')
 				->get();
 } else {
-	$user = DB::table('invoice_product')
+	$user = DB::table(
+					DB::Raw('
+								(SELECT
+									`users`.`name` AS `name`,
+									`users`.`color` AS `color`,
+									`sales`.`id` AS `id`,
+									`sales`.`date_sale` AS `date_sale`,
+									`products`.`product` AS `product`,
+									`sales_items`.`commission` AS `commission`,
+									`sales_items`.`retail` AS `retail`,
+									`sales_items`.`quantity` AS `quantity`,
+									round((`sales_items`.`retail` * `sales_items`.`quantity`),2) AS `TotalAmount`,
+									round((`sales_items`.`commission` * `sales_items`.`quantity`),2)AS `TotalCommission`,
+									`taxes`.`tax` AS `tax`,
+									ifnull(`taxes`.`amount`, 0)AS `tax_charges`,
+									round((round((`sales_items`.`retail` * `sales_items`.`quantity`),2)*(ifnull(`taxes`.`amount`, 0)/ 100)),2)AS `TotalTax`,
+									(round((`sales_items`.`retail` * `sales_items`.`quantity`),2) + round((round((`sales_items`.`retail` * `sales_items`.`quantity`),2)*(ifnull(`taxes`.`amount`, 0)/ 100)),2))AS `GrandTotal`
+								FROM
+									(
+										(
+											(
+												(
+													(
+														(
+															(`sales` JOIN `sales_items` ON((`sales_items`.`id_sales` = `sales`.`id`)))
+															JOIN `products` ON((`sales_items`.`id_product` = `products`.`id`)))
+														LEFT JOIN `users` ON((`sales`.`id_user` = `users`.`id`)))
+													LEFT JOIN `sales_taxes` ON((`sales_taxes`.`id_sales` = `sales`.`id`)))
+												LEFT JOIN `taxes` ON((`taxes`.`id` = `sales_taxes`.`id_tax`)))
+											LEFT JOIN `sales_customers` ON((`sales_customers`.`id_sales` = `sales`.`id`)))
+										LEFT JOIN `customers` ON((`customers`.`id` = `sales_customers`.`id_customer`)))
+								WHERE
+									(
+										ISNULL(`sales`.`deleted_at`)
+										AND ISNULL(`sales_items`.`deleted_at`)
+										AND ISNULL(`sales_taxes`.`deleted_at`)
+										AND ISNULL(`sales_customers`.`deleted_at`)
+									)
+								) AS invoice_product
+						')
+				)
 				->selectRaw('name, color')
 				->whereYear('date_sale', '=', Date('Y'))
 				->groupBy('name')
 				->get();
 }
 
-$month = DB::table('invoice_product')
+$month = DB::table(
+					DB::Raw('
+								(SELECT
+									`users`.`name` AS `name`,
+									`users`.`color` AS `color`,
+									`sales`.`id` AS `id`,
+									`sales`.`date_sale` AS `date_sale`,
+									`products`.`product` AS `product`,
+									`sales_items`.`commission` AS `commission`,
+									`sales_items`.`retail` AS `retail`,
+									`sales_items`.`quantity` AS `quantity`,
+									round((`sales_items`.`retail` * `sales_items`.`quantity`),2) AS `TotalAmount`,
+									round((`sales_items`.`commission` * `sales_items`.`quantity`),2)AS `TotalCommission`,
+									`taxes`.`tax` AS `tax`,
+									ifnull(`taxes`.`amount`, 0)AS `tax_charges`,
+									round((round((`sales_items`.`retail` * `sales_items`.`quantity`),2)*(ifnull(`taxes`.`amount`, 0)/ 100)),2)AS `TotalTax`,
+									(round((`sales_items`.`retail` * `sales_items`.`quantity`),2) + round((round((`sales_items`.`retail` * `sales_items`.`quantity`),2)*(ifnull(`taxes`.`amount`, 0)/ 100)),2))AS `GrandTotal`
+								FROM
+									(
+										(
+											(
+												(
+													(
+														(
+															(`sales` JOIN `sales_items` ON((`sales_items`.`id_sales` = `sales`.`id`)))
+															JOIN `products` ON((`sales_items`.`id_product` = `products`.`id`)))
+														LEFT JOIN `users` ON((`sales`.`id_user` = `users`.`id`)))
+													LEFT JOIN `sales_taxes` ON((`sales_taxes`.`id_sales` = `sales`.`id`)))
+												LEFT JOIN `taxes` ON((`taxes`.`id` = `sales_taxes`.`id_tax`)))
+											LEFT JOIN `sales_customers` ON((`sales_customers`.`id_sales` = `sales`.`id`)))
+										LEFT JOIN `customers` ON((`customers`.`id` = `sales_customers`.`id_customer`)))
+								WHERE
+									(
+										ISNULL(`sales`.`deleted_at`)
+										AND ISNULL(`sales_items`.`deleted_at`)
+										AND ISNULL(`sales_taxes`.`deleted_at`)
+										AND ISNULL(`sales_customers`.`deleted_at`)
+									)
+								) AS invoice_product
+						')
+			)
 			->select(DB::raw('
 				YEAR(date_sale),
 				MONTHNAME(date_sale) bulan,
@@ -77,7 +201,47 @@ $month = DB::table('invoice_product')
 			->orderBy('date_sale')
 			->get();
 
-$product = DB::table('invoice_product')
+$product = DB::table(
+					DB::Raw('
+								(SELECT
+									`users`.`name` AS `name`,
+									`users`.`color` AS `color`,
+									`sales`.`id` AS `id`,
+									`sales`.`date_sale` AS `date_sale`,
+									`products`.`product` AS `product`,
+									`sales_items`.`commission` AS `commission`,
+									`sales_items`.`retail` AS `retail`,
+									`sales_items`.`quantity` AS `quantity`,
+									round((`sales_items`.`retail` * `sales_items`.`quantity`),2) AS `TotalAmount`,
+									round((`sales_items`.`commission` * `sales_items`.`quantity`),2)AS `TotalCommission`,
+									`taxes`.`tax` AS `tax`,
+									ifnull(`taxes`.`amount`, 0)AS `tax_charges`,
+									round((round((`sales_items`.`retail` * `sales_items`.`quantity`),2)*(ifnull(`taxes`.`amount`, 0)/ 100)),2)AS `TotalTax`,
+									(round((`sales_items`.`retail` * `sales_items`.`quantity`),2) + round((round((`sales_items`.`retail` * `sales_items`.`quantity`),2)*(ifnull(`taxes`.`amount`, 0)/ 100)),2))AS `GrandTotal`
+								FROM
+									(
+										(
+											(
+												(
+													(
+														(
+															(`sales` JOIN `sales_items` ON((`sales_items`.`id_sales` = `sales`.`id`)))
+															JOIN `products` ON((`sales_items`.`id_product` = `products`.`id`)))
+														LEFT JOIN `users` ON((`sales`.`id_user` = `users`.`id`)))
+													LEFT JOIN `sales_taxes` ON((`sales_taxes`.`id_sales` = `sales`.`id`)))
+												LEFT JOIN `taxes` ON((`taxes`.`id` = `sales_taxes`.`id_tax`)))
+											LEFT JOIN `sales_customers` ON((`sales_customers`.`id_sales` = `sales`.`id`)))
+										LEFT JOIN `customers` ON((`customers`.`id` = `sales_customers`.`id_customer`)))
+								WHERE
+									(
+										ISNULL(`sales`.`deleted_at`)
+										AND ISNULL(`sales_items`.`deleted_at`)
+										AND ISNULL(`sales_taxes`.`deleted_at`)
+										AND ISNULL(`sales_customers`.`deleted_at`)
+									)
+								) AS invoice_product
+						')
+				)
 				->selectRaw('
 								name,
 								color,
@@ -116,7 +280,47 @@ var myChart = new Chart
 												@foreach($month as $mo)
 													
 <?php
-$tinv = DB::table('invoice_product')
+$tinv = DB::table(
+					DB::Raw('
+								(SELECT
+									`users`.`name` AS `name`,
+									`users`.`color` AS `color`,
+									`sales`.`id` AS `id`,
+									`sales`.`date_sale` AS `date_sale`,
+									`products`.`product` AS `product`,
+									`sales_items`.`commission` AS `commission`,
+									`sales_items`.`retail` AS `retail`,
+									`sales_items`.`quantity` AS `quantity`,
+									round((`sales_items`.`retail` * `sales_items`.`quantity`),2) AS `TotalAmount`,
+									round((`sales_items`.`commission` * `sales_items`.`quantity`),2)AS `TotalCommission`,
+									`taxes`.`tax` AS `tax`,
+									ifnull(`taxes`.`amount`, 0)AS `tax_charges`,
+									round((round((`sales_items`.`retail` * `sales_items`.`quantity`),2)*(ifnull(`taxes`.`amount`, 0)/ 100)),2)AS `TotalTax`,
+									(round((`sales_items`.`retail` * `sales_items`.`quantity`),2) + round((round((`sales_items`.`retail` * `sales_items`.`quantity`),2)*(ifnull(`taxes`.`amount`, 0)/ 100)),2))AS `GrandTotal`
+								FROM
+									(
+										(
+											(
+												(
+													(
+														(
+															(`sales` JOIN `sales_items` ON((`sales_items`.`id_sales` = `sales`.`id`)))
+															JOIN `products` ON((`sales_items`.`id_product` = `products`.`id`)))
+														LEFT JOIN `users` ON((`sales`.`id_user` = `users`.`id`)))
+													LEFT JOIN `sales_taxes` ON((`sales_taxes`.`id_sales` = `sales`.`id`)))
+												LEFT JOIN `taxes` ON((`taxes`.`id` = `sales_taxes`.`id_tax`)))
+											LEFT JOIN `sales_customers` ON((`sales_customers`.`id_sales` = `sales`.`id`)))
+										LEFT JOIN `customers` ON((`customers`.`id` = `sales_customers`.`id_customer`)))
+								WHERE
+									(
+										ISNULL(`sales`.`deleted_at`)
+										AND ISNULL(`sales_items`.`deleted_at`)
+										AND ISNULL(`sales_taxes`.`deleted_at`)
+										AND ISNULL(`sales_customers`.`deleted_at`)
+									)
+								) AS invoice_product
+						')
+	)
 				->selectRaw('
 						name,
 						color,
@@ -178,7 +382,27 @@ var myChartline = new Chart
 							data: [
 								@foreach($month as $mo)
 <?php
-								$rt = DB::table('invoice_payment')
+								$rt = DB::table(
+										DB::Raw('
+													(SELECT
+														`users`.`name` AS `name`,
+														`users`.`color` AS `color`,
+														`sales`.`id` AS `id`,
+														`sales`.`date_sale` AS `date_sale`,
+														`banks`.`bank` AS `bank`,
+														`payments`.`date_payment` AS `date_payment`,
+														`payments`.`amount` AS `amount`
+													FROM
+														(
+															(
+																(
+																	`sales`
+																	LEFT JOIN `users` ON((`users`.`id` = `sales`.`id_user`)))
+																JOIN `payments` ON((`sales`.`id` = `payments`.`id_sales`)))
+															LEFT JOIN `banks` ON((`banks`.`id` = `payments`.`id_bank`)))
+													) AS invoice_payment
+												')
+											)
 											->selectRaw('
 													name,
 													color,
@@ -236,7 +460,47 @@ var myChartline = new Chart
 									data: [
 									@foreach($month as $mo)
 <?php
-$tinvc = DB::table('invoice_product')
+$tinvc = DB::table(
+					DB::Raw('
+								(SELECT
+									`users`.`name` AS `name`,
+									`users`.`color` AS `color`,
+									`sales`.`id` AS `id`,
+									`sales`.`date_sale` AS `date_sale`,
+									`products`.`product` AS `product`,
+									`sales_items`.`commission` AS `commission`,
+									`sales_items`.`retail` AS `retail`,
+									`sales_items`.`quantity` AS `quantity`,
+									round((`sales_items`.`retail` * `sales_items`.`quantity`),2) AS `TotalAmount`,
+									round((`sales_items`.`commission` * `sales_items`.`quantity`),2)AS `TotalCommission`,
+									`taxes`.`tax` AS `tax`,
+									ifnull(`taxes`.`amount`, 0)AS `tax_charges`,
+									round((round((`sales_items`.`retail` * `sales_items`.`quantity`),2)*(ifnull(`taxes`.`amount`, 0)/ 100)),2)AS `TotalTax`,
+									(round((`sales_items`.`retail` * `sales_items`.`quantity`),2) + round((round((`sales_items`.`retail` * `sales_items`.`quantity`),2)*(ifnull(`taxes`.`amount`, 0)/ 100)),2))AS `GrandTotal`
+								FROM
+									(
+										(
+											(
+												(
+													(
+														(
+															(`sales` JOIN `sales_items` ON((`sales_items`.`id_sales` = `sales`.`id`)))
+															JOIN `products` ON((`sales_items`.`id_product` = `products`.`id`)))
+														LEFT JOIN `users` ON((`sales`.`id_user` = `users`.`id`)))
+													LEFT JOIN `sales_taxes` ON((`sales_taxes`.`id_sales` = `sales`.`id`)))
+												LEFT JOIN `taxes` ON((`taxes`.`id` = `sales_taxes`.`id_tax`)))
+											LEFT JOIN `sales_customers` ON((`sales_customers`.`id_sales` = `sales`.`id`)))
+										LEFT JOIN `customers` ON((`customers`.`id` = `sales_customers`.`id_customer`)))
+								WHERE
+									(
+										ISNULL(`sales`.`deleted_at`)
+										AND ISNULL(`sales_items`.`deleted_at`)
+										AND ISNULL(`sales_taxes`.`deleted_at`)
+										AND ISNULL(`sales_customers`.`deleted_at`)
+									)
+								) AS invoice_product
+						')
+				)
 				->selectRaw('
 						name,
 						color,
@@ -273,7 +537,47 @@ echo (($tinvc->TotalCommission == NULL)? 0 : $tinvc->TotalCommission) .',';
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // line chart
 <?php
-								$product = DB::table('invoice_product')
+								$product = DB::table(
+					DB::Raw('
+								(SELECT
+									`users`.`name` AS `name`,
+									`users`.`color` AS `color`,
+									`sales`.`id` AS `id`,
+									`sales`.`date_sale` AS `date_sale`,
+									`products`.`product` AS `product`,
+									`sales_items`.`commission` AS `commission`,
+									`sales_items`.`retail` AS `retail`,
+									`sales_items`.`quantity` AS `quantity`,
+									round((`sales_items`.`retail` * `sales_items`.`quantity`),2) AS `TotalAmount`,
+									round((`sales_items`.`commission` * `sales_items`.`quantity`),2)AS `TotalCommission`,
+									`taxes`.`tax` AS `tax`,
+									ifnull(`taxes`.`amount`, 0)AS `tax_charges`,
+									round((round((`sales_items`.`retail` * `sales_items`.`quantity`),2)*(ifnull(`taxes`.`amount`, 0)/ 100)),2)AS `TotalTax`,
+									(round((`sales_items`.`retail` * `sales_items`.`quantity`),2) + round((round((`sales_items`.`retail` * `sales_items`.`quantity`),2)*(ifnull(`taxes`.`amount`, 0)/ 100)),2))AS `GrandTotal`
+								FROM
+									(
+										(
+											(
+												(
+													(
+														(
+															(`sales` JOIN `sales_items` ON((`sales_items`.`id_sales` = `sales`.`id`)))
+															JOIN `products` ON((`sales_items`.`id_product` = `products`.`id`)))
+														LEFT JOIN `users` ON((`sales`.`id_user` = `users`.`id`)))
+													LEFT JOIN `sales_taxes` ON((`sales_taxes`.`id_sales` = `sales`.`id`)))
+												LEFT JOIN `taxes` ON((`taxes`.`id` = `sales_taxes`.`id_tax`)))
+											LEFT JOIN `sales_customers` ON((`sales_customers`.`id_sales` = `sales`.`id`)))
+										LEFT JOIN `customers` ON((`customers`.`id` = `sales_customers`.`id_customer`)))
+								WHERE
+									(
+										ISNULL(`sales`.`deleted_at`)
+										AND ISNULL(`sales_items`.`deleted_at`)
+										AND ISNULL(`sales_taxes`.`deleted_at`)
+										AND ISNULL(`sales_customers`.`deleted_at`)
+									)
+								) AS invoice_product
+						')
+												)
 												->selectRaw('
 																name,
 																color,

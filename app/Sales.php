@@ -42,14 +42,14 @@ class Sales extends Model
 	public static function graph()
 	{
 		return static::selectRaw('
-									users.`name`,
-									 sales.id,
-									 sales.date_sale,
-									 products.product,
-									 sales_items.commission,
-									 sales_items.retail,
-									 sales_items.quantity,
-									 ROUND(
+									users.name,
+									sales.id,
+									sales.date_sale,
+									products.product,
+									sales_items.commission,
+									sales_items.retail,
+									sales_items.quantity,
+									ROUND(
 										sales_items.retail * sales_items.quantity,
 										2
 									)AS TotalAmount,
@@ -104,4 +104,74 @@ class Sales extends Model
 						->whereNull('slip_numbers.deleted_at');
 	}
 
+	public static function invoice_product()
+	{
+		return static::selectRaw('
+							`users`.`name` AS `name`,
+							`users`.`color` AS `color`,
+							`sales`.`id` AS `id`,
+							`sales`.`date_sale` AS `date_sale`,
+							`products`.`product` AS `product`,
+							`sales_items`.`commission` AS `commission`,
+							`sales_items`.`retail` AS `retail`,
+							`sales_items`.`quantity` AS `quantity`,
+							round((`sales_items`.`retail` * `sales_items`.`quantity`),2)AS `TotalAmount`,
+							round((`sales_items`.`commission` * `sales_items`.`quantity`),2)AS `TotalCommission`,
+							`taxes`.`tax` AS `tax`,
+							ifnull(`taxes`.`amount`, 0)AS `tax_charges`,
+							round((round((`sales_items`.`retail` * `sales_items`.`quantity`),2)*(ifnull(`taxes`.`amount`, 0)/ 100)),2)AS `TotalTax`,
+							(round((`sales_items`.`retail` * `sales_items`.`quantity`),2)+ round((round((`sales_items`.`retail` * `sales_items`.`quantity`),2)*(ifnull(`taxes`.`amount`, 0)/ 100)),2))AS `GrandTotal`
+						')
+						->join('sales_items', 'sales_items.id_sales', '=', 'sales.id')
+						->join('products', 'sales_items.id_product', '=', 'products.id')
+						->leftJoin( 'users', 'sales.id_user', '=', 'users.id' )
+						->leftJoin( 'sales_taxes', 'sales_taxes.id_sales', '=', 'sales.id' )
+						->leftJoin( 'taxes', 'taxes.id', '=', 'sales_taxes.id_tax' )
+						->leftJoin( 'sales_customers', 'sales_customers.id_sales', '=', 'sales.id' )
+						->leftJoin( 'customers', 'customers.id', '=', 'sales_customers.id_customer' )
+						->whereNull( 'sales.deleted_at' )
+						->whereNull( 'sales_items.deleted_at' )
+						->whereNull( 'sales_taxes.deleted_at' )
+						->whereNull( 'sales_customers.deleted_at' )
+						->get();
+	}
+
+	public static function invoice_payment()
+	{
+		return static::Raw('
+				(SELECT
+					`users`.`name` AS `name`,
+					`users`.`color` AS `color`,
+					`sales`.`id` AS `id`,
+					`sales`.`date_sale` AS `date_sale`,
+					`banks`.`bank` AS `bank`,
+					`payments`.`date_payment` AS `date_payment`,
+					`payments`.`amount` AS `amount`
+				FROM
+					(
+						(
+							(
+								`sales`
+								LEFT JOIN `users` ON(
+									(
+										`users`.`id` = `sales`.`id_user`
+									)
+								)
+							)
+							JOIN `payments` ON(
+								(
+									`sales`.`id` = `payments`.`id_sales`
+								)
+							)
+						)
+						LEFT JOIN `banks` ON(
+							(
+								`banks`.`id` = `payments`.`id_bank`
+							)
+						)
+					)
+				) AS invoice_payment
+			')
+			->get();
+	}
 }
