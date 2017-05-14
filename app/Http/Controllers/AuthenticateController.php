@@ -39,7 +39,7 @@ class AuthenticateController extends Controller
 		}
 		$users = \App\User::find(auth()->user()->id);
 		$users->touch();
-		return redirect(route('user.index'));      // redirect back to original route
+		return redirect(route('homeauth.home'));      // redirect back to original route
 	}
 
 	public function destroy()
@@ -55,7 +55,6 @@ class AuthenticateController extends Controller
 
 	public function pastore(AuthenticateRequest $request)
 	{
-		// 
 		return view('auth.remember');
 	}
 }

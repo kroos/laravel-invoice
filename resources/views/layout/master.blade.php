@@ -45,6 +45,10 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2-bootstrap-theme/0.1.0-beta.10/select2-bootstrap.min.css" />
 
+<!-- MiniColors  / color picker http://labs.abeautifulsite.net/jquery-minicolors/index.html -->
+<script src="/js/jquery.minicolors.js"></script>
+<link rel="stylesheet" href="/css/jquery.minicolors.css">
+
 <!-- ucwords -->
 <script src="/js/ucwords.js"></script>
 
@@ -62,6 +66,9 @@
 	<!-- sweet alert for deleting something (https://lipis.github.io/bootstrap-sweetalert/) -->
 	<link href="https://lipis.github.io/bootstrap-sweetalert/dist/sweetalert.css" rel="stylesheet">
 	<script src="https://lipis.github.io/bootstrap-sweetalert/dist/sweetalert.js" ></script>
+
+	<!-- javascript chart : http://www.chartjs.org/ -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.bundle.min.js"></script>
 
 </head>
 <body>

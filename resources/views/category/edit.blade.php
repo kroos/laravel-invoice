@@ -10,12 +10,7 @@
 		</p>
 	</div>
 
-	{!! Form::model($productCategory, [
-						'route' => ['category.update', $productCategory->id],
-						'method' => 'PATCH'
-					], [
-						'class' => 'form-horizontal'
-					]) !!}
+	{!! Form::model($productCategory, [ 'route' => ['category.update', $productCategory->id], 'method' => 'PATCH', 'class' => 'form-horizontal' ]) !!}
 
 <div class="col-lg-12">
 	<div class="panel panel-default">

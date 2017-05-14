@@ -35,7 +35,7 @@ function my($string) {
 					<tbody>
 						<?php
 						if (auth()->user()->id_group == 1) {
-							$inv = App\Sales::where(['deleted_at' => NULL])->get();
+							$inv = App\Sales::withTrashed()->where(['deleted_at' => NULL])->get();
 						} else {
 							$inv = App\Sales::where(['deleted_at' => NULL, 'id_user' => auth()->user()->id])->get();
 						}

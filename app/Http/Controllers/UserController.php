@@ -61,6 +61,7 @@ class UserController extends Controller
 			'email' => strtolower(request('email')),
 			'password' => bcrypt(request('password')),
 			'id_group' => request('id_group'),
+			'color' => request('color'),
 			]);
 	
 		// message to confirm storing data
@@ -111,6 +112,7 @@ class UserController extends Controller
 						'email' => strtolower(request('email')),
 						'password' => bcrypt(request('password')),
 						'id_group' => request('id_group'),
+						'color' => request('color'),
 					]);
 		$user->touch();
 		// info when update success

@@ -54,12 +54,22 @@ Route::post('/forgot', [
 	]);
 
 ####################################################################
-// user controller
+// homeauth controller
 
 Route::get('/home', [
-		'as' => 'user.index',
-		'uses' => 'UserController@index',
+		'as' => 'homeauth.home',
+		'uses' => 'HomeAuthController@home',
 	]);
+
+
+
+####################################################################
+// user controller
+
+// Route::get('/index', [
+// 		'as' => 'user.index',
+// 		'uses' => 'UserController@index',
+// 	]);
 
 Route::get('user/create', [
 		'as' => 'user.create',
@@ -386,6 +396,39 @@ Route::patch('taxes/update/{taxes}', [
 Route::get('taxes/destroy/{taxes}', [
 		'as' => 'taxes.destroy',
 		'uses' => 'TaxesController@destroy'
+	]);
+
+####################################################################
+// customers controller
+
+Route::get('customers/index', [
+		'as' => 'customers.index',
+		'uses' => 'CustomersController@index'
+	]);
+
+Route::get('customers/create', [
+		'as' => 'customers.create',
+		'uses' => 'CustomersController@create'
+	]);
+
+Route::post('customers/store', [
+		'as' => 'customers.store',
+		'uses' => 'CustomersController@store'
+	]);
+
+Route::get('customers/edit/{customers}', [
+		'as' => 'customers.edit',
+		'uses' => 'CustomersController@edit'
+	]);
+
+Route::patch('customers/update/{customers}', [
+		'as' => 'customers.update',
+		'uses' => 'CustomersController@update'
+	]);
+
+Route::delete('customers/destroy/{customers}', [
+		'as' => 'customers.destroy',
+		'uses' => 'CustomersController@destroy'
 	]);
 
 ####################################################################

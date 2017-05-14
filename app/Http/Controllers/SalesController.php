@@ -109,14 +109,14 @@ class SalesController extends Controller
 
 		###################################################
 		// customers part
-		if ( $request->client == NULL && $request->client_phone == NULL && $request->client_email == NULL && $request->repeatcust != NULL) {
+		if ( $request->client == NULL && $request->repeatcust != NULL) {
 			$sacu = SalesCustomers::create([
 					'id_sales' => $inv->id,
 					'id_customer' => $request->repeatcust,
 				]);
 
 		} else {
-			if ( $request->repeatcust == NULL && $request->client != NULL && $request->client_phone != NULL && $request->client_email != NULL ) {
+			if ( $request->client != NULL && $request->repeatcust == NULL ) {
 				$cust = Customers::create([
 						'client' => $request->client,
 						'client_address' => $request->client_address,
@@ -266,8 +266,8 @@ class SalesController extends Controller
 				[
 					'id_customer' => $request->repeatcust,
 				]);
-
-		// } else {
+		}
+		 // else {
 		// 	if ( $request->repeatcust == NULL ) {
 		// 		$cust = Customers::create([
 		// 				'client' => $request->client,

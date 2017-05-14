@@ -18,6 +18,7 @@ class CreateUsersTable extends Migration
             $table->string('name');
             $table->integer('id_group');
             $table->foreign('id_group')->references('id')->on('user_groups');
+            $table->string('color');
             $table->string('email')->unique();
             $table->string('password');
             $table->rememberToken();

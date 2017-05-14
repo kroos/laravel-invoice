@@ -38,4 +38,70 @@ class Sales extends Model
 	public function invuser() {
 		return $this->belongsTo('App\User');
 	}
+
+	public static function graph()
+	{
+		return static::selectRaw('
+									users.`name`,
+									 sales.id,
+									 sales.date_sale,
+									 products.product,
+									 sales_items.commission,
+									 sales_items.retail,
+									 sales_items.quantity,
+									 ROUND(
+										sales_items.retail * sales_items.quantity,
+										2
+									)AS TotalAmount,
+									 ROUND(
+										sales_items.commission * sales_items.quantity,
+										2
+									)AS TotalCommission,
+									 taxes.tax,
+									 IFNULL(taxes.amount, 0) tax_charges,
+									 ROUND(
+										ROUND(
+											sales_items.retail * sales_items.quantity,
+											2
+										)*(IFNULL(taxes.amount, 0) / 100),
+										2
+									)AS TotalTax,
+									(
+										ROUND(
+											sales_items.retail * sales_items.quantity,
+											2
+										)+ ROUND(
+											ROUND(
+												sales_items.retail * sales_items.quantity,
+												2
+											)*(IFNULL(taxes.amount, 0) / 100),
+											2
+										)
+									)AS GrandTotal,
+									IFNULL(banks.bank,"NoBank") bank,
+									IFNULL(payments.date_payment, "1970-01-01") AS date_payment,
+									IFNULL(payments.amount, 0) AS PaymentAmount,
+									customers.client,
+									customers.client_phone,
+									customers.client_email,
+									slip_numbers.tracking_number
+								')
+						->join('sales_items', 'sales_items.id_sales', '=', 'sales.id')
+						->join('products', 'sales_items.id_product', '=', 'products.id')
+						->leftJoin('users', 'sales.id_user', '=', 'users.id')
+						->leftJoin('sales_taxes', 'sales_taxes.id_sales', '=', 'sales.id')
+						->leftJoin('taxes', 'taxes.id', '=', 'sales_taxes.id_tax')
+						->leftJoin('payments', 'payments.id_sales', '=', 'sales.id')
+						->leftJoin('banks', 'banks.id', '=', 'payments.id_bank')
+						->leftJoin('sales_customers', 'sales_customers.id_sales', '=', 'sales.id')
+						->leftJoin('customers', 'customers.id', '=', 'sales_customers.id_customer')
+						->leftJoin('slip_numbers', 'slip_numbers.id_sales', '=', 'sales.id')
+						->whereNull('sales.deleted_at')
+						->whereNull('sales_items.deleted_at')
+						->whereNull('payments.deleted_at')
+						->whereNull('sales_taxes.deleted_at')
+						->whereNull('sales_customers.deleted_at')
+						->whereNull('slip_numbers.deleted_at');
+	}
+
 }

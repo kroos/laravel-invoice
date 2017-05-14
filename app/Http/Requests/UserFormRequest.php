@@ -30,6 +30,7 @@ class UserFormRequest extends FormRequest
             'password' => 'required|min:6|max:8',
             'password_confirmation' => 'required|same:password',
             'id_group' => 'required|integer',
-        ];
+            'color' => 'required',
+       ];
     }
 }

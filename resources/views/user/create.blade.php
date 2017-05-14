@@ -7,7 +7,8 @@
 <div class="panel panel-default">
 <div class="panel-heading">Add User</div>
 	<div class="panel-body">
-	<div class="form-group {!! ( count($errors->get('name')) ) >0 ? 'has-error' : '' !!}">
+
+		<div class="form-group {!! ( count($errors->get('name')) ) >0 ? 'has-error' : '' !!}">
 			{!! Form::label('nam', 'Name :', ['class' => 'col-sm-2 control-label']) !!}
 			<div class="col-sm-10">
 				{!! Form::input('text', 'name', @$value, ['class' => 'form-control put', 'placeholder' => 'Name', 'id' => 'nam']) !!}
@@ -49,7 +50,12 @@
 		</div>
 		
 		
-		
+		<div class="form-group {!! ( count($errors->get('color')) ) >0 ? 'has-error' : '' !!}">
+			{!! Form::label('rgba', 'Choose Your Color :', ['class' => 'col-sm-2 control-label']) !!}
+			<div class="col-sm-10">
+				{!! Form::input('text', 'color', @$value, ['class' => 'form-control ', 'id' => 'rgba' ]) !!}
+			</div>
+		</div>
 		
 		
 		
@@ -118,7 +124,13 @@
 
 
 @section('jquery')
-<!-- 	$("input").keyup(function() {
-		toUpper(this);
-	}); -->
+//	$("input").keyup(function() {
+//		toUpper(this);
+//	});
+
+$('#rgba').minicolors({
+	format: 'rgb',
+	opacity: true,
+	theme: 'bootstrap',
+});
 @endsection

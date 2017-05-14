@@ -6,14 +6,7 @@
 @endif
 	@include('layout.errorform')
 	@include('layout.info')
-	{!! Form::model($user, [
-						'route' => [
-										'user.update',
-										$user->id
-									],
-						'method' => 'PATCH',
-						'class' => 'form-horizontal'
-					]) !!}
+	{!! Form::model($user, [ 'route' => [ 'user.update', $user->id ], 'method' => 'PATCH', 'class' => 'form-horizontal' ]) !!}
 
 <div class="panel panel-default">
 <div class="panel-heading">Edit User</div>
@@ -61,6 +54,14 @@ foreach ($gr as $key) {
 @else
 		{!! Form::hidden('id_group', $user->id_group) !!}
 @endif
+
+		<div class="form-group {!! ( count($errors->get('color')) ) >0 ? 'has-error' : '' !!}">
+			{!! Form::label('rgba', 'Choose Your Color :', ['class' => 'col-sm-2 control-label']) !!}
+			<div class="col-sm-10">
+				{!! Form::input('text', 'color', @$value, ['class' => 'form-control ', 'id' => 'rgba' ]) !!}
+			</div>
+		</div>
+
 		<div class="form-group">
 			<div class="col-sm-offset-2 col-sm-10">
 				{!! Form::submit('Update', ['class' => 'btn btn-primary btn-lg btn-block']) !!}
@@ -74,7 +75,10 @@ foreach ($gr as $key) {
 
 
 @section('jquery')
-	$("input").keyup(function() {
-		toUpper(this);
-	});
+
+$('#rgba').minicolors({
+	format: 'rgb',
+	opacity: true,
+	theme: 'bootstrap',
+});
 @endsection

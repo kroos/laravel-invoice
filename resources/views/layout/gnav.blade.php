@@ -26,64 +26,34 @@
 					<li>
 						<a href="#">Print Report</a>
 					</li>
+					<li>
+						<div class="dropdown">
+							<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+								Invoice Management<span class="caret"></span>
+							</button>
+							<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+								<li role="separator" class="divider"></li>
+								<li><a href="{!! route('product.create') !!}">Adding Product</a></li>
+								<li><a href="{!! route('category.create') !!}">Adding Category</a></li>
+								<li role="separator" class="divider"></li>
+								<li><a href="{!! route('customers.index') !!}">Customers List</a></li>
+								<li role="separator" class="divider"></li>
+							</ul>
+						</div>
+					</li>
 					@if((auth()->user()->id_group) == 1)
 					<li>
 						<div class="dropdown">
 							<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-								Product Management<span class="caret"></span>
+								Setting<span class="caret"></span>
 							</button>
 							<ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
-								<li>
-									<a href="{!! route('product.create') !!}">Adding Product</a>
-								</li>
 								<li role="separator" class="divider"></li>
-								<li>
-									<a href="{!! route('category.create') !!}">Adding Category</a>
-								</li>
-							</ul>
-						</div>
-					</li>
-
-					<li>
-						<div class="dropdown">
-							<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu4" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-								Taxes Management<span class="caret"></span>
-							</button>
-							<ul class="dropdown-menu" aria-labelledby="dropdownMenu4">
-								<li>
-									<a href="{!! route('taxes.index') !!}">Adding Taxes</a>
-								</li>
-							</ul>
-						</div>
-					</li>
-
-					<li>
-						<div class="dropdown">
-							<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu3" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-								Bank Management<span class="caret"></span>
-							</button>
-							<ul class="dropdown-menu" aria-labelledby="dropdownMenu3">
-								<li>
-									<a href="{!! route('banks.index') !!}">Edit Bank</a>
-								</li>
-<!-- 								<li role="separator" class="divider"></li>
-								<li>
-									<a href="{!! route('category.create') !!}">Adding Category</a>
-								</li> -->
-							</ul>
-						</div>
-					</li>
-
-					<li>
-						<div class="dropdown">
-							<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-								User Management<span class="caret"></span>
-							</button>
-							<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
 								<li><a href="{!! route('user.create') !!}">Add User</a></li>
 								<li><a href="{!! route('usergroup.create') !!}">Add User Group</a></li>
 								<li role="separator" class="divider"></li>
-								<li><a href="#">Separated link</a></li>
+								<li><a href="{!! route('banks.index') !!}">Bank Activation</a></li>
+								<li role="separator" class="divider"></li>
 							</ul>
 						</div>
 					</li>

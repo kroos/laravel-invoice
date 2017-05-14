@@ -24,7 +24,7 @@ class SalesFormRequest extends FormRequest
 			'client_address' => 'required_with:client_poskod',
 			'client_poskod' => 'required_with:client_address',
 			'client_phone' => 'required_without:repeatcust|nullable|numeric',
-			'client_email' => 'required_without:repeatcust|nullable|email',
+			'client_email' => 'nullable|email',
 			'inv.*.id_product' => 'required|integer',
 			'inv.*.commission' => 'required|numeric',
 			'inv.*.retail' => 'required|numeric',
