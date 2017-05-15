@@ -432,6 +432,39 @@ Route::delete('customers/destroy/{customers}', [
 	]);
 
 ####################################################################
+// preferences controller
+
+Route::get('preferences/index', [
+		'as' => 'preferences.index',
+		'uses' => 'PreferencesController@index'
+	]);
+
+Route::get('preferences/create', [
+		'as' => 'preferences.create',
+		'uses' => 'PreferencesController@create'
+	]);
+
+Route::post('preferences/store', [
+		'as' => 'preferences.store',
+		'uses' => 'PreferencesController@store'
+	]);
+
+Route::get('preferences/edit/{preferences}', [
+		'as' => 'preferences.edit',
+		'uses' => 'PreferencesController@edit'
+	]);
+
+Route::patch('preferences/update/{preferences}', [
+		'as' => 'preferences.update',
+		'uses' => 'PreferencesController@update'
+	]);
+
+Route::delete('preferences/destroy/{preferences}', [
+		'as' => 'preferences.destroy',
+		'uses' => 'PreferencesController@destroy'
+	]);
+
+####################################################################
 
 
 

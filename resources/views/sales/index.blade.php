@@ -23,19 +23,19 @@ function my($string) {
 						@if(auth()->user()->id_group == 1)
 						<th>officer</th>
 						@endif
-						<th>id invoice</th>
+						<th>editing</th>
+						<th>invoice number</th>
 						<th>date</th>
 						<th>no tracking</th>
 						<th>total commission</th>
 						<th>total invoice</th>
 						<th>total payment</th>
 						<th>status</th>
-						<th>delete</th>
 					</thead>
 					<tbody>
 						<?php
 						if (auth()->user()->id_group == 1) {
-							$inv = App\Sales::withTrashed()->where(['deleted_at' => NULL])->get();
+							$inv = App\Sales::withTrashed()->get();
 						} else {
 							$inv = App\Sales::where(['deleted_at' => NULL, 'id_user' => auth()->user()->id])->get();
 						}
@@ -81,22 +81,37 @@ $re = $paya - $tamo;
 							@if(auth()->user()->id_group == 1)
 							<td>{!! App\User::find($in->id_user)->name !!}</td>
 							@endif
-							<td><a href="{!! route('sales.edit', $in->id) !!}" class="btn btn-info">edit {!! $in->id !!}</a></td>
+							<td>
+								<div class="dropdown">
+									<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+										<span class="caret"></span>
+									</button>
+									<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+										<li role="separator" class="divider"></li>
+										<li><a href="{!! route('sales.edit', $in->id) !!}" >edit</a></li>
+										<li><a href="{!! route('sales.destroy', $in->id) !!}" >delete</a></li>
+										<li role="separator" class="divider"></li>
+										<li><a href="{!! route('sales.edit', $in->id) !!}">export as PDF</a></li>
+										<li><a href="{!! route('sales.edit', $in->id) !!}">send email</a></li>
+										<li role="separator" class="divider"></li>
+									</ul>
+								</div>
+							</td>
+							<td>{!! $in->id !!}</td>
 							<td>{!! my($in->date_sale) !!}</td>
-							<td>{!! $in->no_tracking !!}</td>
-<!-- 							<td>
+							<!-- <td>{!! $in->no_tracking !!}</td> -->
+							<td>
 								<?php
-									$slip = App\SlipPostage::where(['id_sales' => $in->id])->get();
+									$slip = App\SlipNumbers::where(['id_sales' => $in->id])->get();
 									foreach ( $slip as $imu ) {
-										echo '<img src="data:'.$imu->mime.';base64, '.$imu->image.'" class="img-responsive img-rounded">';
+										echo $imu->tracking_number.'<br />';
 									}
 								?>
-							</td> -->
+							</td>
 							<td>RM {!! $tcomm !!}</td>
 							<td>RM {!! $tamo !!}</td>
 							<td>RM {!! $paya !!}</td>
 							<td><p class="btn <?php echo ($re < 0)? 'btn-danger' : 'btn-success' ?>"><?php echo ($re < 0)? 'Pending' : 'Paid' ?></p></td>
-							<td><a href="{!! route('sales.destroy', $in->id) !!}" class="btn btn-danger" >delete {!! $in->id !!}</a></td>
 						</tr>
 						@endforeach
 					</tbody>

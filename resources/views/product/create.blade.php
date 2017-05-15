@@ -45,7 +45,7 @@
 					</div>
 				</div>
 		
-				<div class="form-group {!! ( count($errors->get('image[]')) ) >0 ? 'has-error' : '' !!}">
+				<div class="form-group {!! ( count($errors->get('image.*')) ) >0 ? 'has-error' : '' !!}">
 					{!! Form::label('img', 'Image :', ['class' => 'col-sm-2 control-label']) !!}
 					<div class="col-sm-10">
 						{!! Form::file('image[]', ['id' => 'img', 'multiple' => 'multiple']) !!}

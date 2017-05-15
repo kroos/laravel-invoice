@@ -19,5 +19,6 @@ class DatabaseSeeder extends Seeder
 		$this->call(ProductImagesSeed::class);
 		$this->call(BanksSeed::class);
 		$this->call(TaxesSeed::class);
+		$this->call(PreferencesSeed::class);
 	}
 }

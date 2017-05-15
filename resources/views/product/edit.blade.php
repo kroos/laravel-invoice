@@ -5,14 +5,7 @@
 	@include('layout.errorform')
 	@include('layout.info')
 
-	{!! Form::model($product, [
-						'route' => [
-										'product.update',
-										$product->id
-									],
-						'method' => 'PATCH',
-						'class' => 'form-horizontal'
-					]) !!}
+	{!! Form::model($product, ['route' => ['product.update', $product->id], 'method' => 'PATCH', 'class' => 'form-horizontal']) !!}
 
 <div class="col-lg-12">
 	<div class="row">

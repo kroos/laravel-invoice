@@ -9,7 +9,10 @@
 				<span class="icon-bar"></span>
 				<span class="icon-bar"></span>
 			</button>
-			<a class="navbar-brand topnav" href="{!! route('auth.index') !!}">Utama</a>
+			<?php $logo = App\preferences::find(1) ?>
+			<a class="navbar-brand topnav" href="{!! route('auth.index') !!}">
+				<img src=" data:{!! $logo->company_logo_mime !!};base64,{!! $logo->company_logo_image !!}" alt="Home" title="Home" width="7%" class="img-responsive img-rounded">
+			</a>
 		</div>
 		<!-- Collect the nav links, forms, and other content for toggling -->
 		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -53,6 +56,8 @@
 								<li><a href="{!! route('usergroup.create') !!}">Add User Group</a></li>
 								<li role="separator" class="divider"></li>
 								<li><a href="{!! route('banks.index') !!}">Bank Activation</a></li>
+								<li role="separator" class="divider"></li>
+								<li><a href="{!! route('preferences.edit', 1) !!}">Preferences</a></li>
 								<li role="separator" class="divider"></li>
 							</ul>
 						</div>

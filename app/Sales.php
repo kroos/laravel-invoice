@@ -152,24 +152,9 @@ class Sales extends Model
 						(
 							(
 								`sales`
-								LEFT JOIN `users` ON(
-									(
-										`users`.`id` = `sales`.`id_user`
-									)
-								)
-							)
-							JOIN `payments` ON(
-								(
-									`sales`.`id` = `payments`.`id_sales`
-								)
-							)
-						)
-						LEFT JOIN `banks` ON(
-							(
-								`banks`.`id` = `payments`.`id_bank`
-							)
-						)
-					)
+								LEFT JOIN `users` ON((`users`.`id` = `sales`.`id_user`)))
+							JOIN `payments` ON((`sales`.`id` = `payments`.`id_sales`)))
+						LEFT JOIN `banks` ON((`banks`.`id` = `payments`.`id_bank`)))
 				) AS invoice_payment
 			')
 			->get();
