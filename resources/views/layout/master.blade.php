@@ -8,7 +8,7 @@
 
 	<meta name=description content="Content">
 	<meta name=author content="Author">
-	<title>Really Learning Laravel : Part 2 :)</title>
+	<title>{{ config('app.name') }}</title>
 	<link href="favicon.ico" type="image/x-icon" rel="icon" />
 	<meta name="keywords" content="" />
 

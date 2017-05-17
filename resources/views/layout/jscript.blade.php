@@ -2,10 +2,13 @@
 	jQuery.noConflict ();
 	(function($){
 		$(document).ready(function(){
+
 			$('#example').DataTable({
 				// paging: false,
-				"lengthMenu": [ [50, -1], [50, "All"] ]
+				"lengthMenu": [ [50, -1], [50, "All"] ],
+				// responsive: true
 			});
+
 			$('.remove').click(function(){
 				swal({
 					title: "Are you sure?",

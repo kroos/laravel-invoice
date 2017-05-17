@@ -30,6 +30,7 @@
     26 => 'App\\Providers\\RouteServiceProvider',
     27 => 'Collective\\Html\\HtmlServiceProvider',
     28 => 'Intervention\\Image\\ImageServiceProvider',
+    29 => 'Crabbly\\FPDF\\FpdfServiceProvider',
   ),
   'eager' => 
   array (
@@ -48,6 +49,7 @@
     12 => 'App\\Providers\\EventServiceProvider',
     13 => 'App\\Providers\\RouteServiceProvider',
     14 => 'Intervention\\Image\\ImageServiceProvider',
+    15 => 'Crabbly\\FPDF\\FpdfServiceProvider',
   ),
   'deferred' => 
   array (

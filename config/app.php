@@ -12,7 +12,7 @@ return [
     | any other location as required by the application or its packages.
     */
 
-    'name' => 'Learning Laravel Part 2',
+    'name' => 'Invoice System',
 
     /*
     |--------------------------------------------------------------------------
@@ -187,7 +187,8 @@ return [
         // Intervention\Image\ImageServiceProviderLaravel5::class,
         Intervention\Image\ImageServiceProvider::class,
 
-
+        // $ composer require crabbly/fpdf-laravel
+        Crabbly\FPDF\FpdfServiceProvider::class,
     ],
 
     /*

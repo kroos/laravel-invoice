@@ -23,7 +23,7 @@
 <p>&nbsp;</p>
 <div class="row">
 	<div class="col-sm-12">
-	<label for="myChartpayment">Officer vs Payments Invoices</label>
+	<label for="myChartpayment">Officer vs Payments</label>
 		<canvas id="myChartpayment" width="100%" height="35"></canvas>
 	</div>
 </div>
@@ -31,8 +31,16 @@
 <p>&nbsp;</p>
 <div class="row">
 	<div class="col-sm-12">
-	<label for="myChartcommission">Officer vs Commission Invoices</label>
+	<label for="myChartcommission">Officer vs Commission</label>
 		<canvas id="myChartcommission" width="100%" height="35"></canvas>
+	</div>
+</div>
+
+<p>&nbsp;</p>
+<div class="row">
+	<div class="col-sm-12">
+	<label for="ProsoldPermonth">Products Sold Per Month</label>
+		<canvas id="ProsoldPermonth" width="100%" height="35"></canvas>
 	</div>
 </div>
 
@@ -533,6 +541,131 @@ echo (($tinvc->TotalCommission == NULL)? 0 : $tinvc->TotalCommission) .',';
 		}
 );
 
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// line chart
+<?php
+	$product = DB::table(
+					DB::Raw(
+						'(SELECT
+						sales.date_sale AS date_sale,
+						users.name AS name,
+						users.color AS color,
+						products.product AS product,
+						sales_items.quantity AS quantity
+						FROM
+						sales
+						LEFT JOIN users ON sales.id_user = users.id
+						INNER JOIN sales_items ON sales_items.id_sales = sales.id
+						LEFT JOIN products ON sales_items.id_product = products.id) AS hot_product'
+					))
+				->selectRaw('YEAR(date_sale) tahun, MONTHNAME(date_sale) bulan, name, color, product, quantity, SUM(quantity) total_quantity')
+				->whereYear('date_sale', '=', Date('Y'))
+				->groupBy('product')
+				->orderBy('date_sale')
+				->get();
+?>
+var ctx = document.getElementById('ProsoldPermonth').getContext('2d');
+var myChartline = new Chart
+	(
+		ctx,
+		{
+			type: 'bar',
+			data: 
+			{
+				labels: [
+							@foreach ($month as $key)
+								'{!! $key->bulan !!}', 
+							@endforeach
+						],
+				datasets:
+				[
+					@foreach($product as $pro)
+					{
+						label: '{!! $pro->product !!}',
+						data: [
+							@foreach ($month as $key)
+
+<?php
+if(auth()->user()->id_group == 1) {
+	$producta = DB::table(
+					DB::Raw(
+						'(SELECT
+						sales.date_sale AS date_sale,
+						users.name AS name,
+						users.color AS color,
+						products.product AS product,
+						sales_items.quantity AS quantity
+						FROM
+						sales
+						LEFT JOIN users ON sales.id_user = users.id
+						INNER JOIN sales_items ON sales_items.id_sales = sales.id
+						LEFT JOIN products ON sales_items.id_product = products.id
+						WHERE MONTHNAME(date_sale) = "'.$key->bulan.'"
+						AND
+						product = "'.$pro->product.'"
+						AND
+						YEAR(date_sale) = "'.date('Y').'"
+						) AS hot_product'
+					))
+				->selectRaw('YEAR(date_sale) tahun, MONTHNAME(date_sale) AS bulan, name, color, product, quantity')
+				->get();
+} else {
+	$producta = DB::table(
+					DB::Raw(
+						'(SELECT
+						sales.date_sale AS date_sale,
+						users.name AS name,
+						users.color AS color,
+						products.product AS product,
+						sales_items.quantity AS quantity
+						FROM
+						sales
+						LEFT JOIN users ON sales.id_user = users.id
+						INNER JOIN sales_items ON sales_items.id_sales = sales.id
+						LEFT JOIN products ON sales_items.id_product = products.id
+						WHERE MONTHNAME(date_sale) = "'.$key->bulan.'"
+						AND
+						product = "'.$pro->product.'"
+						AND
+						YEAR(date_sale) = "'.date('Y').'"
+						AND
+						name = "'.auth()->user()->name.'"
+						) AS hot_product'
+					))
+				->selectRaw('YEAR(date_sale) tahun, MONTHNAME(date_sale) AS bulan, name, color, product, quantity')
+				->get();
+}
+
+
+				if ($producta->count() == NULL) {
+					echo '\'0\',';
+				} else {
+					foreach ($producta as $o) {
+							// echo $o->total_quantity.',';
+							echo $o->quantity.',';
+					}
+				}
+?>
+
+							@endforeach
+						],
+						borderColor: '{!! $pro->color !!}',
+						backgroundColor : '{!! $pro->color !!}'
+					},
+					@endforeach
+				]
+			},
+			options:
+			{
+				title:
+				{
+					display: true,
+					text: 'Officer vs Products vs Month'
+				}
+			}
+		}
+);
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // line chart

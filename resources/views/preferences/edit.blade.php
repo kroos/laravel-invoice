@@ -22,17 +22,10 @@
 		</div>
 	</div>
 
-	<div class="form-group {!! ( count($errors->get('company_address')) ) >0 ? 'has-error' : '' !!}">
-		{!! Form::label('coadd', 'Company Address :', ['class' => 'col-sm-2 control-label']) !!}
+	<div class="form-group {!! ( count($errors->get('company_registration')) ) >0 ? 'has-error' : '' !!}">
+		{!! Form::label('compregnum', 'Company Registration Number :', ['class' => 'col-sm-2 control-label']) !!}
 		<div class="col-sm-10">
-			{!! Form::textarea('company_address', @$value, ['class' => 'form-control', 'placeholder' => 'Company Address', 'id' => 'coadd']) !!}
-		</div>
-	</div>
-
-	<div class="form-group {!! ( count($errors->get('company_postcode')) ) >0 ? 'has-error' : '' !!}">
-		{!! Form::label('copost', 'Company Postcode :', ['class' => 'col-sm-2 control-label']) !!}
-		<div class="col-sm-10">
-			{!! Form::input('text', 'company_postcode', @$value, ['class' => 'form-control', 'placeholder' => 'Company Postcode', 'id' => 'copost']) !!}
+			{!! Form::input('text', 'company_registration', @$value, ['class' => 'form-control', 'placeholder' => 'Company Registration Number', 'id' => 'compregnum']) !!}
 		</div>
 	</div>
 
@@ -53,6 +46,20 @@
 		</div>
 	</div>
 
+	<div class="form-group {!! ( count($errors->get('company_address')) ) >0 ? 'has-error' : '' !!}">
+		{!! Form::label('coadd', 'Company Address :', ['class' => 'col-sm-2 control-label']) !!}
+		<div class="col-sm-10">
+			{!! Form::textarea('company_address', @$value, ['class' => 'form-control', 'placeholder' => 'Company Address', 'id' => 'coadd']) !!}
+		</div>
+	</div>
+
+	<div class="form-group {!! ( count($errors->get('company_postcode')) ) >0 ? 'has-error' : '' !!}">
+		{!! Form::label('copost', 'Company Postcode :', ['class' => 'col-sm-2 control-label']) !!}
+		<div class="col-sm-10">
+			{!! Form::input('text', 'company_postcode', @$value, ['class' => 'form-control', 'placeholder' => 'Company Postcode', 'id' => 'copost']) !!}
+		</div>
+	</div>
+
 	<div class="form-group {!! ( count($errors->get('company_fixed_line')) ) >0 ? 'has-error' : '' !!}">
 		{!! Form::label('cofixline', 'Fixed Line Phone Number :', ['class' => 'col-sm-2 control-label']) !!}
 		<div class="col-sm-10">
@@ -67,48 +74,41 @@
 		</div>
 	</div>
 
-	<div class="form-group {!! ( count($errors->get('company_registration')) ) >0 ? 'has-error' : '' !!}">
-		{!! Form::label('compregnum', 'Company Registration Number :', ['class' => 'col-sm-2 control-label']) !!}
+	<div class="form-group {!! ( count($errors->get('company_email')) ) >0 ? 'has-error' : '' !!}">
+		{!! Form::label('compemail', 'Company Email :', ['class' => 'col-sm-2 control-label']) !!}
 		<div class="col-sm-10">
-			{!! Form::input('text', 'company_registration', @$value, ['class' => 'form-control', 'placeholder' => 'Company Registration Number', 'id' => 'compregnum']) !!}
+			{!! Form::input('text', 'company_email', @$value, ['class' => 'form-control', 'placeholder' => 'Company Mobile Phone Number', 'id' => 'compemail']) !!}
 		</div>
 	</div>
+
 
 					</div>
 				</div>
 					<div class="row">
 						<div class="col-lg-6">
+@foreach (App\User::all() as $r)
+	<?php $rm[$r->id] = $r->name; ?>
+@endforeach
+
 				<div class="form-group {!! ( count($errors->get('company_owner')) ) >0 ? 'has-error' : '' !!}">
 					{!! Form::label('own', 'Owner :', ['class' => 'col-sm-2 control-label']) !!}
 					<div class="col-sm-10">
-						{!! Form::input('text', 'company_owner', @$value, ['class' => 'form-control', 'placeholder' => 'Owner', 'id' => 'own']) !!}
+						{!! Form::select('company_owner', $rm, @$value, ['class' => 'form-control', 'placeholder' => 'Choose Owner', 'id' => 'own']) !!}
 					</div>
 				</div>
 
-				<div class="form-group {!! ( count($errors->get('company_owner_mobile')) ) >0 ? 'has-error' : '' !!}">
-					{!! Form::label('ownmobile', 'Owner Mobile :', ['class' => 'col-sm-2 control-label']) !!}
-					<div class="col-sm-10">
-						{!! Form::input('text', 'company_owner_mobile', @$value, ['class' => 'form-control', 'placeholder' => 'Owner Mobile', 'id' => 'ownmobile']) !!}
-					</div>
-				</div>
+
 							
 						</div>
 						<div class="col-lg-6">
 				<div class="form-group {!! ( count($errors->get('company_person_in-charge')) ) >0 ? 'has-error' : '' !!}">
 					{!! Form::label('comppersonincharge', 'Company Person In-Charge :', ['class' => 'col-sm-2 control-label']) !!}
 					<div class="col-sm-10">
-						{!! Form::input('text', 'company_person_in-charge', @$value, ['class' => 'form-control', 'placeholder' => 'Company Person In-Charge', 'id' => 'comppersonincharge']) !!}
+						{!! Form::select('company_person_in-charge', $rm, @$value, ['class' => 'form-control', 'placeholder' => 'Choose Company Person In-Charge', 'id' => 'comppersonincharge']) !!}
 					</div>
 				</div>
 
-				<div class="form-group {!! ( count($errors->get('company_person_in-charge_mobile')) ) >0 ? 'has-error' : '' !!}">
-					{!! Form::label('comppersoninchargemobile', 'Company Person In-Charge Mobile :', ['class' => 'col-sm-2 control-label']) !!}
-					<div class="col-sm-10">
-						{!! Form::input('text', 'company_person_in-charge_mobile', @$value, ['class' => 'form-control', 'placeholder' => 'Company Person In-Charge Mobile', 'id' => 'comppersoninchargemobile']) !!}
-					</div>
-				</div>
-							
-							
+
 						</div>
 					</div>
 				</div>

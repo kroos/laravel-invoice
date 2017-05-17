@@ -83,16 +83,33 @@
 					@if( count($us) > 0 )
 						<table id="example" class="table table-border table-hover ">
 							<thead>
-								<th>id</th>
+								<th>&nbsp;</th>
 								<th>name</th>
 								<th>email</th>
 								<th>group</th>
-								<th>delete</th>
 							</thead>
 							<tbody>
 								@foreach ($us as $k)
 									<tr>
-										<td><a href="{!! route('user.edit', $k->id) !!}" class="btn btn-info">edit {!! $k->id !!}</a></td>
+										<td>
+								<div class="dropdown">
+									<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+										<span class="caret"></span>
+									</button>
+									<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+										<li role="separator" class="divider"></li>
+										<li><a href="{!! route('user.edit', $k->id) !!}" >edit</a></li>
+										<li>
+											@if($k->id != 1)
+											{!! Form::open(['route' => ['user.destroy', $k->id], 'method' => 'delete']) !!}
+												{!! Form::submit('delete', ['class' => 'remove']) !!}
+											{!! Form::close() !!}
+											@endif
+										</li>
+										<li role="separator" class="divider"></li>
+									</ul>
+								</div>
+										</td>
 										<td>{!! $k->name !!}</td>
 										<td>{!! $k->email !!}</td>
 											<?php
@@ -100,14 +117,6 @@
 											$use = \App\UserGroup::findOrFail($k->id_group);
 											?>
 										<td>{!! $use->group !!}</td>
-										<td>@if($k->id != 1)
-											{!! Form::open(['route' => ['user.destroy', $k->id],'method' => 'delete',]) !!}
-												{!! Form::submit('padam '.$k->id, ['class' => 'btn btn-danger remove']) !!}
-											{!! Form::close() !!}
-											@else
-											<button class="btn btn-info">{!! $k->id !!}</button>
-											@endif
-										</td>
 									</tr>
 								@endforeach
 							</tbody>

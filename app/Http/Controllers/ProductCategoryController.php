@@ -17,7 +17,7 @@ class ProductCategoryController extends Controller
 	function __construct()
 	{
 		$this->middleware('auth');
-		$this->middleware('admin');
+		$this->middleware('admin', ['except' => ['create', 'store']]);
 	}
 
 	/**

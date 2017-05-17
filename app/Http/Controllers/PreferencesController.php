@@ -55,32 +55,34 @@ class PreferencesController extends Controller
 		$option = Preferences::updateOrCreate(
 	    		['id' => $preferences->id],
 	    		request([
-	    				'company_name', 'company_address', 'company_postcode', 'company_tagline', 'company_fixed_line', 'company_mobile', 'company_registration', 'company_owner', 'company_owner_mobile', 'company_person_in-charge', 'company_person_in-charge_mobile'
+	    				'company_name', 'company_address', 'company_postcode', 'company_tagline', 'company_fixed_line', 'company_mobile', 'company_registration', 'company_owner', 'company_email', 'company_person_in-charge'
 	    			])
 	    	);
 
-		foreach($request->file('logo') as $file)
-		{
-			$mime = $file->getMimeType();
-			$filename = $file->store('images');
-			$imag = Image::make(storage_path().'/uploads/'.$filename);
-
-			// // resize the image to a height of 100 and constrain aspect ratio (auto width)
-			$imag->resize
-			(
-				null, 800, function ($constraint)
-				{
-					$constraint->aspectRatio();
-				}
-			);
-
-			$imag->save();
-
-			$img = Preferences::updateOrCreate(
-					['id' => $preferences->id], [
-					'company_logo_image' => base64_encode( file_get_contents( storage_path().'/uploads/'.$filename ) ),
-					'company_logo_mime' => $mime,
-				]);
+		if ($request->file('logo') != NULL) {
+			foreach($request->file('logo') as $file)
+			{
+				$mime = $file->getMimeType();
+				$filename = $file->store('images');
+				$imag = Image::make(storage_path().'/uploads/'.$filename);
+	
+				// // resize the image to a height of 100 and constrain aspect ratio (auto width)
+				$imag->resize
+				(
+					null, 800, function ($constraint)
+					{
+						$constraint->aspectRatio();
+					}
+				);
+	
+				$imag->save();
+	
+				$img = Preferences::updateOrCreate(
+						['id' => $preferences->id], [
+						'company_logo_image' => base64_encode( file_get_contents( storage_path().'/uploads/'.$filename ) ),
+						'company_logo_mime' => $mime,
+					]);
+			}
 		}
 
 		// clean up

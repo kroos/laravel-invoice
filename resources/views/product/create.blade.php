@@ -25,13 +25,16 @@
 						{!! Form::input('text', 'retail', @$value, ['class' => 'form-control', 'placeholder' => 'Retail in RM', 'id' => 'co']) !!}
 					</div>
 				</div>
-		
+@if(auth()->user()->id_group == 1)
 				<div class="form-group {!! ( count($errors->get('commission')) ) >0 ? 'has-error' : '' !!}">
 					{!! Form::label('com', 'Commission :', ['class' => 'col-sm-2 control-label']) !!}
 					<div class="col-sm-10">
 						{!! Form::input('text', 'commission', @$value, ['class' => 'form-control', 'placeholder' => 'Commission in RM', 'id' => 'com']) !!}
 					</div>
 				</div>
+@else
+{!! Form::hidden('commission', 0) !!}
+@endif
 				<?php
 				$r = array();
 				foreach ($cate as $key) {
@@ -45,14 +48,14 @@
 					</div>
 				</div>
 		
-				<div class="form-group {!! ( count($errors->get('image.*')) ) >0 ? 'has-error' : '' !!}">
+				<div class="form-group {!! ( count($errors->get('image')) ) >0 ? 'has-error' : '' !!}">
 					{!! Form::label('img', 'Image :', ['class' => 'col-sm-2 control-label']) !!}
 					<div class="col-sm-10">
 						{!! Form::file('image[]', ['id' => 'img', 'multiple' => 'multiple']) !!}
 					</div>
 				</div>
-		
-		
+
+@if(auth()->user()->id_group == 1)
 				<div class="form-group">
 					<div class="col-sm-offset-2 col-sm-10">
 						<div class="checkbox">
@@ -62,6 +65,9 @@
 						</div>
 					</div>
 				</div>
+@else
+{!! Form::hidden('active', 0) !!}
+@endif
 				<div class="form-group">
 					<div class="col-sm-offset-2 col-sm-10">
 						{!! Form::submit('Save', ['class' => 'btn btn-primary btn-lg btn-block']) !!}
@@ -88,24 +94,36 @@
 				@if( count($pro) > 0 )
 					<table id="example" class="table table-border table-hover ">
 						<thead>
-							<th>id</th>
+							<th>&nbsp;</th>
 							<th>product</th>
 							<th>category</th>
 							<th>retail</th>
 							<th>commission</th>
 							<th>active</th>
 							<th>image</th>
-							<th>delete</th>
 						</thead>
 						<tbody>
 							@foreach ($pro as $k)
 								<tr>
-									<td><a href="{!! route('product.edit' ,$k->id) !!}" class="btn btn-info">edit {!! $k->id !!}</a></td>
+									<td>
+								<div class="dropdown">
+									<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+										<span class="caret"></span>
+									</button>
+									<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+										<li role="separator" class="divider"></li>
+										<li><a href="{!! route('product.edit' ,$k->id) !!}" >edit</a></li>
+										<li><a href="{!! route('product.destroy', $k->id) !!}">delete</a></li>
+
+										<li role="separator" class="divider"></li>
+									</ul>
+								</div>
+									</td>
 									<td>{!! $k->product !!}</td>
 									<td>{!! App\ProductCategory::find($k->id_category)->product_category !!}</td>
 									<td>RM {!! number_format($k->retail, 2) !!}</td>
 									<td>RM {!! number_format($k->commission, 2) !!}</td>
-									<td>{!! ($k->active == 1) ? 'active' : 'tidak aktif' !!}</td>
+									<td>{!! ($k->active == 1) ? 'active' : 'inactive' !!}</td>
 									<td>
 										<?php
 												$imge = App\Product::find($k->id)->productimage;
@@ -115,7 +133,6 @@
 												
 										?>
 									</td>
-									<td><a href="{!! route('product.destroy', $k->id) !!}" class="btn btn-danger remove">delete {!! $k->id !!}</a></td>
 								</tr>
 							@endforeach
 						</tbody>

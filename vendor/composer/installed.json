@@ -3911,5 +3911,48 @@
             "framework",
             "laravel"
         ]
+    },
+    {
+        "name": "crabbly/fpdf-laravel",
+        "version": "v1.0.1",
+        "version_normalized": "1.0.1.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/crabbly/fpdf-laravel.git",
+            "reference": "9d87cc36119512a32e7099448eccc84a3b164f2b"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/crabbly/fpdf-laravel/zipball/9d87cc36119512a32e7099448eccc84a3b164f2b",
+            "reference": "9d87cc36119512a32e7099448eccc84a3b164f2b",
+            "shasum": ""
+        },
+        "require": {
+            "illuminate/database": ">=5.1.0",
+            "illuminate/support": ">=5.1.0"
+        },
+        "time": "2016-09-15T20:40:09+00:00",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Crabbly\\FPDF\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Rodrigo Vieira",
+                "email": "rodrigo@crabbly.com"
+            }
+        ],
+        "description": "Laravel package for FPDF.",
+        "keywords": [
+            "fpdf",
+            "laravel"
+        ]
     }
 ]

@@ -12,12 +12,11 @@
 
 				<table id="example" class="table table-hover">
 					<thead>
-						<th>id</th>
+						<th>activation</th>
 						<th>bank</th>
 						<th>city</th>
 						<th>swift code</th>
-						<th>no account</th>
-						<th>active</th>
+						<th>account number</th>
 					</thead>
 					<tbody>
 						<?php
@@ -26,17 +25,22 @@
 						@foreach($inv as $in)
 						<tr>
 							<td>
-								<p>
-									<a href="{!! route('banks.edit', $in->id) !!}" class="btn btn-info">Edit {!! $in->id !!}</a>
-								</p>
-								</td>
+								<div class="dropdown">
+									<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+										<span class="caret"></span>
+									</button>
+									<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+										<li role="separator" class="divider"></li>
+										<li><a href="{!! route('banks.edit', $in->id) !!}" >edit</a></li>
+										<li><a href="{!! route('banks.active', $in->id) !!}" class="btn <?=($in->active == 1)?'btn-success':'btn-danger' ?> "><?=($in->active == 1)?'active':'inactive' ?></a></li>
+										<li role="separator" class="divider"></li>
+									</ul>
+								</div>
+							</td>
 							<td>{!! $in->bank !!}</td>
 							<td>{!! $in->city !!}</td>
 							<td>{!! $in->swift_code !!}</td>
 							<td>{!! $in->account !!}</td>
-							<td>
-								<p><a href="{!! route('banks.active', $in->id) !!}" class="btn <?=($in->active == 1)?'btn-success':'btn-danger' ?> "><?=($in->active == 1)?'active':'inactive' ?></a></p>
-							</td>
 						</tr>
 						@endforeach
 					</tbody>

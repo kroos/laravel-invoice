@@ -12,13 +12,12 @@
 
 				<table id="example" class="table table-hover">
 					<thead>
-						<th>id</th>
+						<th>&nbsp;</th>
 						<th>customer</th>
 						<th>address</th>
 						<th>postcode</th>
 						<th>phone</th>
 						<th>email</th>
-						<th>delete</th>
 					</thead>
 					<tbody>
 						<?php
@@ -33,18 +32,23 @@
 						@foreach($inv as $in)
 						<tr>
 							<td>
-								<p>
-									<a href="{!! route('customers.edit', $in->id) !!}" class="btn btn-info">Edit {!! $in->id !!}</a>
-								</p>
-								</td>
+								<div class="dropdown">
+									<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+										<span class="caret"></span>
+									</button>
+									<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+										<li role="separator" class="divider"></li>
+										<li><a href="{!! route('customers.edit', $in->id) !!}" >edit</a></li>
+										<li><a href="{!! route('customers.destroy', $in->id) !!}" >delete</a></li>
+										<li role="separator" class="divider"></li>
+									</ul>
+								</div>
+							</td>
 							<td>{!! $in->client !!}</td>
 							<td>{!! $in->client_address !!}</td>
 							<td>{!! $in->client_postcode !!}</td>
 							<td>{!! $in->client_phone !!}</td>
 							<td>{!! $in->client_email !!}</td>
-							<td>
-								<p><a href="{!! route('customers.destroy', $in->id) !!}" class="btn btn-danger">delete <?=$in->id?></a></p>
-							</td>
 						</tr>
 						@endforeach
 					</tbody>

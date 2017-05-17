@@ -99,6 +99,7 @@ class ComposerStaticInit9af1e2492deeb8a122fc9c24637d532f
         'C' => 
         array (
             'Cron\\' => 5,
+            'Crabbly\\FPDF\\' => 13,
             'Collective\\Html\\' => 16,
             'Carbon\\' => 7,
         ),
@@ -260,6 +261,10 @@ class ComposerStaticInit9af1e2492deeb8a122fc9c24637d532f
         array (
             0 => __DIR__ . '/..' . '/mtdowling/cron-expression/src/Cron',
         ),
+        'Crabbly\\FPDF\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/crabbly/fpdf-laravel/src',
+        ),
         'Collective\\Html\\' => 
         array (
             0 => __DIR__ . '/..' . '/laravelcollective/html/src',
@@ -330,6 +335,7 @@ class ComposerStaticInit9af1e2492deeb8a122fc9c24637d532f
         'App\\Http\\Controllers\\HomeAuthController' => __DIR__ . '/../..' . '/app/Http/Controllers/HomeAuthController.php',
         'App\\Http\\Controllers\\PaymentsController' => __DIR__ . '/../..' . '/app/Http/Controllers/PaymentsController.php',
         'App\\Http\\Controllers\\PreferencesController' => __DIR__ . '/../..' . '/app/Http/Controllers/PreferencesController.php',
+        'App\\Http\\Controllers\\PrintPDFController' => __DIR__ . '/../..' . '/app/Http/Controllers/PrintPDFController.php',
         'App\\Http\\Controllers\\ProductCategoryController' => __DIR__ . '/../..' . '/app/Http/Controllers/ProductCategoryController.php',
         'App\\Http\\Controllers\\ProductController' => __DIR__ . '/../..' . '/app/Http/Controllers/ProductController.php',
         'App\\Http\\Controllers\\ProductImageController' => __DIR__ . '/../..' . '/app/Http/Controllers/ProductImageController.php',
@@ -354,6 +360,7 @@ class ComposerStaticInit9af1e2492deeb8a122fc9c24637d532f
         'App\\Http\\Requests\\BanksFormRequest' => __DIR__ . '/../..' . '/app/Http/Requests/BanksFormRequest.php',
         'App\\Http\\Requests\\CustomersFormRequest' => __DIR__ . '/../..' . '/app/Http/Requests/CustomersFormRequest.php',
         'App\\Http\\Requests\\ForgotPasswordRequest' => __DIR__ . '/../..' . '/app/Http/Requests/ForgotPasswordRequest.php',
+        'App\\Http\\Requests\\PreferencesFormRequest' => __DIR__ . '/../..' . '/app/Http/Requests/PreferencesFormRequest.php',
         'App\\Http\\Requests\\ProductCategoryFormRequest' => __DIR__ . '/../..' . '/app/Http/Requests/ProductCategoryFormRequest.php',
         'App\\Http\\Requests\\ProductFormRequest' => __DIR__ . '/../..' . '/app/Http/Requests/ProductFormRequest.php',
         'App\\Http\\Requests\\ProductImageFormRequest' => __DIR__ . '/../..' . '/app/Http/Requests/ProductImageFormRequest.php',
@@ -392,6 +399,9 @@ class ComposerStaticInit9af1e2492deeb8a122fc9c24637d532f
         'Collective\\Html\\HtmlBuilder' => __DIR__ . '/..' . '/laravelcollective/html/src/HtmlBuilder.php',
         'Collective\\Html\\HtmlFacade' => __DIR__ . '/..' . '/laravelcollective/html/src/HtmlFacade.php',
         'Collective\\Html\\HtmlServiceProvider' => __DIR__ . '/..' . '/laravelcollective/html/src/HtmlServiceProvider.php',
+        'Crabbly\\FPDF\\Exception' => __DIR__ . '/..' . '/crabbly/fpdf-laravel/src/Exception.php',
+        'Crabbly\\FPDF\\FPDF' => __DIR__ . '/..' . '/crabbly/fpdf-laravel/src/Fpdf.php',
+        'Crabbly\\FPDF\\FpdfServiceProvider' => __DIR__ . '/..' . '/crabbly/fpdf-laravel/src/FpdfServiceProvider.php',
         'CreateBanksTable' => __DIR__ . '/../..' . '/database/migrations/2017_04_29_145442_create_banks_table.php',
         'CreateCustomersTable' => __DIR__ . '/../..' . '/database/migrations/2017_04_10_022910_create_customers_table.php',
         'CreatePasswordResetsTable' => __DIR__ . '/../..' . '/database/migrations/2014_10_12_100000_create_password_resets_table.php',

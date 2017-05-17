@@ -465,6 +465,20 @@ Route::delete('preferences/destroy/{preferences}', [
 	]);
 
 ####################################################################
+// PrintPDF controller
+
+Route::get('printpdf/{sales}', [
+		'as' => 'printpdf.print',
+		'uses' => 'PrintPDFController@print'
+	]);
+
+Route::get('emailpdf/{sales}', [
+		'as' => 'emailpdf.send',
+		'uses' => 'PrintPDFController@email_invoice'
+	]);
+
+
+####################################################################
 
 
 

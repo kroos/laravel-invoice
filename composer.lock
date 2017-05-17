@@ -4,8 +4,49 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "b5736944a78f15a2c72f0d7d9e94f1ba",
+    "content-hash": "b6ae89ef29cab287060bf1bd587ac9a2",
     "packages": [
+        {
+            "name": "crabbly/fpdf-laravel",
+            "version": "v1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/crabbly/fpdf-laravel.git",
+                "reference": "9d87cc36119512a32e7099448eccc84a3b164f2b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/crabbly/fpdf-laravel/zipball/9d87cc36119512a32e7099448eccc84a3b164f2b",
+                "reference": "9d87cc36119512a32e7099448eccc84a3b164f2b",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/database": ">=5.1.0",
+                "illuminate/support": ">=5.1.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Crabbly\\FPDF\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Rodrigo Vieira",
+                    "email": "rodrigo@crabbly.com"
+                }
+            ],
+            "description": "Laravel package for FPDF.",
+            "keywords": [
+                "fpdf",
+                "laravel"
+            ],
+            "time": "2016-09-15T20:40:09+00:00"
+        },
         {
             "name": "dnoegel/php-xdg-base-dir",
             "version": "0.1",

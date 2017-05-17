@@ -91,8 +91,8 @@ $re = $paya - $tamo;
 										<li><a href="{!! route('sales.edit', $in->id) !!}" >edit</a></li>
 										<li><a href="{!! route('sales.destroy', $in->id) !!}" >delete</a></li>
 										<li role="separator" class="divider"></li>
-										<li><a href="{!! route('sales.edit', $in->id) !!}">export as PDF</a></li>
-										<li><a href="{!! route('sales.edit', $in->id) !!}">send email</a></li>
+										<li><a href="{!! route('printpdf.print', $in->id) !!}" target="_blank">export as PDF</a></li>
+										<li><a href="{!! route('emailpdf.send', $in->id) !!}">send email</a></li>
 										<li role="separator" class="divider"></li>
 									</ul>
 								</div>
