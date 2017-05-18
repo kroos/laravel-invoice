@@ -9,7 +9,7 @@
 				<span class="icon-bar"></span>
 				<span class="icon-bar"></span>
 			</button>
-			<?php $logo = App\preferences::find(1) ?>
+			<?php $logo = App\Preferences::find(1) ?>
 			<a class="navbar-brand topnav" href="{!! route('auth.index') !!}">
 				<img src=" data:{!! $logo->company_logo_mime !!};base64,{!! $logo->company_logo_image !!}" alt="Home" title="Home" width="7%" class="img-responsive img-rounded">
 			</a>
