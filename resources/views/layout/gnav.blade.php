@@ -27,7 +27,7 @@
 						<a href="{!! route('sales.index') !!}">Invoice</a>
 					</li>
 					<li>
-						<a href="#">Print Report</a>
+						<a href="{!! route('printreport.index') !!}">Print Report</a>
 					</li>
 					<li>
 						<div class="dropdown">

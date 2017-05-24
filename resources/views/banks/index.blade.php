@@ -8,6 +8,7 @@
 	<div class="panel panel-default">
 		<div class="panel-heading">Banks and Financial Institutions</div>
 		<div class="panel-body">
+		<p class="text-right"><a href="{!! route('banks.create') !!}" class="btn btn-info">New Bank</a></p>
 			<div class="col-lg-12 table-responsive">
 
 				<table id="example" class="table table-hover">
@@ -17,6 +18,7 @@
 						<th>city</th>
 						<th>swift code</th>
 						<th>account number</th>
+						<th>active</th>
 					</thead>
 					<tbody>
 						<?php
@@ -32,7 +34,6 @@
 									<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
 										<li role="separator" class="divider"></li>
 										<li><a href="{!! route('banks.edit', $in->id) !!}" >edit</a></li>
-										<li><a href="{!! route('banks.active', $in->id) !!}" class="btn <?=($in->active == 1)?'btn-success':'btn-danger' ?> "><?=($in->active == 1)?'active':'inactive' ?></a></li>
 										<li role="separator" class="divider"></li>
 									</ul>
 								</div>
@@ -41,6 +42,7 @@
 							<td>{!! $in->city !!}</td>
 							<td>{!! $in->swift_code !!}</td>
 							<td>{!! $in->account !!}</td>
+							<td><a href="{!! route('banks.active', $in->id) !!}" class="btn <?=($in->active == 1)?'btn-success':'btn-danger' ?> "><?=($in->active == 1)?'active':'inactive' ?></a></td>
 						</tr>
 						@endforeach
 					</tbody>

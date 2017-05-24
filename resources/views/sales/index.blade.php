@@ -35,7 +35,7 @@ function my($string) {
 					<tbody>
 						<?php
 						if (auth()->user()->id_group == 1) {
-							$inv = App\Sales::withTrashed()->get();
+							$inv = App\Sales::where(['deleted_at' => NULL])->get();
 						} else {
 							$inv = App\Sales::where(['deleted_at' => NULL, 'id_user' => auth()->user()->id])->get();
 						}
@@ -108,9 +108,9 @@ $re = $paya - $tamo;
 									}
 								?>
 							</td>
-							<td>RM {!! $tcomm !!}</td>
-							<td>RM {!! $tamo !!}</td>
-							<td>RM {!! $paya !!}</td>
+							<td>RM {!! number_format($tcomm,2) !!}</td>
+							<td>RM {!! number_format($tamo, 2) !!}</td>
+							<td>RM {!! number_format($paya, 2) !!}</td>
 							<td><p class="btn <?php echo ($re < 0)? 'btn-danger' : 'btn-success' ?>"><?php echo ($re < 0)? 'Pending' : 'Paid' ?></p></td>
 						</tr>
 						@endforeach

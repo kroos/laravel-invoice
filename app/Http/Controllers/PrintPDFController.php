@@ -70,7 +70,10 @@ class PrintPDFController extends Controller
 			echo view('printpdf.emailpdf', compact(['sales']));
 	
 			// start sending email
-			Mail::to($client->client_email)
+			Mail::to(['to' => [
+					'name' => $client->client,
+					'email' => $client->client_email
+				]])
     		// ->cc($moreUsers)
     		// ->bcc($evenMoreUsers)
 			->send(new SendInvoice($sales));

@@ -25,12 +25,23 @@ class BanksController extends Controller
 	
 	public function create()
 	{
-		//
+		return view('banks.create');
 	}
 	
 	public function store(BanksFormRequest $request)
 	{
-		//
+		if ($request->active == NULL) {
+			$request->active = 0;
+		}
+		$ban = Banks::create([
+				'bank' => $request->bank,
+				'city' => $request->city,
+				'swift_code' => $request->swift_code,
+				'account' => $request->account,
+				'active' => $request->active,
+			]);
+		Session::flash('flash_message', 'Data successfully edited!');
+		return redirect(route('banks.index'));
 	}
 	
 	public function show(Banks $banks)

@@ -17,8 +17,9 @@ class BanksFormRequest extends FormRequest
 		return [
 			'bank' => 'required',
 			'city' => 'required',
-			'swift_code' => 'required|unique:banks,swift_code,'.$this->banks['id'],
-			'account' => 'required',
+			'swift_code' => 'required|alpha|unique:banks,swift_code,'.$this->banks['id'],
+			'account' => 'nullable|alpha_dash',
+			'active' => 'nullable'
 		];
 	}
 }

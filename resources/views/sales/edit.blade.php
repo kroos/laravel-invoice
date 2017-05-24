@@ -84,14 +84,41 @@ endif;
 
 							<div class="col-lg-12">
 								<div class="col-lg-4">
-									<strong>Image :</strong><br />Click to Delete the image
+									<strong>Image :</strong><br />
 								</div>
 								<div class="col-sm-8">
+
 								<?php
 									$r = App\SlipPostage::where(['id_sales' => $sales->id, 'deleted_at' => null])->get();
-									foreach ( $r as $imu ) {
-										echo '<a href="'.route('slippostage.destroy', $imu->id).'"><img src="data:'.$imu->mime.';base64, '.$imu->image.'" class="img-responsive img-rounded"></a>';
-									}
+									foreach ( $r as $imu ):
+								?>
+										<!-- Trigger the modal with a button -->
+										<!-- Modal -->
+										<div id="myModal" class="modal fade" role="dialog">
+											<div class="modal-dialog">
+										
+												<!-- Modal content-->
+												<div class="modal-content">
+													<div class="modal-header">
+														<button type="button" class="close" data-dismiss="modal">&times;</button>
+														<h4 class="modal-title">Slip Receipt / Postage</h4>
+													</div>
+													<div class="modal-body">
+														<img src="data:{!! $imu->mime !!};base64,{!! $imu->image !!}" class="img-responsive img-rounded">
+													</div>
+													<div class="modal-footer">
+														<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+													</div>
+												</div>
+											</div>
+										</div>
+										<a href="#" data-toggle="modal" data-target="#myModal">
+											<img src="data:{!! $imu->mime !!};base64,{!! $imu->image !!}" class="img-responsive img-rounded">
+										</a>
+										<br />
+										<a href="{!! route('slippostage.destroy', $imu->id) !!}" class="btn btn-danger">Delete</a>
+								<?php
+								endforeach;
 								?>
 								</div>
 							</div>

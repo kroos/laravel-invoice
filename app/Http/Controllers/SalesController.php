@@ -352,6 +352,6 @@ class SalesController extends Controller
 		// info when update success
 		Session::flash('flash_message', 'Data successfully deleted!');
 	
-		return redirect(route('sales.index.create'));		// redirect back to original route
+		return redirect(route('sales.index'));		// redirect back to original route
 	}
 }

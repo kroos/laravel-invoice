@@ -479,7 +479,28 @@ Route::get('emailpdf/{sales}', [
 
 
 ####################################################################
+// contact us controller
+Route::post('contactus', [
+		'as' => 'contactus',
+		'uses' => 'ContactUsController@email'
+	]);
 
+####################################################################
+// printreport controller
+Route::get('printreport', [
+		'as' => 'printreport.index',
+		'uses' => 'PrintReportController@index'
+	]);
+
+Route::post('printreport/store', [
+		'as' => 'printreport.store',
+		'uses' => 'PrintReportController@store'
+	]);
+
+Route::post('printreport/audit', [
+		'as' => 'printreport.audit',
+		'uses' => 'PrintReportController@audit'
+	]);
 
 
 

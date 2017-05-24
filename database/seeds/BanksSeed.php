@@ -1179,5 +1179,13 @@ class BanksSeed extends Seeder
 				'account' => NULL,
 				'active' => 0,
 			]);
+		DB::table('banks')->insert([
+				'id' => '147',
+				'bank' => 'PAY PAL';
+				'city' => 'USA',
+				'swift_code' => 'PAYPAL',
+				'account' => NULL,
+				'active' => 0,
+			]);
     }
 }
