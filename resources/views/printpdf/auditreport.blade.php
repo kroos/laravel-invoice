@@ -50,7 +50,7 @@ class PDF extends Fpdf
 		// Logo
 		$this->Image(base64ToImage($lo1->company_logo_image, $lo1->company_logo_mime),50,9,30);
 		// Arial bold 15
-		$this->SetFont('arial','B',15);
+		$this->SetFont('Arial','B',15);
 		// Move to the right
 		// $this->Cell(80);
 		// Title
@@ -118,7 +118,23 @@ foreach ($request->user1 as $l) {
 	$pdf->SetTextColor(0, 0, 255);
 
 	$nm = User::find($l);
-	$pdf->Cell(0, 7, $nm->name.' Sale\'s', 0, 1, 'C');
+
+    $title = $nm->name.' Sale\'s';
+    // Arial bold 15
+    // $this->SetFont('Arial','B',15);
+    // Calculate width of title and position
+    $w = $pdf->GetStringWidth($title)+6;
+    $pdf->SetX((210-$w)/2);
+    // Colors of frame, background and text
+    $pdf->SetDrawColor(0,80,180);
+    // $pdf->SetFillColor(255,230,0);
+    $pdf->SetTextColor(0,0,255);
+    // Thickness of frame (1 mm)
+    // $pdf->SetLineWidth(1);
+    // Title
+    $pdf->Cell($w,9,$title,1,1,'C',true);
+
+	// $pdf->Cell(0, 7, $nm->name.' Sale\'s', 0, 1, 'C');
 
 	// reset font
 	$pdf->SetFont('Arial','',8);
@@ -127,19 +143,145 @@ foreach ($request->user1 as $l) {
 	// search for invoice
 	$inv = Sales::where('id_user', $l)->whereBetween('date_sale', [$request->from1, $request->to1])->get();
 	if ($inv->count() < 1) {
+		$pdf->SetFont('Arial','B',10);
 		$pdf->Cell(0, 7, 'Sorry, no invoice found.', 0, 2, 'C');
 		$pdf->Ln(5);
 
 	} else {
-
-		// set font
-		$pdf->SetFont('Arial','B',10);
-		$pdf->SetTextColor(0, 0, 255);
-
 		foreach ($inv as $in) {
-			$pdf->MultiCell(0, 7, 'Invoice #'.$in->id, 1, 'C');
+
+			// set font
+			$pdf->SetFont('Arial','B',10);
+			$pdf->SetTextColor(0, 0, 255);
+
+			$pdf->Cell(0, 7, 'Invoice #'.$in->id, 0, 1, 'C');
+
+			$pdf->SetFont('Arial','',8);
+			$pdf->SetTextColor(0, 0, 0);
+			
+			$sn = SlipNumbers::where(['id_sales' => $in->id, 'deleted_at' => NULL])->get();
+			$st = SlipPostage::where(['id_sales' => $in->id, 'deleted_at' => NULL])-> get();
+
+			// slip postage image
+			foreach ($st as $imu)
+			{
+				$pdf->Cell(0, 50, $pdf->Image(base64ToImage($imu->image, $imu->mime), $pdf->GetX()+1, $pdf->GetY()+0, NULL, 49), 0,1,'C');
+			}
+
+			// date invoice
+			$pdf->SetFont('Arial','B',10);
+			$pdf->Cell(50,7, 'Date Invoice : '.my($in->date_sale), 0, 0, 'C');
+
+			// tracking number / receipt number
+			$pdf->Cell(50, 7, 'Slip Postage :', 0, 0, 'R');
+			$pdf->SetFont('Arial','',8);
+			foreach ($sn as $kl) {
+				$pdf->Cell(0, 7, $kl->tracking_number, 0, 2, 'L');
+			}
+			$pdf->Cell(0, 0, '', 0, 1, 'C');
+
+			// client
+			$pdf->SetFont('Arial','B',10);
+			$pdf->Cell(50,7,'Client : ',0,0,'R');
+
+			$pdf->SetFont('Arial','',8);
+			$b = SalesCustomers::where(['id_sales' => $in->id, 'deleted_at' => NULL])->get();
+			foreach ($b as $op) {
+				$g = Customers::find($op->id_customer);
+				$pdf->Cell(0,7,$g->client, 0, 2, 'L');
+				$pdf->Cell(0,7,$g->client_address.' '.$g->client_poskod, 0, 2, 'L');
+				$pdf->Cell(0,7,'Telephone : '.$g->client_phone, 0, 2, 'L');
+				$pdf->Cell(0,7, 'Email : '.$g->client_email, 0, 2, 'L');
+			}
+			$pdf->Cell(0, 0, '', 0, 1, 'C');
+			$pdf->Ln(5);
+
+			// header
+			$pdf->SetFont('Arial','B',10);
+			$pdf->Cell(70, 7, 'Product', 1, 0, 'C');
+			$pdf->Cell(30, 7, 'Retail (RM)', 1, 0, 'C');
+			$pdf->Cell(30, 7, 'Quantity', 1, 0, 'C');
+			$pdf->Cell(30, 7, 'Total retail (RM)', 1, 0, 'C');
+			$pdf->Cell(30, 7, 'Image', 1, 1, 'C');
+
+			// product list
+			$vb = SalesItems::where(['id_sales' => $in->id, 'deleted_at' => NULL])->get();
+			$gt = 0;
+			$pdf->SetFont('Arial','',8);
+			foreach ($vb as $hj) {
+				$fg = Product::find($hj->id_product);
+				$pdf->Cell(70, 27, App\Product::findOrFail($hj->id_product)->product, 1, 0, 'C');
+				$pdf->Cell(30, 27, number_format($hj->retail, 2), 1, 0, 'C');
+				$pdf->Cell(30, 27, $hj->quantity, 1, 0, 'C');
+				$pdf->Cell(30, 27, number_format(($hj->retail * $hj->quantity), 2), 1, 0, 'C');
+				$gt += $hj->retail * $hj->quantity;
+			
+				$img = ProductImage::where(['id_product' => $hj->id_product])->get();
+				foreach ($img as $imu) {
+					$pdf->Cell(30, 27, $pdf->Image(base64ToImage($imu->image, $imu->mime), $pdf->GetX()+1, $pdf->GetY()+0, 28, 27), 1, 2, 'C');
+				}
+				$pdf->Cell(0, 0, '', 0, 1, 'C');
+			}
+			$pdf->Ln(5);
+
+			// list of taxes
+			$taxes = SalesTax::where(['id_sales' => $in->id])->get();
+			$rp = 0;
+			if ($taxes->count() > 0) {
+				foreach ($taxes as $tx) {
+					$txd = Taxes::find($tx->id_tax);
+					$pdf->SetFont('Arial','B',10);
+					$pdf->Cell(70, 7, 'Taxes : ', 1, 0, 'C');
+					$pdf->Cell(30, 7, $txd->tax, 1, 0, 'C');
+					$pdf->SetFont('Arial','',8);
+					$pdf->Cell(30, 7, $txd->amount.'%', 1, 0, 'C');
+					$pdf->Cell(30, 7, number_format( ($txd->amount / 100) * $gt , 2), 1, 0, 'C');
+					$rp += ($txd->amount / 100) * $gt;
+					$pdf->Cell(30, 7, '', 1, 1, 'C');
+				}
+			}
+			
+			// footer
+			$pdf->SetFont('Arial','B',10);
+			$pdf->Cell(130, 7, 'Grand Total', 1, 0, 'C');
+			$pdf->Cell(30, 7, number_format($gt + $rp, 2), 1, 0, 'C');
+			$pdf->Cell(30, 7, '', 1, 1, 'C');
+			$pdf->Ln(5);
+
+			// reset font
+			$pdf->SetFont('Arial','B',10);
+			$pdf->SetTextColor(0, 0, 0);
+
+			$lipay = Payments::where(['id_sales' => $in->id])->get();
+			$py = 0;
+			
+			if ($lipay->count() > 0) {
+			
+				// header
+				$pdf->Cell(130, 7, 'Bank', 1, 0, 'C');
+				$pdf->Cell(30, 7, 'Date Payment', 1, 0, 'C');
+				$pdf->Cell(30, 7, 'Amount', 1, 1, 'C');
+				
+				// list of payment
+				$pdf->SetFont('Arial','',8);
+				foreach ($lipay as $k) {
+					$pdf->Cell(130, 7, Banks::findOrFail($k->id_bank)->bank, 1, 0, 'C');
+					$pdf->Cell(30, 7, my($k->date_payment), 1, 0, 'C');
+					$pdf->Cell(30, 7, number_format($k->amount, 2), 1, 1, 'C');
+					$py += $k->amount;
+				
+				}
+				
+				// footer
+				$pdf->SetFont('Arial','B',10);
+				$pdf->Cell(160, 7, 'Grand Total', 1, 0, 'C');
+				$pdf->Cell(30, 7, number_format($py, 2), 1, 1, 'C');
+			} else {
+				$pdf->SetFont('Arial','B',10);
+				$pdf->Cell(0, 7, 'Sorry, no payment yet.', 0, 1, 'C');
+			}
+		$pdf->Ln(15);
 		}
-		$pdf->Ln(5);
 	}
 }
 

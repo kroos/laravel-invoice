@@ -502,6 +502,11 @@ Route::post('printreport/audit', [
 		'uses' => 'PrintReportController@audit'
 	]);
 
+Route::post('printreport/payment', [
+		'as' => 'printreport.payment',
+		'uses' => 'PrintReportController@payment'
+	]);
+
 
 
 

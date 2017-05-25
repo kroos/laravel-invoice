@@ -15,6 +15,7 @@ use App\SalesTax;
 use App\SalesCustomers;
 use App\User;
 
+use File;
 
 use Illuminate\Http\Request;
 
@@ -51,5 +52,31 @@ class PrintReportController extends Controller
                 'user1.*' => 'integer',
         ]);
         echo view('printpdf.auditreport', compact(['request']));
+
+        $files2 = File::allFiles(storage_path('uploads/pdfimages'));
+        foreach($files2 as $h) {
+            if (File::extension($h) != 'txt') {
+                // echo $l.'<br />';
+                File::delete($h);
+            }
+        }
+    }
+
+    public function payment(Request $request)
+    {
+        $this->validate($request, [
+                'from2' => 'required|date_format:Y-m-d',
+                'to2' => 'required|date_format:Y-m-d|after:from2',
+                'user2' => 'required',
+                'user2.*' => 'integer',
+        ]);
+        echo view('printpdf.payment', compact(['request']));
+        $files2 = File::allFiles(storage_path('uploads/pdfimages'));
+        foreach($files2 as $h) {
+            if (File::extension($h) != 'txt') {
+                // echo $l.'<br />';
+                File::delete($h);
+            }
+        }
     }
 }
