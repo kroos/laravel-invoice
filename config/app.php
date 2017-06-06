@@ -189,6 +189,11 @@ return [
 
         // $ composer require crabbly/fpdf-laravel
         Crabbly\FPDF\FpdfServiceProvider::class,
+
+		// $ composer require anhskohbo/no-captcha
+		// https://github.com/anhskohbo/no-captcha
+		// https://www.google.com/recaptcha/admin#site/337920931?setup
+        // Anhskohbo\NoCaptcha\NoCaptchaServiceProvider::class,
     ],
 
     /*

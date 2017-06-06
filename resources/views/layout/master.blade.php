@@ -70,6 +70,9 @@
 	<!-- javascript chart : http://www.chartjs.org/ -->
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.bundle.min.js"></script>
 
+	<!-- ckeditor sdk http://sdk.ckeditor.com/index.html -->
+	<script src="https://cdn.ckeditor.com/4.7.0/standard/ckeditor.js"></script>
+
 </head>
 <body>
 
