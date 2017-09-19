@@ -358,7 +358,9 @@ trait ValidatesAttributes
             return false;
         }
 
-        $date = DateTime::createFromFormat($parameters[0], $value);
+        $format = $parameters[0] == 'Y-m' ? '!Y-m' : $parameters[0];
+
+        $date = DateTime::createFromFormat($format, $value);
 
         return $date && $date->format($parameters[0]) == $value;
     }
@@ -375,9 +377,15 @@ trait ValidatesAttributes
     {
         $this->requireParameterCount(1, $parameters, 'different');
 
-        $other = Arr::get($this->data, $parameters[0]);
+        foreach ($parameters as $parameter) {
+            $other = Arr::get($this->data, $parameter);
 
-        return isset($other) && $value !== $other;
+            if (is_null($other) || $value === $other) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**
@@ -478,7 +486,9 @@ trait ValidatesAttributes
             [1, 1], array_filter(sscanf($parameters['ratio'], '%f/%d'))
         );
 
-        return abs($numerator / $denominator - $width / $height) > 0.000001;
+        $precision = 1 / max($width, $height);
+
+        return abs($numerator / $denominator - $width / $height) > $precision;
     }
 
     /**
@@ -909,6 +919,10 @@ trait ValidatesAttributes
             return false;
         }
 
+        if ($this->shouldBlockPhpUpload($value, $parameters)) {
+            return false;
+        }
+
         return $value->getPath() != '' && in_array($value->guessExtension(), $parameters);
     }
 
@@ -926,9 +940,31 @@ trait ValidatesAttributes
             return false;
         }
 
+        if ($this->shouldBlockPhpUpload($value, $parameters)) {
+            return false;
+        }
+
         return $value->getPath() != '' &&
                 (in_array($value->getMimeType(), $parameters) ||
                  in_array(explode('/', $value->getMimeType())[0].'/*', $parameters));
+    }
+
+    /**
+     * Check if PHP uploads are explicitly allowed.
+     *
+     * @param  mixed  $value
+     * @param  array  $parameters
+     * @return bool
+     */
+    protected function shouldBlockPhpUpload($value, $parameters)
+    {
+        if (in_array('php', $parameters)) {
+            return false;
+        }
+
+        return ($value instanceof UploadedFile)
+           ? strtolower($value->getClientOriginalExtension()) === 'php'
+           : strtolower($value->getExtension()) === 'php';
     }
 
     /**

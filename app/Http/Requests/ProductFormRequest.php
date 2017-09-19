@@ -21,7 +21,7 @@ class ProductFormRequest extends FormRequest
 			'retail' => 'required|numeric',
 			'commission' => 'required|numeric',
 			'id_category' => 'required|integer',
-			'image' => 'required',      // multiple file validation
+			// 'image' => 'required',      // multiple file validation
 			'image.*' => 'image|max:5000',       // multiple file validation
 			'active' => 'integer',
 		];

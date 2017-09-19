@@ -2,6 +2,10 @@
 
 namespace Illuminate\Database\Concerns;
 
+use Illuminate\Container\Container;
+use Illuminate\Pagination\Paginator;
+use Illuminate\Pagination\LengthAwarePaginator;
+
 trait BuildsQueries
 {
     /**
@@ -64,7 +68,7 @@ trait BuildsQueries
      * Execute the query and get the first result.
      *
      * @param  array  $columns
-     * @return mixed
+     * @return \Illuminate\Database\Eloquent\Model|static|null
      */
     public function first($columns = ['*'])
     {
@@ -75,8 +79,8 @@ trait BuildsQueries
      * Apply the callback's query changes if the given "value" is true.
      *
      * @param  mixed  $value
-     * @param  \Closure  $callback
-     * @param  \Closure  $default
+     * @param  callable  $callback
+     * @param  callable  $default
      * @return mixed
      */
     public function when($value, $callback, $default = null)
@@ -88,5 +92,68 @@ trait BuildsQueries
         }
 
         return $this;
+    }
+
+    /**
+     * Pass the query to a given callback.
+     *
+     * @param  \Closure  $callback
+     * @return \Illuminate\Database\Query\Builder
+     */
+    public function tap($callback)
+    {
+        return $this->when(true, $callback);
+    }
+
+    /**
+     * Apply the callback's query changes if the given "value" is false.
+     *
+     * @param  mixed  $value
+     * @param  callable  $callback
+     * @param  callable  $default
+     * @return mixed
+     */
+    public function unless($value, $callback, $default = null)
+    {
+        if (! $value) {
+            return $callback($this, $value) ?: $this;
+        } elseif ($default) {
+            return $default($this, $value) ?: $this;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Create a new length-aware paginator instance.
+     *
+     * @param  \Illuminate\Support\Collection  $items
+     * @param  int  $total
+     * @param  int  $perPage
+     * @param  int  $currentPage
+     * @param  array  $options
+     * @return \Illuminate\Pagination\LengthAwarePaginator
+     */
+    protected function paginator($items, $total, $perPage, $currentPage, $options)
+    {
+        return Container::getInstance()->makeWith(LengthAwarePaginator::class, compact(
+            'items', 'total', 'perPage', 'currentPage', 'options'
+        ));
+    }
+
+    /**
+     * Create a new simple paginator instance.
+     *
+     * @param  \Illuminate\Support\Collection  $items
+     * @param  int $perPage
+     * @param  int $currentPage
+     * @param  array  $options
+     * @return \Illuminate\Pagination\Paginator
+     */
+    protected function simplePaginator($items, $perPage, $currentPage, $options)
+    {
+        return Container::getInstance()->makeWith(Paginator::class, compact(
+            'items', 'perPage', 'currentPage', 'options'
+        ));
     }
 }

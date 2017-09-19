@@ -15,8 +15,8 @@ use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Database\ConnectionInterface;
 use Illuminate\Database\Concerns\BuildsQueries;
 use Illuminate\Database\Query\Grammars\Grammar;
-use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Query\Processors\Processor;
+use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 
 class Builder
 {
@@ -99,7 +99,7 @@ class Builder
      *
      * @var array
      */
-    public $wheres;
+    public $wheres = [];
 
     /**
      * The groupings for the query.
@@ -177,7 +177,7 @@ class Builder
      * @var array
      */
     public $operators = [
-        '=', '<', '>', '<=', '>=', '<>', '!=',
+        '=', '<', '>', '<=', '>=', '<>', '!=', '<=>',
         'like', 'like binary', 'not like', 'between', 'ilike',
         '&', '|', '^', '<<', '>>',
         'rlike', 'regexp', 'not regexp',
@@ -461,17 +461,6 @@ class Builder
     }
 
     /**
-     * Pass the query to a given callback.
-     *
-     * @param  \Closure  $callback
-     * @return \Illuminate\Database\Query\Builder
-     */
-    public function tap($callback)
-    {
-        return $this->when(true, $callback);
-    }
-
-    /**
      * Merge an array of where clauses and bindings.
      *
      * @param  array  $wheres
@@ -480,7 +469,7 @@ class Builder
      */
     public function mergeWheres($wheres, $bindings)
     {
-        $this->wheres = array_merge((array) $this->wheres, (array) $wheres);
+        $this->wheres = array_merge($this->wheres, (array) $wheres);
 
         $this->bindings['where'] = array_values(
             array_merge($this->bindings['where'], (array) $bindings)
@@ -573,12 +562,12 @@ class Builder
      */
     protected function addArrayOfWheres($column, $boolean, $method = 'where')
     {
-        return $this->whereNested(function ($query) use ($column, $method) {
+        return $this->whereNested(function ($query) use ($column, $method, $boolean) {
             foreach ($column as $key => $value) {
                 if (is_numeric($key) && is_array($value)) {
                     $query->{$method}(...array_values($value));
                 } else {
-                    $query->$method($key, '=', $value);
+                    $query->$method($key, '=', $value, $boolean);
                 }
             }
         }, $boolean);
@@ -635,7 +624,7 @@ class Builder
     /**
      * Add an "or where" clause to the query.
      *
-     * @param  \Closure|string  $column
+     * @param  string|array|\Closure  $column
      * @param  string  $operator
      * @param  mixed   $value
      * @return \Illuminate\Database\Query\Builder|static
@@ -716,10 +705,10 @@ class Builder
      * Add a raw or where clause to the query.
      *
      * @param  string  $sql
-     * @param  array   $bindings
+     * @param  mixed   $bindings
      * @return \Illuminate\Database\Query\Builder|static
      */
-    public function orWhereRaw($sql, array $bindings = [])
+    public function orWhereRaw($sql, $bindings = [])
     {
         return $this->whereRaw($sql, $bindings, 'or');
     }
@@ -737,10 +726,14 @@ class Builder
     {
         $type = $not ? 'NotIn' : 'In';
 
+        if ($values instanceof EloquentBuilder) {
+            $values = $values->getQuery();
+        }
+
         // If the value is a query builder instance we will assume the developer wants to
         // look for any values that exists within this given query. So we will add the
         // query accordingly so that this query is properly executed when it is run.
-        if ($values instanceof static) {
+        if ($values instanceof self) {
             return $this->whereInExistingQuery(
                 $column, $values, $boolean, $not
             );
@@ -1563,7 +1556,7 @@ class Builder
     }
 
     /**
-     * Get an array orders with all orders for an given column removed.
+     * Get an array with all orders with a given column removed.
      *
      * @param  string  $column
      * @return array
@@ -1572,7 +1565,8 @@ class Builder
     {
         return Collection::make($this->orders)
                     ->reject(function ($order) use ($column) {
-                        return $order['column'] === $column;
+                        return isset($order['column'])
+                               ? $order['column'] === $column : false;
                     })->values()->all();
     }
 
@@ -1729,7 +1723,7 @@ class Builder
 
         $results = $total ? $this->forPage($page, $perPage)->get($columns) : collect();
 
-        return new LengthAwarePaginator($results, $total, $perPage, $page, [
+        return $this->paginator($results, $total, $perPage, $page, [
             'path' => Paginator::resolveCurrentPath(),
             'pageName' => $pageName,
         ]);
@@ -1752,7 +1746,7 @@ class Builder
 
         $this->skip(($page - 1) * $perPage)->take($perPage + 1);
 
-        return new Paginator($this->get($columns), $perPage, $page, [
+        return $this->simplePaginator($this->get($columns), $perPage, $page, [
             'path' => Paginator::resolveCurrentPath(),
             'pageName' => $pageName,
         ]);
