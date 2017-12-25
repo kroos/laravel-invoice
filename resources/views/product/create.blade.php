@@ -112,7 +112,7 @@
 									</button>
 									<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
 										<li role="separator" class="divider"></li>
-										<li><a href="{!! route('product.edit' ,$k->id) !!}" >edit</a></li>
+										<li><a href="{!! route('product.edit' ,$k->slug) !!}" >edit</a></li>
 										<li><a href="{!! route('product.destroy', $k->id) !!}">delete</a></li>
 
 										<li role="separator" class="divider"></li>

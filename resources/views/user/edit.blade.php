@@ -6,7 +6,7 @@
 @endif
 	@include('layout.errorform')
 	@include('layout.info')
-	{!! Form::model($user, [ 'route' => [ 'user.update', $user->id ], 'method' => 'PATCH', 'class' => 'form-horizontal' ]) !!}
+	{!! Form::model($user, [ 'route' => [ 'user.update', $user->slug ], 'method' => 'PATCH', 'class' => 'form-horizontal' ]) !!}
 
 <div class="panel panel-default">
 <div class="panel-heading">Edit User</div>
@@ -15,6 +15,13 @@
 			{!! Form::label('nam', 'Name :', ['class' => 'col-sm-2 control-label']) !!}
 			<div class="col-sm-10">
 				{!! Form::input('text', 'name', $user->name, ['class' => 'form-control put', 'placeholder' => 'Name', 'id' => 'nam']) !!}
+			</div>
+		</div>
+
+		<div class="form-group {!! ( count($errors->get('name')) ) >0 ? 'has-error' : '' !!}">
+			{!! Form::label('usernam', 'Username :', ['class' => 'col-sm-2 control-label']) !!}
+			<div class="col-sm-10">
+				{!! Form::text('username', @$value, ['class' => 'form-control put', 'placeholder' => 'Username', 'id' => 'usernam']) !!}
 			</div>
 		</div>
 

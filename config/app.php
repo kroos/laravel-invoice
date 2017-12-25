@@ -194,6 +194,11 @@ return [
 		// https://github.com/anhskohbo/no-captcha
 		// https://www.google.com/recaptcha/admin#site/337920931?setup
         // Anhskohbo\NoCaptcha\NoCaptchaServiceProvider::class,
+
+
+        // $ composer require cviebrock/eloquent-sluggable
+        Cviebrock\EloquentSluggable\ServiceProvider::class,
+        // https://github.com/cviebrock/eloquent-sluggable
     ],
 
     /*

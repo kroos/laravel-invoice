@@ -22,7 +22,7 @@
                             <li><a href="{!! route('login') !!}">Login</a></li>
                         @endif
 			@if(Auth::check())
-					<li><a href="{!! route('user.edit', auth()->user()->id) !!}">Welcome {!! auth()->user()->name !!}</a></li>
+					<li><a href="{!! route('user.edit', auth()->user()->slug) !!}">Welcome {!! auth()->user()->name !!}</a></li>
 					<li>
 						<a href="{!! route('sales.index') !!}">Invoice</a>
 					</li>

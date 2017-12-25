@@ -14,7 +14,14 @@
 				{!! Form::input('text', 'name', @$value, ['class' => 'form-control put', 'placeholder' => 'Name', 'id' => 'nam']) !!}
 			</div>
 		</div>
-		
+
+		<div class="form-group {!! ( count($errors->get('name')) ) >0 ? 'has-error' : '' !!}">
+			{!! Form::label('usernam', 'Username :', ['class' => 'col-sm-2 control-label']) !!}
+			<div class="col-sm-10">
+				{!! Form::text('username', @$value, ['class' => 'form-control put', 'placeholder' => 'Username', 'id' => 'usernam']) !!}
+			</div>
+		</div>
+
 		<div class="form-group {!! ( count($errors->get('email')) ) >0 ? 'has-error' : '' !!}">
 			{!! Form::label('email', 'Email :', ['class' => 'col-sm-2 control-label']) !!}
 			<div class="col-sm-10">
@@ -85,6 +92,7 @@
 							<thead>
 								<th>&nbsp;</th>
 								<th>name</th>
+								<th>username</th>
 								<th>email</th>
 								<th>group</th>
 							</thead>
@@ -98,7 +106,7 @@
 									</button>
 									<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
 										<li role="separator" class="divider"></li>
-										<li><a href="{!! route('user.edit', $k->id) !!}" >edit</a></li>
+										<li><a href="{!! route('user.edit', $k->slug) !!}" >edit</a></li>
 										<li>
 											@if($k->id != 1)
 											{!! Form::open(['route' => ['user.destroy', $k->id], 'method' => 'delete']) !!}
@@ -111,6 +119,7 @@
 								</div>
 										</td>
 										<td>{!! $k->name !!}</td>
+										<td>{!! $k->username !!}</td>
 										<td>{!! $k->email !!}</td>
 											<?php
 											// refer to users model

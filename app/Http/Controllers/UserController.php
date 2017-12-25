@@ -58,6 +58,7 @@ class UserController extends Controller
 	{
 		User::create([
 			'name' => title_case(request('name')),
+			'username' => $request->username,
 			'email' => strtolower(request('email')),
 			'password' => bcrypt(request('password')),
 			'id_group' => request('id_group'),
@@ -109,16 +110,18 @@ class UserController extends Controller
 		User::where('id', $user->id)
 					-> update([
 						'name' => title_case(request('name')),
+						'username' => $request->username,
 						'email' => strtolower(request('email')),
 						'password' => bcrypt(request('password')),
 						'id_group' => request('id_group'),
 						'color' => request('color'),
+						'updated_at' => $request->updated_at
 					]);
-		$user->touch();
+		// $user->touch();
 		// info when update success
 		Session::flash('flash_message', 'Data successfully edited!');
 	
-		return redirect(route('user.edit', $user->id));      // redirect back to original route
+		return redirect(route('user.edit', $user->slug));      // redirect back to original route
 	}
 	
 	 /**
