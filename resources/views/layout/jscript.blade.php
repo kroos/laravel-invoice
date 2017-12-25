@@ -35,7 +35,7 @@
 			});
 
 			$('select').select2();
-
+			
 			@section('jquery')
 			@show
 		});

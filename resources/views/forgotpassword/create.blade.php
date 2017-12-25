@@ -14,11 +14,11 @@
 <div class="panel panel-default">
 	<div class="panel-heading">Forgot Password</div>
 <div class="panel-body">
-	{!! Form::open(['route' => 'password.email', 'class' => 'form-horizontal']) !!}
+	{!! Form::open(['route' => 'password.email', 'class' => 'form-horizontal', 'id' => 'form']) !!}
 		<div class="form-group {!! ( count($errors->get('email')) ) >0 ? 'has-error' : '' !!}">
 			{!! Form::label('na', 'Email :', ['class' => 'col-sm-2  control-label']) !!}
 			<div class="col-sm-10">
-				{!! Form::input('text', 'email', @$value, ['class' => 'form-control', 'id' => 'na', 'placeholder' => 'Email']) !!}
+				{!! Form::text('email', @$value, ['class' => 'form-control', 'id' => 'na', 'placeholder' => 'Email']) !!}
 			</div>
 		</div>
 
@@ -34,7 +34,33 @@
 
 
 @section('jquery')
-<!-- 	$("input").keyup(function() {
-		toUpper(this);
-	}); -->
+
+$("#na").keyup(function() {
+   lch(this);
+});
+
+////////////////////////////////////////////////////////////////////////////////////
+// bootstrap validator
+$("#form").bootstrapValidator({
+	feedbackIcons: {
+		valid: 'glyphicon glyphicon-ok',
+		invalid: 'glyphicon glyphicon-remove',
+		validating: 'glyphicon glyphicon-refresh'
+	},
+	fields: {
+		email: {
+			validators: {
+				notEmpty: {
+					message: 'Please insert your email '
+				},
+				regexp: {
+					regexp: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+					message: ' Please insert your valid email address'
+				},
+			}
+		},
+	}
+})
+
+////////////////////////////////////////////////////////////////////////////////////
 @endsection

@@ -6,7 +6,7 @@
 @endif
 	@include('layout.errorform')
 	@include('layout.info')
-	{!! Form::model($user, [ 'route' => [ 'user.update', $user->slug ], 'method' => 'PATCH', 'class' => 'form-horizontal' ]) !!}
+	{!! Form::model($user, [ 'route' => [ 'user.update', $user->slug ], 'method' => 'PATCH', 'class' => 'form-horizontal', 'id' => 'form']) !!}
 
 <div class="panel panel-default">
 <div class="panel-heading">Edit User</div>
@@ -83,9 +83,103 @@ foreach ($gr as $key) {
 
 @section('jquery')
 
+$("#nam").keyup(function() {
+	tch(this);
+});
+
+$("#usernam, #email").keyup(function() {
+	lch(this);
+});
+
 $('#rgba').minicolors({
 	format: 'rgb',
 	opacity: true,
 	theme: 'bootstrap',
 });
+
+////////////////////////////////////////////////////////////////////////////////////
+// bootstrap validator
+$("#form").bootstrapValidator({
+	feedbackIcons: {
+		valid: 'glyphicon glyphicon-ok',
+		invalid: 'glyphicon glyphicon-remove',
+		validating: 'glyphicon glyphicon-refresh'
+	},
+	fields: {
+		name: {
+			validators: {
+				notEmpty: {
+					message: 'Please insert your name. '
+				}
+			}
+		},
+		email: {
+			validators: {
+				notEmpty: {
+					message: 'Please insert your email. '
+				},
+				regexp: {
+					regexp: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+					message: 'Please insert your valid email address. '
+				},
+			}
+		},
+		username: {
+			message: 'The username is not valid',
+			validators: {
+				notEmpty: {
+					message: 'The username is required and cannot be empty'
+				},
+				stringLength: {
+					min: 6,
+					max: 10,
+					message: 'The username must be more than 6 and less than 10 characters long'
+				},
+				regexp: {
+					regexp: /^[a-zA-Z0-9_]+$/,
+					message: 'The username can only consist of alphabetical, number and underscore'
+				},
+			}
+		},
+		password: {
+			validators: {
+				notEmpty: {
+					message: 'Please insert your password. '
+				},
+				regexp: {
+					regexp: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,16}$/,
+					message: 'Passwords are 8-16 characters with uppercase letters, lowercase letters and at least one number. '
+				},
+			}
+		},
+		password_confirmation: {
+			validators: {
+				notEmpty: {
+					message: 'Please insert your confirmation password. '
+				},
+				identical: {
+					field: 'password',
+					message: 'The password and its confirmation are not the same. '
+				}
+			}
+		},
+		id_group: {
+			validators: {
+				notEmpty: {
+					message: 'Please choose an option. '
+				}
+			}
+		},
+		color: {
+			validators: {
+				notEmpty: {
+					message: 'Please choose a color. '
+				}
+			}
+		},
+	}
+})
+
+////////////////////////////////////////////////////////////////////////////////////
+
 @endsection

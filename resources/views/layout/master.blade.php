@@ -12,8 +12,10 @@
 	<link href="favicon.ico" type="image/x-icon" rel="icon" />
 	<meta name="keywords" content="" />
 
-	<!-- Bootstrap -->
+	<!-- jquery -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js" type="text/javascript" ></script>
+
+	<!-- Bootstrap -->
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" ></script>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" >
 	<!-- Optional theme -->
@@ -72,6 +74,13 @@
 
 	<!-- ckeditor sdk http://sdk.ckeditor.com/index.html -->
 	<script src="https://cdn.ckeditor.com/4.7.0/standard/ckeditor.js"></script>
+
+	<!-- bootstrap validator http://formvalidation.io/ -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-validator/0.5.3/css/bootstrapValidator.min.css" />
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-validator/0.5.3/js/bootstrapValidator.min.js"></script>
+
+	<!-- font awesome -->
+	<script src="https://use.fontawesome.com/2c6bc88dec.js"></script>
 
 </head>
 <body>

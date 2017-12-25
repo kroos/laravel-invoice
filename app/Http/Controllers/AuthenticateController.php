@@ -33,7 +33,7 @@ class AuthenticateController extends Controller
 	{
 		$remember_me = $request->has('remember') ? true : false;
 		// attempt to authenticate the user
-		if( !auth()->attempt(request(['email', 'password']), $remember_me) ) {
+		if( !auth()->attempt(request(['username', 'password']), $remember_me) ) {
 			Session::flash('flash_message', 'Please check your credential');
 			return back();
 		}
