@@ -11,7 +11,7 @@
 		<div class="panel-body">
 			<div class="col-lg-12">
 
-			{!! Form::open(['route' => 'sales.store', 'class' => 'form-horizontal', 'autocomplete' => 'off', 'files' => true]) !!}
+			{!! Form::open(['route' => 'sales.store', 'class' => 'form-horizontal', 'autocomplete' => 'off', 'files' => true, 'id' => 'form']) !!}
 				@if( auth()->user()->id_group == 1 )
 					<?php
 					$user = App\User::all();
@@ -279,13 +279,13 @@
 // ucwords input
 $(document).on('keyup', '#pel', function () {
 // $("input").keyup(function() {
-	toUpper(this);
+	tch(this);
 });
 
 ////////////////////////////////////////////////////////////////////////////////////
 // uppercase input for tracking number and customer section
 $(document).on('keyup', '#apel, #catel', function () {
-	toUppercase(this);
+	uch(this);
 });
 
 ////////////////////////////////////////////////////////////////////////////////////
@@ -299,24 +299,6 @@ $(document).on('mouseenter', '.date', function () {
 		// endDate: '<?= (date('j') == 1) ? 1 - date('j') : 0 - date('j') ?>d',
 	});	
 });
-
-////////////////////////////////////////////////////////////////////////////////////
-// capital case helper
-function toUppercase(obj) {
-	var mystring = obj.value;
-	var sp = mystring.split(' ');
-	var wl=0;
-	var f ,r;
-	var word = new Array();
-	for (i = 0 ; i < sp.length ; i ++ ) {
-		f = sp[i].substring(0,1).toUpperCase();
-		r = sp[i].substring(1).toUpperCase();
-		word[i] = f+r;
-	}
-	newstring = word.join(' ');
-	obj.value = newstring;
-	return true;
-}
 
 ////////////////////////////////////////////////////////////////////////////////////
 // slip serial number : add and remove row
@@ -652,6 +634,56 @@ function update_balance() {
 		}
 	}
 };
+
+////////////////////////////////////////////////////////////////////////////////////
+// bootstrap validator
+$("#form").bootstrapValidator({
+	feedbackIcons: {
+		valid: 'glyphicon glyphicon-ok',
+		invalid: 'glyphicon glyphicon-remove',
+		validating: 'glyphicon glyphicon-refresh'
+	},
+	fields: {
+		id_user: {
+			validators: {
+				notEmpty: {
+					message: 'Please choose user.'
+				},
+			}
+		},
+		date_sale: {
+			validators: {
+				notEmpty: {
+					message: 'Please insert date. '
+				},
+				date: {
+					format: 'YYYY-MM-DD',
+					message: 'The date format is not valid. '
+				}
+			}
+		},
+		'serial[][tracking_number]': {
+			validators: {
+				notEmpty: {
+					message: 'Please insert tracking number/bill number/receipt number. '
+				}
+			}
+		},
+		'image[]': {
+			validators: {
+				notEmpty: {
+					message: 'Please select an image'
+				},
+				file: {
+					extension: 'jpeg,jpg,png,bmp',
+					type: 'image/jpeg,image/png,image/bmp',
+					maxSize: 7990272,   // 3264 * 2448
+					message: 'The selected file is not valid'
+				}
+			}
+		}
+	}
+})
 
 ////////////////////////////////////////////////////////////////////////////////////
 
