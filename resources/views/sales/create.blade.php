@@ -169,6 +169,66 @@
 						<div class="panel-body">
 				
 							<div class="col-lg-12 input_fields_wrap">
+
+		<div class="row rowinvoice">
+			<div class="col-sm-12">
+				<div class="col-sm-1">
+					<div class="row">
+						<div class="col-sm-12">
+							<button class="btn btn-danger remove_field" type="button">-</button>
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-4">
+					<div class="row">
+						<div class="col-sm-12 form-group <?php echo ( count($errors->get('inv.*.id_product')) ) >0 ? 'has-error' : '' ?>">
+							<select name="inv[1][id_product]" class="series form-control">
+								<option value="">Choose Product</option>
+
+								<?php $cate = App\ProductCategory::where(['active' => 1])->get(); ?>
+								@foreach ($cate as $key)
+									<optgroup label="{!! $key->product_category !!}">
+										<?php $pro = App\Product::where(['id_category' => $key->id, 'active' => 1])->get() ?>
+										@foreach($pro as $r)
+											<option value="{!! $r->id !!}" data-commission="{!! $r->commission !!}" data-retail="{!! $r->retail !!}">{!! $r->product !!}</option>
+										@endforeach
+									</optgroup>
+								@endforeach
+							</select>
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-2">
+					<div class="row">
+						<div class="col-sm-12 form-group {!! ( count($errors->get('inv.*.commission')) ) >0 ? 'has-error' : '' !!}">
+							<input <?=(auth()->user()->id_group == 1)? 'type="text"' : 'type="hidden"' ?> name="inv[1][commission]" class="comm form-control" placeholder="Commission (RM)" />
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-2">
+					<div class="row">
+						<div class="col-sm-12 form-group {!! ( count($errors->get('inv.*.retail')) ) >0 ? 'has-error' : '' !!}">
+							<input type="text" name="inv[1][retail]" class="rate form-control" placeholder="Retail (RM)"/>
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-2">
+					<div class="row">
+						<div class="col-sm-12 form-group {!! ( count($errors->get('inv.*.quantity')) ) >0 ? 'has-error' : '' !!}">
+							<input type="text" name="inv[1][quantity]" class="quan form-control" placeholder="Quantity" />
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-1">
+					<div class="row">
+						<div class="col-sm-12">
+							<p class="text-right"><span class="total_price">0.00</span></p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
 							</div>
 				
 							<div class="col-lg-12">
@@ -226,6 +286,46 @@
 
 							<div class="col-lg-12">
 								<div class="col-lg-12 payment_wrap">
+
+		<div class="row rowpayment">
+			<div class="col-sm-12">
+				<div class="col-sm-1">
+					<div class="row">
+						<div class="col-sm-12">
+							<button class="btn btn-danger remove_payment" type="button">-</button>
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-6">
+					<div class="row">
+						<div class="col-sm-12 form-group <?php echo ( count($errors->get('pay.*.id_bank')) ) >0 ? 'has-error' : '' ?>">
+							<select name="pay[1][id_bank]" class="form-control">
+								<option value="">Choose Bank</option>
+								<?php $ba = App\Banks::where(['active' => 1])->get(); ?>
+								@foreach ($ba as $r)
+								<option value="{!! $r->id !!}" >{!! $r->bank !!}</option>
+								@endforeach
+							</select>
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-2">
+					<div class="row">
+						<div class="col-sm-12 form-group {!! ( count($errors->get('pay.*.date_payment')) ) >0 ? 'has-error' : '' !!}">
+							<input type="text" name="pay[1][date_payment]" class="form-control date" placeholder="Date Payment"/>
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-3">
+					<div class="row">
+						<div class="col-sm-12 form-group {!! ( count($errors->get('pay.*.amount')) ) >0 ? 'has-error' : '' !!}">
+							<input type="text" name="pay[1][amount]" class="pamount form-control" placeholder="Amount (RM)"/>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
 								</div>
 								<div class="col-lg-12">
 									<div class="row">
@@ -379,7 +479,7 @@ function num(obj) {
 // adding and removing rows for invoice items
 var add_button	= $(".add_field");
 var wrapper		= $(".input_fields_wrap");
-var x = 0;
+var x = 1;
 $(add_button).click(function(){
 	x++;
 	$(wrapper).append(
@@ -488,7 +588,7 @@ $(document).on('change', '.series', function () {
 // payment add and remove payment row
 var add_buttonp	= $(".add_payment");
 var wrapperp		= $(".payment_wrap");
-var xp = 0;
+var xp = 1;
 $(add_buttonp).click(function(){
 	xp++;
 	$(wrapperp).append(
@@ -662,7 +762,7 @@ $("#form").bootstrapValidator({
 				}
 			}
 		},
-		'serial[][tracking_number]': {
+		'serial[1][tracking_number]': {
 			validators: {
 				notEmpty: {
 					message: 'Please insert tracking number/bill number/receipt number. '
@@ -681,7 +781,18 @@ $("#form").bootstrapValidator({
 					message: 'The selected file is not valid'
 				}
 			}
-		}
+		},
+		//client: {
+		//	validators: {
+		//		notEmpty: {
+		//			message: 'not empty'
+		//		},
+		//		regexp: {
+		//			regexp: /^[a-z\s]+$/i,
+		//			message: 'The full name can consist of alphabetical characters and spaces only'
+		//		}
+		//	}
+		//},
 	}
 })
 
