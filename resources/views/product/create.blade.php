@@ -10,26 +10,25 @@
 		<div class="panel panel-default">
 			<div class="panel-heading">Add Product</div>
 			<div class="panel-body">
-				{!! Form::open(['route' => 'product.store', 'class' => 'form-horizontal', 'files' => true]) !!}
-				{!! Form::hidden('id_user', auth()->id()) !!}
+				{!! Form::open(['route' => 'product.store', 'class' => 'form-horizontal', 'id' => 'form', 'files' => true]) !!}
 				<div class="form-group {!! ( count($errors->get('product')) ) >0 ? 'has-error' : '' !!}">
 					{!! Form::label('pr', 'Product :', ['class' => 'col-sm-2 control-label']) !!}
 					<div class="col-sm-10">
-						{!! Form::input('text', 'product', @$value, ['class' => 'form-control', 'placeholder' => 'Product', 'id' => 'pr']) !!}
+						{!! Form::text('product', @$value, ['class' => 'form-control', 'placeholder' => 'Product', 'id' => 'pr']) !!}
 					</div>
 				</div>
 		
 				<div class="form-group {!! ( count($errors->get('retail')) ) >0 ? 'has-error' : '' !!}">
 					{!! Form::label('co', 'Retail :', ['class' => 'col-sm-2 control-label']) !!}
 					<div class="col-sm-10">
-						{!! Form::input('text', 'retail', @$value, ['class' => 'form-control', 'placeholder' => 'Retail in RM', 'id' => 'co']) !!}
+						{!! Form::text('retail', @$value, ['class' => 'form-control', 'placeholder' => 'Retail in RM', 'id' => 'co']) !!}
 					</div>
 				</div>
 @if(auth()->user()->id_group == 1)
 				<div class="form-group {!! ( count($errors->get('commission')) ) >0 ? 'has-error' : '' !!}">
 					{!! Form::label('com', 'Commission :', ['class' => 'col-sm-2 control-label']) !!}
 					<div class="col-sm-10">
-						{!! Form::input('text', 'commission', @$value, ['class' => 'form-control', 'placeholder' => 'Commission in RM', 'id' => 'com']) !!}
+						{!! Form::text('commission', @$value, ['class' => 'form-control', 'placeholder' => 'Commission in RM', 'id' => 'com']) !!}
 					</div>
 				</div>
 @else
@@ -112,8 +111,8 @@
 									</button>
 									<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
 										<li role="separator" class="divider"></li>
-										<li><a href="{!! route('product.edit' ,$k->slug) !!}" >edit</a></li>
-										<li><a href="{!! route('product.destroy', $k->id) !!}">delete</a></li>
+										<li><a href="{!! route('product.edit' ,$k->slug) !!}" ><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i>&nbsp;&nbsp; edit</a></li>
+										<li><a href="{!! route('product.destroy', $k->slug) !!}"><i class="fa fa-trash fa-lg" aria-hidden="true"></i>&nbsp;&nbsp; delete</a></li>
 
 										<li role="separator" class="divider"></li>
 									</ul>
@@ -151,7 +150,74 @@
 
 
 @section('jquery')
+
 	$("input").keyup(function() {
-		toUpper(this);
+		tch(this);
 	});
+
+////////////////////////////////////////////////////////////////////////////////////
+// bootstrap validator
+
+$("#form").bootstrapValidator({
+	feedbackIcons: {
+		valid: 'glyphicon glyphicon-ok',
+		invalid: 'glyphicon glyphicon-remove',
+		validating: 'glyphicon glyphicon-refresh'
+	},
+	fields: {
+		product: {
+			validators: {
+				notEmpty: {
+					message: 'Please insert product name. '
+				},
+			}
+		},
+		retail: {
+			validators: {
+				notEmpty: {
+					message: 'Please insert retail price. '
+				},
+				greaterThan: {
+					value: 0,
+					message: 'The retail price should be greater than 0. '
+				}
+			}
+		},
+@if(auth()->user()->id_group == 1)
+		commission: {
+			validators: {
+				notEmpty: {
+					message: 'Please insert commission. '
+				},
+				greaterThan: {
+					value: 0,
+					message: 'The commssion should be greater than 0. '
+				}
+			}
+		},
+@endif
+		'image[]': {
+			validators: {
+				notEmpty: {
+					message: 'Please select an image'
+				},
+				file: {
+					extension: 'jpeg,jpg,png,bmp',
+					type: 'image/jpeg,image/png,image/bmp',
+					maxSize: 7990272,   // 3264 * 2448
+					message: 'The selected file is not valid. It should be 3264X2448 max dimension. '
+				}
+			}
+		},
+		id_category: {
+			validators: {
+				notEmpty: {
+					message: 'Please choose an category for the product. '
+				}
+			}
+		},
+	}
+})
+
+////////////////////////////////////////////////////////////////////////////////////
 @endsection

@@ -495,7 +495,7 @@ $(add_button).click(function(){
 				'<div class="col-sm-4">' +
 					'<div class="row">' +
 						'<div class="col-sm-12 form-group <?php echo ( count($errors->get('inv.*.id_product')) ) >0 ? 'has-error' : '' ?>">' +
-							'<select name="inv[' + x + '][id_product]" class="series form-control">' +
+							'<select name="inv[' + x + '][id_product]" class="series form-control" onload="select2()">' +
 								'<option value="">Choose Product</option>' +
 
 								<?php $cate = App\ProductCategory::where(['active' => 1])->get(); ?>
@@ -737,6 +737,7 @@ function update_balance() {
 
 ////////////////////////////////////////////////////////////////////////////////////
 // bootstrap validator
+
 $("#form").bootstrapValidator({
 	feedbackIcons: {
 		valid: 'glyphicon glyphicon-ok',
@@ -782,17 +783,81 @@ $("#form").bootstrapValidator({
 				}
 			}
 		},
-		//client: {
-		//	validators: {
-		//		notEmpty: {
-		//			message: 'not empty'
-		//		},
-		//		regexp: {
-		//			regexp: /^[a-z\s]+$/i,
-		//			message: 'The full name can consist of alphabetical characters and spaces only'
-		//		}
-		//	}
-		//},
+
+@for ($i = 1; $i < 10; $i++)
+
+		'inv[{{ $i }}][id_product]': {
+			validators: {
+				notEmpty: {
+					message: 'Please choose an item. '
+				}
+			}
+		},
+		'inv[{{ $i }}][commission]': {
+			validators: {
+				notEmpty: {
+					message: 'Please insert commission for this item. '
+				},
+				greaterThan: {
+					value: 0,
+					message: 'Commission must be equal or greater than 0. '
+				},
+			},
+		},
+		'inv[{{ $i }}][retail]': {
+			validators: {
+				notEmpty: {
+					message: 'Please insert retail price for this item. '
+				},
+				greaterThan: {
+					value: 0,
+					message: 'Commission must be equal or greater than 0. '
+				},
+			},
+		},
+		'inv[{{ $i }}][quantity]': {
+			validators: {
+				notEmpty: {
+					message: 'Please insert retail price for this item. '
+				},
+				greaterThan: {
+					value: 0,
+					message: 'Commission must be equal or greater than 0. '
+				},
+			},
+		},
+		'pay[{{ $i }}][id_bank]': {
+			validators: {
+				notEmpty: {
+					message: 'Please choose payment bank. '
+				},
+			},
+		},
+		'pay[{{ $i }}][date_payment]': {
+			validators: {
+				notEmpty: {
+					message: 'Please insert payment date. '
+				},
+				date: {
+					format: 'YYYY-MM-DD',
+					message: 'The date format is not valid. '
+				}
+			},
+		},
+		'pay[{{ $i }}][amount]': {
+			validators: {
+				notEmpty: {
+					message: 'Please insert payment amount. '
+				},
+				greaterThan: {
+					value: 1,
+					message: 'Amount must be equal or greater than 1. '
+				},
+			},
+		},
+@endfor
+
+
 	}
 })
 

@@ -56,6 +56,11 @@ class User extends Authenticatable
         return $this->hasMany('App\Sales', 'id_user');
     }
 
+    public function createdby()
+    {
+        return $this->hasMany('App\Product', 'id_user');
+    }
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////
     // this is for middleware truly for an admin purpose
     public function isAnAdmin() {

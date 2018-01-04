@@ -15,7 +15,7 @@ class Product extends Model
     {
         return [
             'slug' => [
-                'source' => 'taxes'
+                'source' => 'product'
             ]
         ];
     }
@@ -39,4 +39,9 @@ class Product extends Model
 	{
 		return $this->hasMany('App\Transactions', 'id_user');
 	}
+
+    public function belonging()
+    {
+        return $this->belongsTo('App\User');
+    }
 }

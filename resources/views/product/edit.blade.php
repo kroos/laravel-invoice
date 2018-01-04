@@ -122,6 +122,6 @@
 
 @section('jquery')
 	$("input").keyup(function() {
-		toUpper(this);
+		tch(this);
 	});
 @endsection

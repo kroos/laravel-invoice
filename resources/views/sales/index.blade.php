@@ -88,11 +88,11 @@ $re = $paya - $tamo;
 									</button>
 									<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
 										<li role="separator" class="divider"></li>
-										<li><a href="{!! route('sales.edit', $in->id) !!}" >edit</a></li>
-										<li><a href="{!! route('sales.destroy', $in->id) !!}" >delete</a></li>
+										<li><a href="{!! route('sales.edit', $in->id) !!}" ><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i>&nbsp;&nbsp; edit</a></li>
+										<li><a href="{!! route('sales.destroy', $in->id) !!}" ><i class="fa fa-trash fa-lg" aria-hidden="true"></i>&nbsp;&nbsp; delete</a></li>
 										<li role="separator" class="divider"></li>
-										<li><a href="{!! route('printpdf.print', $in->id) !!}" target="_blank">export as PDF</a></li>
-										<li><a href="{!! route('emailpdf.send', $in->id) !!}">send email</a></li>
+										<li><a href="{!! route('printpdf.print', $in->id) !!}" target="_blank"><i class="fa fa-file-pdf-o fa-lg" aria-hidden="true"></i>&nbsp;&nbsp; export to pdf</a></li>
+										<li><a href="{!! route('emailpdf.send', $in->id) !!}"><i class="fa fa-envelope-o fa-lg" aria-hidden="true"></i>&nbsp;&nbsp; sent email</a></li>
 										<li role="separator" class="divider"></li>
 									</ul>
 								</div>
@@ -111,7 +111,7 @@ $re = $paya - $tamo;
 							<td>RM {!! number_format($tcomm,2) !!}</td>
 							<td>RM {!! number_format($tamo, 2) !!}</td>
 							<td>RM {!! number_format($paya, 2) !!}</td>
-							<td><p class="btn <?php echo ($re < 0)? 'btn-danger' : 'btn-success' ?>"><?php echo ($re < 0)? 'Pending' : 'Paid' ?></p></td>
+							<td><p class="btn <?php echo ($re < 0)? 'btn-danger' : 'btn-success' ?>"><?php echo ($re < 0) ? '<i class="fa fa-credit-card fa-lg" aria-hidden="true"></i>' : '<i class="fa fa-money fa-lg" aria-hidden="true"></i>' ?></p></td>
 						</tr>
 						@endforeach
 					</tbody>

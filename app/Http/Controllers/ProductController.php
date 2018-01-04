@@ -45,9 +45,15 @@ class ProductController extends Controller
 	
 	public function store(ProductFormRequest $request)
 	{
-		$prdt = Product::create(request([
-				'id_user', 'product', 'id_category', 'retail', 'commission', 'active'
-			]));
+		// dd($request->all());
+		$prdt1 = new Product(request([
+				'product', 'id_category', 'retail', 'commission', 'active'
+		]));
+		$prdt = \Auth::user()->createdby()->save($prdt1);
+		// $prdt = Product::create(request([
+		// 		'id_user', 'product', 'id_category', 'retail', 'commission', 'active'
+		// 	]));
+
 		foreach($request->file('image') as $file){
 
 			$mime = $file->getMimeType();
@@ -83,7 +89,8 @@ class ProductController extends Controller
 				File::delete($h);
 			}
 		}
-
+		// info when update success
+		Session::flash('flash_message', 'Data successfully added!');
 		return redirect()->back();		// redirect back to original route
 	}
 	
@@ -107,12 +114,13 @@ class ProductController extends Controller
 						'retail' => request('retail'),
 						'commission' => request('commission'),
 						'active' => request('active'),
+						'updated_at' => request('updated_at'),
 					]);
-		$product->touch();
+
 		// info when update success
 		Session::flash('flash_message', 'Data successfully edited!');
 	
-		return redirect(route('product.edit', $product->id));      // redirect back to original route
+		return redirect(route('product.edit', $product->slug));      // redirect back to original route
 	}
 	
 	public function destroy(Product $product)

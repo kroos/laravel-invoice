@@ -1,13 +1,13 @@
 @extends('layout.master')
 
 @section('content')
-	<div class="row"><p><a href="{!! route('product.edit', $productImage->id_product) !!}" class="btn btn-info">Back to product</a></p></div>
+<?php $rt = App\Product::find($productImage->id_product) ?>
+	<div class="row"><p><a href="{!! route('product.edit', $rt->slug) !!}" class="btn btn-info">Back to product</a></p></div>
 	@include('layout.errorform')
 	@include('layout.info')
 
 	{!! Form::model($productImage, ['route' => ['productimage.update',$productImage->id], 'method' => 'PATCH', 'class' => 'form-horizontal', 'files' => true]) !!}
 
-<?php $rt = App\Product::find($productImage->id_product) ?>
 
 <div class="panel panel-default">
 	<div class="panel-heading">Edit Image for <strong>{!! $rt->product !!}</strong></div>
@@ -34,6 +34,6 @@
 
 @section('jquery')
 	$("input").keyup(function() {
-		toUpper(this);
+		tch(this);
 	});
 @endsection
