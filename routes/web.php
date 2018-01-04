@@ -61,8 +61,12 @@ Route::get('/home', [
 		'uses' => 'HomeAuthController@home',
 	]);
 
-
-
+####################################################################
+// remote controller
+Route::get('/remoteusers', [
+		'as' => 'remote.user',
+		'uses' => 'RemoteController@remoteusername',
+	]);
 ####################################################################
 // user controller
 

@@ -103,9 +103,9 @@ class ProductCategoryController extends Controller
 						'product_category' => title_case(request('category')),
 						'active' => request('active'),
 						'id_user' => auth()->user()->id,
-						// 'updatsed_at' => Carbon::now(),
+						'updated_at' => request('updated_at')
 					]);
-		$productCategory->touch();
+		// $productCategory->touch();
 		// info when update success
 		Session::flash('flash_message', 'Data successfully edited!');
 	

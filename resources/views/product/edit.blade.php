@@ -5,7 +5,7 @@
 	@include('layout.errorform')
 	@include('layout.info')
 
-	{!! Form::model($product, ['route' => ['product.update', $product->slug], 'method' => 'PATCH', 'class' => 'form-horizontal']) !!}
+	{!! Form::model($product, ['route' => ['product.update', $product->slug], 'method' => 'PATCH', 'class' => 'form-horizontal', 'id' => 'form']) !!}
 
 <div class="col-lg-12">
 	<div class="row">
@@ -17,7 +17,7 @@
 						<div class="form-group {!! ( count($errors->get('product')) ) >0 ? 'has-error' : '' !!}">
 							{!! Form::label('nam', 'Product :', ['class' => 'col-sm-2 control-label']) !!}
 							<div class="col-sm-10">
-								{!! Form::input('text', 'product', $product->product, ['class' => 'form-control put', 'placeholder' => 'Name', 'id' => 'nam']) !!}
+								{!! Form::text('product', $product->product, ['class' => 'form-control put', 'placeholder' => 'Name', 'id' => 'nam']) !!}
 							</div>
 						</div>
 			
@@ -54,6 +54,7 @@
 							<div class="col-sm-offset-2 col-sm-10">
 								<div class="checkbox">
 									<label>
+										{!! Form::hidden('active', 0) !!}
 										{!! Form::checkbox('active', 1, $product->active) !!}&nbsp;Active
 									</label>
 								</div>
@@ -121,7 +122,74 @@
 
 
 @section('jquery')
+
 	$("input").keyup(function() {
 		tch(this);
 	});
+
+////////////////////////////////////////////////////////////////////////////////////
+// bootstrap validator
+
+$("#form").bootstrapValidator({
+	feedbackIcons: {
+		valid: 'glyphicon glyphicon-ok',
+		invalid: 'glyphicon glyphicon-remove',
+		validating: 'glyphicon glyphicon-refresh'
+	},
+	fields: {
+		product: {
+			validators: {
+				notEmpty: {
+					message: 'Please insert product name. '
+				},
+			}
+		},
+		retail: {
+			validators: {
+				notEmpty: {
+					message: 'Please insert retail price. '
+				},
+				greaterThan: {
+					value: 0,
+					message: 'The retail price should be greater than 0. '
+				}
+			}
+		},
+@if(auth()->user()->id_group == 1)
+		commission: {
+			validators: {
+				notEmpty: {
+					message: 'Please insert commission. '
+				},
+				greaterThan: {
+					value: 0,
+					message: 'The commssion should be greater than 0. '
+				}
+			}
+		},
+@endif
+		'image[]': {
+			validators: {
+				notEmpty: {
+					message: 'Please select an image'
+				},
+				file: {
+					extension: 'jpeg,jpg,png,bmp',
+					type: 'image/jpeg,image/png,image/bmp',
+					maxSize: 7990272,   // 3264 * 2448
+					message: 'The selected file is not valid. It should be 3264X2448 max dimension. '
+				}
+			}
+		},
+		id_category: {
+			validators: {
+				notEmpty: {
+					message: 'Please choose an category for the product. '
+				}
+			}
+		},
+	}
+})
+
+////////////////////////////////////////////////////////////////////////////////////
 @endsection

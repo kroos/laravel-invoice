@@ -4,7 +4,7 @@
 	@include('layout.errorform')
 	@include('layout.info')
 
-	{!! Form::open(['route' => 'category.store', 'class' => 'form-horizontal']) !!}
+	{!! Form::open(['route' => 'category.store', 'class' => 'form-horizontal', 'id' => 'form']) !!}
 <div class="row">
 	<div class="col-lg-12">
 		<div class="panel panel-default">
@@ -14,14 +14,15 @@
 					<div class="form-group {!! ( count($errors->get('category')) ) >0 ? 'has-error' : '' !!}">
 						{!! Form::label('cate', 'Category :', ['class' => 'col-sm-2 control-label']) !!}
 						<div class="col-sm-10">
-							{!! Form::input('text', 'category', @$value, ['class' => 'form-control', 'placeholder' => 'Category', 'id' => 'cate']) !!}
+							{!! Form::text('category', @$value, ['class' => 'form-control', 'placeholder' => 'Category', 'id' => 'cate']) !!}
 						</div>
 					</div>
 					<div class="form-group">
 						<div class="col-sm-offset-2 col-sm-10">
 							<div class="checkbox">
 								<label>
-									{!! Form::input('checkbox', 'active', TRUE, @$value) !!}&nbsp;Aktif
+									{!! Form::checkbox('active', TRUE, @$value) !!}&nbsp;Aktif
+									{!! Form::hidden('active', FALSE) !!}
 								</label>
 							</div>
 						</div>
@@ -66,8 +67,8 @@
 									</button>
 									<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
 										<li role="separator" class="divider"></li>
-										<li><a href="{!! route('category.edit', $k->id) !!}" >edit</a></li>
-										<li><a href="{!! route('category.destroy', $k->id) !!}" >delete</a></li>
+										<li><a href="{!! route('category.edit', $k->id) !!}" ><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i>&nbsp;&nbsp; edit</a></li>
+										<li><a href="{!! route('category.destroy', $k->id) !!}" ><i class="fa fa-trash fa-lg" aria-hidden="true"></i>&nbsp;&nbsp; delete</a></li>
 										<li role="separator" class="divider"></li>
 									</ul>
 								</div>
@@ -91,7 +92,30 @@
 
 
 @section('jquery')
-	$("input").keyup(function() {
-		toUpper(this);
-	});
+
+$("input").keyup(function() {
+	tch(this);
+});
+
+////////////////////////////////////////////////////////////////////////////////////
+// bootstrap validator
+
+$("#form").bootstrapValidator({
+	feedbackIcons: {
+		valid: 'glyphicon glyphicon-ok',
+		invalid: 'glyphicon glyphicon-remove',
+		validating: 'glyphicon glyphicon-refresh'
+	},
+	fields: {
+		category: {
+			validators: {
+				notEmpty: {
+					message: 'Please insert category name. '
+				},
+			}
+		},
+	}
+})
+
+////////////////////////////////////////////////////////////////////////////////////
 @endsection

@@ -67,32 +67,14 @@
 // ucwords input
 	$(document).on('keyup', '#pel', function () {
 	// $("input").keyup(function() {
-		toUpper(this);
+		tch(this);
 	});
 
 ////////////////////////////////////////////////////////////////////////////////////
 // uppercase input for tracking number and customer section
 	$(document).on('keyup', '#apel, #catel', function () {
-		toUppercase(this);
+		uch(this);
 	});
-
-////////////////////////////////////////////////////////////////////////////////////
-// capital case helper
-	function toUppercase(obj) {
-		var mystring = obj.value;
-		var sp = mystring.split(' ');
-		var wl=0;
-		var f ,r;
-		var word = new Array();
-		for (i = 0 ; i < sp.length ; i ++ ) {
-			f = sp[i].substring(0,1).toUpperCase();
-			r = sp[i].substring(1).toUpperCase();
-			word[i] = f+r;
-		}
-		newstring = word.join(' ');
-		obj.value = newstring;
-		return true;
-	}
 
 ////////////////////////////////////////////////////////////////////////////////////
 @endsection

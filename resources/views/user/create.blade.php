@@ -106,11 +106,11 @@
 									</button>
 									<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
 										<li role="separator" class="divider"></li>
-										<li><a href="{!! route('user.edit', $k->slug) !!}" >edit</a></li>
+										<li><a href="{!! route('user.edit', $k->slug) !!}" ><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i>&nbsp;&nbsp; edit</a></li>
 										<li>
 											@if($k->id != 1)
 											{!! Form::open(['route' => ['user.destroy', $k->slug], 'method' => 'delete']) !!}
-											{!! Form::button('delete&nbsp;<i class="remove glyphicon glyphicon-remove-sign glyphicon-white"></i>', ['class' => 'remove', 'type' => 'submit']) !!}
+											{!! Form::button('<i class="fa fa-trash fa-lg" aria-hidden="true"></i>&nbsp;&nbsp; delete', ['class' => 'remove', 'type' => 'submit']) !!}
 											{!! Form::close() !!}
 											@endif
 										</li>
@@ -182,6 +182,12 @@ $("#form").bootstrapValidator({
 					regexp: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
 					message: 'Please insert your valid email address. '
 				},
+				remote: {
+					// type: 'POST',
+					url:'{{ route('remote.user') }}',
+					message: 'Please use another email. ',
+					delay: 50
+				},
 			}
 		},
 		username: {
@@ -198,6 +204,12 @@ $("#form").bootstrapValidator({
 				regexp: {
 					regexp: /^[a-zA-Z0-9_]+$/,
 					message: 'The username can only consist of alphabetical, number and underscore'
+				},
+				remote: {
+					// type: 'POST',
+					url:'{{ route('remote.user') }}',
+					message: 'Please use another username. ',
+					delay: 50
 				},
 			}
 		},

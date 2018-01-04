@@ -38,8 +38,8 @@
 									</button>
 									<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
 										<li role="separator" class="divider"></li>
-										<li><a href="{!! route('customers.edit', $in->id) !!}" >edit</a></li>
-										<li><a href="{!! route('customers.destroy', $in->id) !!}" >delete</a></li>
+										<li><a href="{!! route('customers.edit', $in->id) !!}" ><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i>&nbsp;&nbsp; edit</a></li>
+										<li><a href="{!! route('customers.destroy', $in->id) !!}" ><i class="fa fa-trash fa-lg" aria-hidden="true"></i>&nbsp;&nbsp; delete</a></li>
 										<li role="separator" class="divider"></li>
 									</ul>
 								</div>

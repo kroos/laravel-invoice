@@ -20,7 +20,7 @@
 				<div class="form-group {!! ( count($errors->get('category')) ) >0 ? 'has-error' : '' !!}">
 					{!! Form::label('cate', 'Category :', ['class' => 'col-sm-2 control-label']) !!}
 					<div class="col-sm-10">
-						{!! Form::input('text', 'category', $productCategory->product_category, ['class' => 'form-control', 'placeholder' => 'Category', 'id' => 'cate']) !!}
+						{!! Form::text('category', $productCategory->product_category, ['class' => 'form-control', 'placeholder' => 'Category', 'id' => 'cate']) !!}
 					</div>
 				</div>
 				<div class="form-group">
@@ -48,6 +48,6 @@
 
 @section('jquery')
 	$("input").keyup(function() {
-		toUpper(this);
+		tch(this);
 	});
 @endsection
