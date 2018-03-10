@@ -1,9 +1,9 @@
 // http://www.jquery4u.com/events/capitalize-letter-word-keypress/
 
 //usage
-$("input").keyup(function() {
-   tch(this);
-});
+// $("input").keyup(function() {
+//    tch(this);
+// });
 
 
 ////////////////////////////////////////////////////////////////////////////////////
