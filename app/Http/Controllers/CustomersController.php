@@ -45,9 +45,9 @@ class CustomersController extends Controller
 	{
 		$duit = Customers::find($customers->id)
 				->update(request([
-						'client', 'client_address', 'client_poskod', 'client_phone', 'client_email',
+						'client', 'client_address', 'client_poskod', 'client_phone', 'client_email', 'updated_at',
 				]));
-		$customers->touch();
+		// $customers->touch();
 		// info when update success
 		Session::flash('flash_message', 'Data successfully edited!');
 		return redirect(route('customers.index'));
@@ -56,5 +56,37 @@ class CustomersController extends Controller
 	public function destroy(Customers $customers)
 	{
 	//
+	}
+
+	public function search(Request $request)
+	{
+		$valid = TRUE;
+		$cust = Customers::where('client', $request->client)->count();
+		$cust_email = Customers::where('client_email', $request->client_email)->count();
+		$cust_phone = Customers::where('client_phone', $request->client_phone)->count();
+		// dd($cust);
+
+		if ($cust == 1) 
+		{
+			$valid = FALSE;
+		}
+		else 
+		{
+			if ($cust_phone == 1)
+			{
+				$valid = FALSE;
+			}
+			else
+			{
+				if ($cust_email == 1)
+				{
+					$valid = FALSE;
+				} else {
+					$valid = TRUE;
+				}
+			}
+		}
+
+		return response()->json(['valid' => $valid]);
 	}
 }

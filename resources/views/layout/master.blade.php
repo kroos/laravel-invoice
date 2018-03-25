@@ -11,9 +11,13 @@
 	<title>{{ config('app.name') }}</title>
 	<link href="favicon.ico" type="image/x-icon" rel="icon" />
 	<meta name="keywords" content="" />
+	<meta name="csrf-token" content="{{ csrf_token() }}">
 
 	<!-- jquery -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js" type="text/javascript" ></script>
+
+	<!-- jquery cookie -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js" type="text/javascript"></script>
 
 	<!-- Bootstrap -->
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" ></script>

@@ -435,6 +435,11 @@ Route::delete('customers/destroy/{customers}', [
 		'uses' => 'CustomersController@destroy'
 	]);
 
+Route::post('customers/search', [
+		'as' => 'customers.search',
+		'uses' => 'CustomersController@search'
+	]);
+
 ####################################################################
 // preferences controller
 

@@ -770,6 +770,51 @@ $("#form").bootstrapValidator({
 				}
 			}
 		},
+		client: {
+			validators: {
+				remote: {
+					type: 'POST',
+					url: '{{ route('customers.search') }}',
+					message: 'Client already exist. Please check them in "Returning Customer" Section',
+					data: function(validator) {
+								return {
+											_token: '{!! csrf_token() !!}',
+								};
+							},
+					delay: 1,		// wait 0.001 seconds
+				},
+			}
+		},
+		client_email: {
+			validators: {
+				remote: {
+					type: 'POST',
+					url: '{{ route('customers.search') }}',
+					message: 'Client email already exist. Please check them in "Returning Customer" Section',
+					data: function(validator) {
+								return {
+											_token: '{!! csrf_token() !!}',
+								};
+							},
+					delay: 1,		// wait 0.001 seconds
+				},
+			}
+		},
+		client_phone: {
+			validators: {
+				remote: {
+					type: 'POST',
+					url: '{{ route('customers.search') }}',
+					message: 'Client phone already exist. Please check them in "Returning Customer" Section',
+					data: function(validator) {
+								return {
+											_token: '{!! csrf_token() !!}',
+								};
+							},
+					delay: 1,		// wait 0.001 seconds
+				},
+			}
+		},
 		'image[]': {
 			validators: {
 				notEmpty: {
@@ -811,18 +856,18 @@ $("#form").bootstrapValidator({
 				},
 				greaterThan: {
 					value: 0,
-					message: 'Commission must be equal or greater than 0. '
+					message: 'Retail price must be equal or greater than 0. '
 				},
 			},
 		},
 		'inv[{{ $i }}][quantity]': {
 			validators: {
 				notEmpty: {
-					message: 'Please insert retail price for this item. '
+					message: 'Please insert quantity for this item. '
 				},
 				greaterThan: {
 					value: 0,
-					message: 'Commission must be equal or greater than 0. '
+					message: 'Quantity must be equal or greater than 0. '
 				},
 			},
 		},
