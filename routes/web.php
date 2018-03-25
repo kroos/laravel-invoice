@@ -369,6 +369,12 @@ Route::get('slipnumbers/destroy/{slipNumbers}', [
 		'uses' => 'SlipNumbersController@destroy'
 	]);
 
+Route::post('slipnumbers/search', [
+		'as' => 'slipnumbers.search',
+		'uses' => 'SlipNumbersController@search'
+	]);
+
+
 ####################################################################
 // taxes controller
 

@@ -91,4 +91,19 @@ class SlipNumbersController extends Controller
     
         return redirect()->back();      // redirect back to original route
     }
+
+    public function search(Request $request)
+    {
+        $valid = TRUE;
+        // dd($cust);
+        foreach ($request->serial as $key => $val) {
+            $serialtrack = SlipNumbers::where('tracking_number', $val['tracking_number'])->count();
+            if ($serialtrack == 1) {
+                $valid = FALSE;
+            } else {
+                $valid = TRUE;
+            }
+            return response()->json(['valid' => $valid]);
+        }
+    }
 }

@@ -737,8 +737,8 @@ function update_balance() {
 
 ////////////////////////////////////////////////////////////////////////////////////
 // bootstrap validator
-
-$("#form").bootstrapValidator({
+$(document).on('keydown', '#form', function () {
+$(this).bootstrapValidator({
 	feedbackIcons: {
 		valid: 'glyphicon glyphicon-ok',
 		invalid: 'glyphicon glyphicon-remove',
@@ -763,13 +763,24 @@ $("#form").bootstrapValidator({
 				}
 			}
 		},
-		'serial[1][tracking_number]': {
+@for ($ie = 1; $ie < 10; $ie++)
+		'serial[{{ $ie }}][tracking_number]': {
 			validators: {
+				remote: {
+					type: 'POST',
+					url: '{{ route('slipnumbers.search') }}',
+					message: 'Postage tracking number/DO number already exist',
+					data: function(validator) {
+								return { _token: '{!! csrf_token() !!}' };
+							},
+					delay: 1,		// wait 0.001 seconds
+				},
 				notEmpty: {
 					message: 'Please insert tracking number/bill number/receipt number. '
 				}
 			}
 		},
+@endfor
 		client: {
 			validators: {
 				remote: {
@@ -904,6 +915,7 @@ $("#form").bootstrapValidator({
 
 
 	}
+})
 })
 
 ////////////////////////////////////////////////////////////////////////////////////
