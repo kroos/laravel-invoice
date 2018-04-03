@@ -135,8 +135,12 @@ class UserController extends Controller
 		//
 		User::destroy($user->id);
 		// info when update success
-		Session::flash('flash_message', 'Data successfully deleted!');
+		// Session::flash('flash_message', 'Data successfully deleted!');
 	
-		return redirect(route('user.create'));		// redirect back to original route
+		// return redirect(route('user.create'));		// redirect back to original route
+		return response()->json([
+									'message' => 'Data deleted',
+									'status' => 'success'
+								]);
 	}
 }

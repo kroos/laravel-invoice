@@ -40,7 +40,12 @@ class SalesController extends Controller
 	{
 		return view('sales.index');
 	}
-	
+
+	public function read()
+	{
+		return view('sales.read');
+	}
+
 	public function create()
 	{
 		return view('sales.create');
@@ -348,10 +353,13 @@ class SalesController extends Controller
 		$sale->salespayment()->delete();
 		$sale->delete();
 
-
 		// info when update success
-		Session::flash('flash_message', 'Data successfully deleted!');
-	
-		return redirect(route('sales.index'));		// redirect back to original route
+		// Session::flash('flash_message', 'Data successfully deleted!');
+
+		// return redirect(route('sales.index'));		// redirect back to original route
+		return response()->json([
+									'message' => 'Data deleted',
+									'status' => 'success'
+								]);
 	}
 }

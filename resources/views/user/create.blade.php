@@ -90,34 +90,15 @@
 					@if( count($us) > 0 )
 						<table id="example" class="table table-border table-hover ">
 							<thead>
-								<th>&nbsp;</th>
 								<th>name</th>
 								<th>username</th>
 								<th>email</th>
 								<th>group</th>
+								<th>action</th>
 							</thead>
 							<tbody>
 								@foreach ($us as $k)
 									<tr>
-										<td>
-								<div class="dropdown">
-									<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-										<span class="caret"></span>
-									</button>
-									<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-										<li role="separator" class="divider"></li>
-										<li><a href="{!! route('user.edit', $k->slug) !!}" ><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i>&nbsp;&nbsp; edit</a></li>
-										<li>
-											@if($k->id != 1)
-											{!! Form::open(['route' => ['user.destroy', $k->slug], 'method' => 'delete']) !!}
-											{!! Form::button('<i class="fa fa-trash fa-lg" aria-hidden="true"></i>&nbsp;&nbsp; delete', ['class' => 'remove', 'type' => 'submit']) !!}
-											{!! Form::close() !!}
-											@endif
-										</li>
-										<li role="separator" class="divider"></li>
-									</ul>
-								</div>
-										</td>
 										<td>{!! $k->name !!}</td>
 										<td>{!! $k->username !!}</td>
 										<td>{!! $k->email !!}</td>
@@ -126,6 +107,13 @@
 											$use = \App\UserGroup::findOrFail($k->id_group);
 											?>
 										<td>{!! $use->group !!}</td>
+										<td>
+											<a href="{!! route('user.edit', $k->slug) !!}" ><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></a>
+
+											@if($k->id != 1)
+											<a href="{!! route('user.destroy', $k->slug) !!}" data-id="{!! $k->slug !!}" id="delete_product_<?=$k->slug ?>" title="Delete" class="delete_button"><i class="fa fa-trash fa-lg" aria-hidden="true"></i></a>
+											@endif
+										</td>
 									</tr>
 								@endforeach
 							</tbody>
@@ -142,7 +130,59 @@
 
 
 @section('jquery')
+/////////////////////////////////////////////////////////////////////////////////////////
+// ajax post delete row
+	// readProducts(); /* it will load products when document loads */
 
+	$(document).on('click', '.delete_button', function(e){
+		var productId = $(this).data('id');
+		SwalDelete(productId);
+		e.preventDefault();
+	});
+	
+	// function readProducts(){
+	// 	$('#load-products').load('read.php');
+	// }
+
+	function SwalDelete(productId){
+		swal({
+			title: 'Are you sure?',
+			text: "It will be deleted permanently!",
+			type: 'warning',
+			showCancelButton: true,
+			confirmButtonColor: '#3085d6',
+			cancelButtonColor: '#d33',
+			confirmButtonText: 'Yes, delete it!',
+			showLoaderOnConfirm: true,
+			allowOutsideClick: false,
+
+			preConfirm: function(){
+				return new Promise(function(resolve) {
+					$.ajax({
+						headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+						url: '<?=route('user.destroy', $k->slug)?>',
+						type: 'delete',
+						data:	{
+									id: productId,
+									_token : $('meta[name=csrf-token]').attr('content')
+								},
+						dataType: 'json'
+					})
+					.done(function(response){
+						swal('Deleted!', response.message, response.status);
+						// readProducts();
+						// $('#delete_product_' + productId).text('imhere').css({"color": "red"});
+						$('#delete_product_' + productId).parent().parent().remove();
+					})
+					.fail(function(){
+						swal('Oops...', 'Something went wrong with ajax !', 'error');
+					});
+				});
+			},
+		});
+	}
+
+/////////////////////////////////////////////////////////////////////////////////////////
 $("#nam").keyup(function() {
 	tch(this);
 });

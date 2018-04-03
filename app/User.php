@@ -83,7 +83,7 @@ class User extends Authenticatable
             if ( auth()->user()->id_group == 1 ) {
                 return true;
             } else {
-                return false;        
+                return false;
             }
         }
     }

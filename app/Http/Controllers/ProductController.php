@@ -131,8 +131,12 @@ class ProductController extends Controller
 		$prod->delete();
 
 		// info when update success
-		Session::flash('flash_message', 'Data successfully deleted!');
+		// Session::flash('flash_message', 'Data successfully deleted!');
 	
-		return redirect()->back();		// redirect back to original route
+		// return redirect()->back();		// redirect back to original route
+		return response()->json([
+									'message' => 'Data deleted',
+									'status' => 'success'
+								]);
 	}
 }

@@ -136,7 +136,7 @@ Route::patch('category/update/{productCategory}', [
 		'uses' => 'ProductCategoryController@update'
 	]);
 
-Route::get('category/destroy/{productCategory}', [
+Route::delete('category/destroy/{productCategory}', [
 		'as' => 'category.destroy',
 		'uses' => 'ProductCategoryController@destroy'
 	]);
@@ -164,7 +164,7 @@ Route::patch('product/update/{product}', [
 		'uses' => 'ProductController@update'
 	]);
 
-Route::get('product/destroy/{product}', [
+Route::delete('product/destroy/{product}', [
 		'as' => 'product.destroy',
 		'uses' => 'ProductController@destroy'
 	]);
@@ -258,7 +258,7 @@ Route::patch('sales/update/{sales}', [
 		'uses' => 'SalesController@update'
 	]);
 
-Route::get('sales/destroy/{sales}', [
+Route::delete('sales/destroy/{sales}', [
 		'as' => 'sales.destroy',
 		'uses' => 'SalesController@destroy'
 	]);

@@ -55,7 +55,11 @@ class CustomersController extends Controller
 	
 	public function destroy(Customers $customers)
 	{
-	//
+		
+		return response()->json([
+									'message' => 'Data deleted',
+									'status' => 'success'
+								]);
 	}
 
 	public function search(Request $request)

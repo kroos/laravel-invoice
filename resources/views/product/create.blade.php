@@ -93,31 +93,17 @@
 				@if( count($pro) > 0 )
 					<table id="example" class="table table-border table-hover ">
 						<thead>
-							<th>&nbsp;</th>
 							<th>product</th>
 							<th>category</th>
 							<th>retail</th>
 							<th>commission</th>
 							<th>active</th>
 							<th>image</th>
+							<th>action</th>
 						</thead>
 						<tbody>
 							@foreach ($pro as $k)
 								<tr>
-									<td>
-								<div class="dropdown">
-									<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-										<span class="caret"></span>
-									</button>
-									<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-										<li role="separator" class="divider"></li>
-										<li><a href="{!! route('product.edit' ,$k->slug) !!}" ><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i>&nbsp;&nbsp; edit</a></li>
-										<li><a href="{!! route('product.destroy', $k->slug) !!}"><i class="fa fa-trash fa-lg" aria-hidden="true"></i>&nbsp;&nbsp; delete</a></li>
-
-										<li role="separator" class="divider"></li>
-									</ul>
-								</div>
-									</td>
 									<td>{!! $k->product !!}</td>
 									<td>{!! App\ProductCategory::find($k->id_category)->product_category !!}</td>
 									<td>RM {!! number_format($k->retail, 2) !!}</td>
@@ -131,6 +117,10 @@
 												}
 												
 										?>
+									</td>
+									<td>
+										<a href="{!! route('product.edit' ,$k->slug) !!}" ><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></a>
+										<a href="{!! route('product.destroy', $k->slug) !!}" data-id="{!! $k->slug !!}" id="delete_product_<?=$k->slug ?>" title="Delete" class="delete_button"><i class="fa fa-trash fa-lg" aria-hidden="true"></i></a>
 									</td>
 								</tr>
 							@endforeach
@@ -150,7 +140,60 @@
 
 
 @section('jquery')
+/////////////////////////////////////////////////////////////////////////////////////////
+// ajax post delete row
+	// readProducts(); /* it will load products when document loads */
 
+	$(document).on('click', '.delete_button', function(e){
+		var productId = $(this).data('id');
+		SwalDelete(productId);
+		e.preventDefault();
+	});
+	
+	// function readProducts(){
+	// 	$('#load-products').load('read.php');
+	// }
+
+	function SwalDelete(productId){
+		swal({
+			title: 'Are you sure?',
+			text: "It will be deleted permanently!",
+			type: 'warning',
+			showCancelButton: true,
+			confirmButtonColor: '#3085d6',
+			cancelButtonColor: '#d33',
+			confirmButtonText: 'Yes, delete it!',
+			showLoaderOnConfirm: true,
+			allowOutsideClick: false,
+
+			preConfirm: function()                {
+				return new Promise(function(resolve) {
+					$.ajax({
+						headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+						url: '<?=route('product.destroy', $k->slug)?>',
+						type: 'delete',
+						data:	{
+									id: productId,
+									_token : $('meta[name=csrf-token]').attr('content')
+								},
+						dataType: 'json'
+					})
+					.done(function(response){
+						swal('Deleted!', response.message, response.status);
+						// readProducts();
+						$('#delete_product_' + productId).text('imhere').css({"color": "red"});
+						$('#delete_product_' + productId).parent().parent().remove();
+					})
+					.fail(function(){
+						swal('Oops...', 'Something went wrong with ajax !', 'error');
+					});
+					console.log()
+				});
+			},
+		});
+	}
+
+/////////////////////////////////////////////////////////////////////////////////////////
 	$("input").keyup(function() {
 		tch(this);
 	});

@@ -122,8 +122,12 @@ class ProductCategoryController extends Controller
 	{
 		ProductCategory::destroy($productCategory->id);
 		// info when update success
-		Session::flash('flash_message', 'Data successfully deleted!');
+		// Session::flash('flash_message', 'Data successfully deleted!');
 	
-		return redirect(route('category.create'));		// redirect back to original route
+		// return redirect(route('category.create'));		// redirect back to original route
+		return response()->json([
+									'message' => 'Data deleted',
+									'status' => 'success'
+								]);
 	}
 }

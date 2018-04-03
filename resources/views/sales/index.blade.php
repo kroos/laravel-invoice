@@ -3,6 +3,16 @@
 @section('content')
 	@include('layout.errorform')
 	@include('layout.info')
+<div class="col-lg-12">
+	<div class="panel panel-default">
+		<div class="panel-heading">Invoice</div>
+		<div class="panel-body">
+		<p class="text-right"><a href="{!! route('sales.create') !!}" class="btn btn-info">New Invoice</a></p>
+			<div class="col-lg-12 table-responsive" id="load-products">
+
+
+
+
 <?php
 use Carbon\Carbon;
 
@@ -11,19 +21,12 @@ function my($string) {
 	return date('d F Y', mktime(0, 0, 0, $rt->month, $rt->day, $rt->year));
 }
 ?>
-<div class="col-lg-12">
-	<div class="panel panel-default">
-		<div class="panel-heading">Invoice</div>
-		<div class="panel-body">
-		<p class="text-right"><a href="{!! route('sales.create') !!}" class="btn btn-info">New Invoice</a></p>
-			<div class="col-lg-12 table-responsive">
-
 				<table id="example" class="table table-hover">
 					<thead>
 						@if(auth()->user()->id_group == 1)
 						<th>officer</th>
 						@endif
-						<th>editing</th>
+						<!-- <th>editing</th> -->
 						<th>invoice number</th>
 						<th>date</th>
 						<th>no tracking</th>
@@ -31,6 +34,7 @@ function my($string) {
 						<th>total invoice</th>
 						<th>total payment</th>
 						<th>status</th>
+						<th>action</th>
 					</thead>
 					<tbody>
 						<?php
@@ -81,22 +85,6 @@ $re = $paya - $tamo;
 							@if(auth()->user()->id_group == 1)
 							<td>{!! App\User::find($in->id_user)->name !!}</td>
 							@endif
-							<td>
-								<div class="dropdown">
-									<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-										<span class="caret"></span>
-									</button>
-									<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-										<li role="separator" class="divider"></li>
-										<li><a href="{!! route('sales.edit', $in->id) !!}" ><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i>&nbsp;&nbsp; edit</a></li>
-										<li><a href="{!! route('sales.destroy', $in->id) !!}" ><i class="fa fa-trash fa-lg" aria-hidden="true"></i>&nbsp;&nbsp; delete</a></li>
-										<li role="separator" class="divider"></li>
-										<li><a href="{!! route('printpdf.print', $in->id) !!}" target="_blank"><i class="fa fa-file-pdf-o fa-lg" aria-hidden="true"></i>&nbsp;&nbsp; export to pdf</a></li>
-										<li><a href="{!! route('emailpdf.send', $in->id) !!}"><i class="fa fa-envelope-o fa-lg" aria-hidden="true"></i>&nbsp;&nbsp; sent email</a></li>
-										<li role="separator" class="divider"></li>
-									</ul>
-								</div>
-							</td>
 							<td>{!! $in->id !!}</td>
 							<td>{!! my($in->date_sale) !!}</td>
 							<!-- <td>{!! $in->no_tracking !!}</td> -->
@@ -112,10 +100,20 @@ $re = $paya - $tamo;
 							<td>RM {!! number_format($tamo, 2) !!}</td>
 							<td>RM {!! number_format($paya, 2) !!}</td>
 							<td><p class="btn <?php echo ($re < 0)? 'btn-danger' : 'btn-success' ?>"><?php echo ($re < 0) ? '<i class="fa fa-credit-card fa-lg" aria-hidden="true"></i>' : '<i class="fa fa-money fa-lg" aria-hidden="true"></i>' ?></p></td>
+							<td>
+								<a href="{!! route('sales.edit', $in->id) !!}" title="Edit"><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></a>
+
+								<a href="{!! route('sales.destroy', $in->id) !!}" data-id="{!! $in->id !!}" data-token="{{ csrf_token() }}" id="delete_product_<?=$in->id ?>" title="Delete" class="delete_button"><i class="fa fa-trash fa-lg" aria-hidden="true"></i>
+								</a>
+
+								<a href="{!! route('printpdf.print', $in->id) !!}" target="_blank" title="Print PDF"><i class="fa fa-file-pdf-o fa-lg" aria-hidden="true"></i></a>
+								<a href="{!! route('emailpdf.send', $in->id) !!}" title="Send Email"><i class="fa fa-envelope-o fa-lg" aria-hidden="true"></i></a>
+							</td>
 						</tr>
 						@endforeach
 					</tbody>
 				</table>
+
 
 			</div>
 		</div>
@@ -127,4 +125,63 @@ $re = $paya - $tamo;
 
 @section('jquery')
 
+/////////////////////////////////////////////////////////////////////////////////////////
+
+$.ajaxSetup({
+    headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')}
+});
+
+// ajax post delete row
+	// readProducts(); /* it will load products when document loads */
+
+	$(document).on('click', '.delete_button', function(e){
+		var productId = $(this).data('id');
+		SwalDelete(productId);
+		e.preventDefault();
+	});
+	
+	// function readProducts(){
+	// 	$('#load-products').load('read.php');
+	// }
+
+	function SwalDelete(productId){
+		swal({
+			title: 'Are you sure?',
+			text: "It will be deleted permanently!",
+			type: 'warning',
+			showCancelButton: true,
+			confirmButtonColor: '#3085d6',
+			cancelButtonColor: '#d33',
+			confirmButtonText: 'Yes, delete it!',
+			showLoaderOnConfirm: true,
+			allowOutsideClick: false,
+
+			preConfirm: function()                {
+				return new Promise(function(resolve) {
+					$.ajax({
+						headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+						url: '<?=route('sales.destroy', $in->id)?>',
+						type: 'delete',
+						data:	{
+									id: productId,
+									_token : $('meta[name=csrf-token]').attr('content')
+								},
+						dataType: 'json'
+					})
+					.done(function(response){
+						swal('Deleted!', response.message, response.status);
+						// readProducts();
+						$('#delete_product_' + productId).text('imhere').css({"color": "red"});
+						$('#delete_product_' + productId).parent().parent().remove();
+					})
+					.fail(function(){
+						swal('Oops...', 'Something went wrong with ajax !', 'error');
+					});
+					console.log()
+				});
+			},
+		});
+	}
+
+/////////////////////////////////////////////////////////////////////////////////////////
 @endsection

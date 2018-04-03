@@ -438,8 +438,8 @@ $(document).on('change', '#taxs', function () {
 	for (var i = arr.length - 1; i >= 0; i--) {
 		er += ((arr[i] * 100) / 100);
 	}
-	console.log(er);
-	console.log(se);
+	//console.log(er);
+	//console.log(se);
 	$('#total_tax').text( er );
 
 	// update each time user change the value
