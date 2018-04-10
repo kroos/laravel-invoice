@@ -11,7 +11,7 @@ body {
 	font-family: 'Sanchez', serif;
 	font-size: 15px;
 	background-color: lightblue;
-	padding-top: 70px;
+	padding-top: 105px;
 }
 h1 {
 	color: darkblue;
@@ -40,3 +40,17 @@ p {
 	float: none;
 	margin: 0 auto;
 }
+
+
+// font awesome 4
+@import "~font-awesome/scss/font-awesome";
+
+// select2 themes default
+
+// select2 bootstrap css
+@import '~select2/src/scss/core';
+@import "~select2-bootstrap-css/lib/select2-bootstrap";
+@import "~select2/src/scss/theme/default/layout";
+
+// sweetalert2
+@import '~sweetalert2/src/sweetalert2';

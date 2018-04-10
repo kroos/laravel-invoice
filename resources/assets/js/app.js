@@ -6,5 +6,11 @@
  */
 
 require('./bootstrap');
-require('./ucwords');
-require('./jquery.chained.min');
+require('./jquery-minicolors');
+require('./bootstrapvalidator');
+require('./jquery-chained');
+require('./select2');
+require('./datatables.net');
+require('./bootstrap-datepicker');
+require('./jquery.cookie');
+require('./sweetalert2');

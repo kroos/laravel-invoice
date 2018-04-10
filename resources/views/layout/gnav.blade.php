@@ -9,15 +9,15 @@
 				<span class="icon-bar"></span>
 				<span class="icon-bar"></span>
 			</button>
-			<?php $logo = App\Preferences::find(1) ?>
-			<a class="navbar-brand topnav" href="{!! route('auth.index') !!}">
-				<img src=" data:{!! $logo->company_logo_mime !!};base64,{!! $logo->company_logo_image !!}" alt="Home" title="Home" width="7%" class="img-responsive img-rounded">
-			</a>
 		</div>
 		<!-- Collect the nav links, forms, and other content for toggling -->
 		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 
 				<ul class="nav navbar-nav navbar-right">
+					<li>
+						<?php $logo = App\Preferences::find(1) ?>
+						<a href="{!! route('auth.index') !!}"><!-- <img src=" data:{!! $logo->company_logo_mime !!};base64,{!! $logo->company_logo_image !!}" alt="Home" title="Home" width="5%" class="img-responsive img-rounded"> -->Home</a>
+					</li>
                         @if (Auth::guest())
                             <li><a href="{!! route('login') !!}">Login</a></li>
                         @endif
