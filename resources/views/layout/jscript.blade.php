@@ -10,10 +10,10 @@
 			});
 
 			$(document).on('mouseenter', 'select', function () {
-				$(this).select2();
+				// $(this).select2();
 			});
 
-			$('select').select2();
+			// $('select').select2();
 			
 			@section('jquery')
 			@show

@@ -52,15 +52,38 @@
 									{!! Form::input('text', 'date_sale', @$value, ['class' => 'form-control date', 'placeholder' => 'Date', 'id' => 'da']) !!}
 								</div>
 							</div>
+
 							<div class="serial_wrap">
 								<div class="form-group <?php echo ( count($errors->get('serial.*.tracking_number'))  > 0 ) ? 'has-error' : '' ?> rowserial">
-									<button type="button" class="btn btn-danger col-lg-1 remove_serial">-</button>{!! Form::label('catel', 'Receipt or Postage Tracking :', ['class' => 'col-sm-4 control-label']) !!}
+									<button type="button" class="btn btn-danger col-lg-1 remove_serial">
+										<i class="fa fa-trash" aria-hidden="true"></i>
+									</button>{!! Form::label('catel', 'Receipt or Postage Tracking :', ['class' => 'col-sm-4 control-label']) !!}
 									<div class="col-sm-7">
-										{!! Form::input('text', 'serial[1][tracking_number]', @$value, ['class' => 'form-control', 'placeholder' => 'Receipt or Tracking Serial Number', 'id' => 'catel']) !!}
+										{!! Form::input('text', 'serial[][tracking_number]', @$value, ['class' => 'form-control tracking_number', 'placeholder' => 'Receipt or Tracking Serial Number', 'id' => 'catel']) !!}
 									</div>
 								</div>
 							</div>
-							<p><button class="add_serial btn btn-default" type="button">Add Postage Tracking</button></p>
+
+							<!-- for adding and remove row -->
+							<div class="serial_wrap hide" id="optionTemplate">
+								<div class="form-group <?php echo ( count($errors->get('serial.*.tracking_number'))  > 0 ) ? 'has-error' : '' ?> rowserial">
+									<button type="button" class="btn btn-danger col-lg-1 remove_serial">
+										<i class="fa fa-trash" aria-hidden="true"></i>
+									</button>{!! Form::label('catel', 'Receipt or Postage Tracking :', ['class' => 'col-sm-4 control-label']) !!}
+									<div class="col-sm-7">
+										{!! Form::input('text', 'serial[][tracking_number]', @$value, ['class' => 'form-control tracking_number', 'placeholder' => 'Receipt or Tracking Serial Number', 'id' => 'catel']) !!}
+									</div>
+								</div>
+							</div>
+							<!-- adding and remove row ends -->
+
+							<!-- button add -->
+							<p>
+								<button class="add_serial btn btn-primary" type="button">
+									<i class="fa fa-plus" aria-hidden="true"></i>&nbsp;Add Postage Tracking
+								</button>
+							</p>
+
 							<div class="form-group <?php echo ( count( $errors->get('image.*') )  > 0  )? 'has-error' : '' ?>">
 								{!! Form::label('img', 'Receipt or Postage Slip Image :', ['class' => 'col-sm-5 control-label']) !!}
 								<div class="col-sm-7">
@@ -170,65 +193,129 @@
 				
 							<div class="col-lg-12 input_fields_wrap">
 
-		<div class="row rowinvoice">
-			<div class="col-sm-12">
-				<div class="col-sm-1">
-					<div class="row">
-						<div class="col-sm-12">
-							<button class="btn btn-danger remove_field" type="button">-</button>
-						</div>
-					</div>
-				</div>
-				<div class="col-sm-4">
-					<div class="row">
-						<div class="col-sm-12 form-group <?php echo ( count($errors->get('inv.*.id_product')) ) >0 ? 'has-error' : '' ?>">
-							<select name="inv[1][id_product]" class="series form-control">
-								<option value="">Choose Product</option>
-
-								<?php $cate = App\ProductCategory::where(['active' => 1])->get(); ?>
-								@foreach ($cate as $key)
-									<optgroup label="{!! $key->product_category !!}">
-										<?php $pro = App\Product::where(['id_category' => $key->id, 'active' => 1])->get() ?>
-										@foreach($pro as $r)
-											<option value="{!! $r->id !!}" data-commission="{!! $r->commission !!}" data-retail="{!! $r->retail !!}">{!! $r->product !!}</option>
-										@endforeach
-									</optgroup>
-								@endforeach
-							</select>
-						</div>
-					</div>
-				</div>
-				<div class="col-sm-2">
-					<div class="row">
-						<div class="col-sm-12 form-group {!! ( count($errors->get('inv.*.commission')) ) >0 ? 'has-error' : '' !!}">
-							<input <?=(auth()->user()->id_group == 1)? 'type="text"' : 'type="hidden"' ?> name="inv[1][commission]" class="comm form-control" placeholder="Commission (RM)" />
-						</div>
-					</div>
-				</div>
-				<div class="col-sm-2">
-					<div class="row">
-						<div class="col-sm-12 form-group {!! ( count($errors->get('inv.*.retail')) ) >0 ? 'has-error' : '' !!}">
-							<input type="text" name="inv[1][retail]" class="rate form-control" placeholder="Retail (RM)"/>
-						</div>
-					</div>
-				</div>
-				<div class="col-sm-2">
-					<div class="row">
-						<div class="col-sm-12 form-group {!! ( count($errors->get('inv.*.quantity')) ) >0 ? 'has-error' : '' !!}">
-							<input type="text" name="inv[1][quantity]" class="quan form-control" placeholder="Quantity" />
-						</div>
-					</div>
-				</div>
-				<div class="col-sm-1">
-					<div class="row">
-						<div class="col-sm-12">
-							<p class="text-right"><span class="total_price">0.00</span></p>
-						</div>
-					</div>
+<div class="row inv">
+	<div class="col-sm-12">
+		<div class="col-sm-1">
+			<div class="row">
+				<div class="col-sm-12">
+					<button class="btn btn-danger remove_field" type="button">
+						<i class="fa fa-trash" aria-hidden="true"></i>
+					</button>
 				</div>
 			</div>
 		</div>
+		<div class="col-sm-4">
+			<div class="row">
+				<div class="col-sm-12 form-group <?php echo ( count($errors->get('inv.*.id_product')) ) >0 ? 'has-error' : '' ?>">
+					<select name="inv[][id_product]" class="series form-control" id="selectseries">
+						<option value="">Choose Product</option>
 
+						<?php $cate = App\ProductCategory::where(['active' => 1])->get(); ?>
+						@foreach ($cate as $key)
+							<optgroup label="{!! $key->product_category !!}">
+								<?php $pro = App\Product::where(['id_category' => $key->id, 'active' => 1])->get() ?>
+								@foreach($pro as $r)
+									<option value="{!! $r->id !!}" data-commission="{!! $r->commission !!}" data-retail="{!! $r->retail !!}">{!! $r->product !!}</option>
+								@endforeach
+							</optgroup>
+						@endforeach
+					</select>
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-2">
+			<div class="row">
+				<div class="col-sm-12 form-group {!! ( count($errors->get('inv.*.commission')) ) >0 ? 'has-error' : '' !!}">
+					<input <?=(auth()->user()->id_group == 1)? 'type="text"' : 'type="hidden"' ?> name="inv[][commission]" class="comm form-control" placeholder="Commission (RM)" />
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-2">
+			<div class="row">
+				<div class="col-sm-12 form-group {!! ( count($errors->get('inv.*.retail')) ) >0 ? 'has-error' : '' !!}">
+					<input type="text" name="inv[][retail]" class="rate form-control" placeholder="Retail (RM)"/>
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-2">
+			<div class="row">
+				<div class="col-sm-12 form-group {!! ( count($errors->get('inv.*.quantity')) ) >0 ? 'has-error' : '' !!}">
+					<input type="text" name="inv[][quantity]" class="quan form-control" placeholder="Quantity" />
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-1">
+			<div class="row">
+				<div class="col-sm-12">
+					<p class="text-right"><span class="total_price">0.00</span></p>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- option template -->
+<div class="row inv hide" id="rowinvoice">
+	<div class="col-sm-12">
+		<div class="col-sm-1">
+			<div class="row">
+				<div class="col-sm-12">
+					<button class="btn btn-danger remove_field" type="button">
+						<i class="fa fa-trash" aria-hidden="true"></i>
+					</button>
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-4">
+			<div class="row">
+				<div class="col-sm-12 form-group <?php echo ( count($errors->get('inv.*.id_product')) ) >0 ? 'has-error' : '' ?>">
+					<select name="inv[][id_product]" class="series form-control" id="selectseries">
+						<option value="">Choose Product</option>
+
+						<?php $cate = App\ProductCategory::where(['active' => 1])->get(); ?>
+						@foreach ($cate as $key)
+							<optgroup label="{!! $key->product_category !!}">
+								<?php $pro = App\Product::where(['id_category' => $key->id, 'active' => 1])->get() ?>
+								@foreach($pro as $r)
+									<option value="{!! $r->id !!}" data-commission="{!! $r->commission !!}" data-retail="{!! $r->retail !!}">{!! $r->product !!}</option>
+								@endforeach
+							</optgroup>
+						@endforeach
+					</select>
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-2">
+			<div class="row">
+				<div class="col-sm-12 form-group {!! ( count($errors->get('inv.*.commission')) ) >0 ? 'has-error' : '' !!}">
+					<input <?=(auth()->user()->id_group == 1)? 'type="text"' : 'type="hidden"' ?> name="inv[][commission]" class="comm form-control" placeholder="Commission (RM)" />
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-2">
+			<div class="row">
+				<div class="col-sm-12 form-group {!! ( count($errors->get('inv.*.retail')) ) >0 ? 'has-error' : '' !!}">
+					<input type="text" name="inv[][retail]" class="rate form-control" placeholder="Retail (RM)"/>
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-2">
+			<div class="row">
+				<div class="col-sm-12 form-group {!! ( count($errors->get('inv.*.quantity')) ) >0 ? 'has-error' : '' !!}">
+					<input type="text" name="inv[][quantity]" class="quan form-control" placeholder="Quantity" />
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-1">
+			<div class="row">
+				<div class="col-sm-12">
+					<p class="text-right"><span class="total_price">0.00</span></p>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- end option template -->
 							</div>
 				
 							<div class="col-lg-12">
@@ -242,8 +329,7 @@
 												</div>
 												<div class="col-xs-6">
 													<p>
-														<select name="tax[]" id="taxs" multiple="multiple">
-															<option value="">Choose Tax</option>
+														<select name="tax[]" id="taxs" multiple="multiple" placeholder="Choose Tax">
 															@foreach(App\Taxes::all() as $r) :
 															<option value="{!! $r->id !!}" data-amount="{!! $r->amount !!}" >{!! $r->tax !!}</option>
 															@endforeach
@@ -271,7 +357,14 @@
 								</div>
 							</div>
 							<div class="col-lg-12">
-								<p><button class="btn btn-default add_field" type="button">Add Products</button></p>
+
+								<!-- add button -->
+								<p>
+									<button class="btn btn-primary add_field" type="button">
+									<i class="fa fa-plus" aria-hidden="true"></i>&nbsp;Add Products
+									</button>
+								</p>
+
 							</div>
 						</div>
 					</div>
@@ -287,45 +380,88 @@
 							<div class="col-lg-12">
 								<div class="col-lg-12 payment_wrap">
 
-		<div class="row rowpayment">
-			<div class="col-sm-12">
-				<div class="col-sm-1">
-					<div class="row">
-						<div class="col-sm-12">
-							<button class="btn btn-danger remove_payment" type="button">-</button>
-						</div>
-					</div>
-				</div>
-				<div class="col-sm-6">
-					<div class="row">
-						<div class="col-sm-12 form-group <?php echo ( count($errors->get('pay.*.id_bank')) ) >0 ? 'has-error' : '' ?>">
-							<select name="pay[1][id_bank]" class="form-control">
-								<option value="">Choose Bank</option>
-								<?php $ba = App\Banks::where(['active' => 1])->get(); ?>
-								@foreach ($ba as $r)
-								<option value="{!! $r->id !!}" >{!! $r->bank !!}</option>
-								@endforeach
-							</select>
-						</div>
-					</div>
-				</div>
-				<div class="col-sm-2">
-					<div class="row">
-						<div class="col-sm-12 form-group {!! ( count($errors->get('pay.*.date_payment')) ) >0 ? 'has-error' : '' !!}">
-							<input type="text" name="pay[1][date_payment]" class="form-control date" placeholder="Date Payment"/>
-						</div>
-					</div>
-				</div>
-				<div class="col-sm-3">
-					<div class="row">
-						<div class="col-sm-12 form-group {!! ( count($errors->get('pay.*.amount')) ) >0 ? 'has-error' : '' !!}">
-							<input type="text" name="pay[1][amount]" class="pamount form-control" placeholder="Amount (RM)"/>
-						</div>
-					</div>
+<div class="row rowpayment">
+	<div class="col-sm-12">
+		<div class="col-sm-1">
+			<div class="row">
+				<div class="col-sm-12">
+					<button class="btn btn-danger remove_payment" type="button">
+						<i class="fa fa-trash" aria-hidden="true"></i>
+					</button>
 				</div>
 			</div>
 		</div>
-
+		<div class="col-sm-6">
+			<div class="row">
+				<div class="col-sm-12 form-group <?php echo ( count($errors->get('pay.*.id_bank')) ) >0 ? 'has-error' : '' ?>">
+					<select name="pay[][id_bank]" class="form-control">
+						<option value="">Choose Bank</option>
+						<?php $ba = App\Banks::where(['active' => 1])->get(); ?>
+						@foreach ($ba as $r)
+						<option value="{!! $r->id !!}" >{!! $r->bank !!}</option>
+						@endforeach
+					</select>
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-2">
+			<div class="row">
+				<div class="col-sm-12 form-group {!! ( count($errors->get('pay.*.date_payment')) ) >0 ? 'has-error' : '' !!}">
+					<input type="text" name="pay[][date_payment]" class="form-control date" id="date_paym" placeholder="Date Payment"/>
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-3">
+			<div class="row">
+				<div class="col-sm-12 form-group {!! ( count($errors->get('pay.*.amount')) ) >0 ? 'has-error' : '' !!}">
+					<input type="text" name="pay[][amount]" class="pamount form-control" placeholder="Amount (RM)"/>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- option template -->
+<div class="row rowpayment hide" id="optionpayment">
+	<div class="col-sm-12">
+		<div class="col-sm-1">
+			<div class="row">
+				<div class="col-sm-12">
+					<button class="btn btn-danger remove_payment" type="button">
+						<i class="fa fa-trash" aria-hidden="true"></i>
+					</button>
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-6">
+			<div class="row">
+				<div class="col-sm-12 form-group <?php echo ( count($errors->get('pay.*.id_bank')) ) >0 ? 'has-error' : '' ?>">
+					<select name="pay[][id_bank]" class="form-control">
+						<option value="">Choose Bank</option>
+						<?php $ba = App\Banks::where(['active' => 1])->get(); ?>
+						@foreach ($ba as $r)
+						<option value="{!! $r->id !!}" >{!! $r->bank !!}</option>
+						@endforeach
+					</select>
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-2">
+			<div class="row">
+				<div class="col-sm-12 form-group {!! ( count($errors->get('pay.*.date_payment')) ) >0 ? 'has-error' : '' !!}">
+					<input type="text" name="pay[][date_payment]" class="form-control date" id="date_paym" placeholder="Date Payment"/>
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-3">
+			<div class="row">
+				<div class="col-sm-12 form-group {!! ( count($errors->get('pay.*.amount')) ) >0 ? 'has-error' : '' !!}">
+					<input type="text" name="pay[][amount]" class="pamount form-control" placeholder="Amount (RM)"/>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- end option template -->
 								</div>
 								<div class="col-lg-12">
 									<div class="row">
@@ -350,7 +486,12 @@
 									</div>
 								</div>
 								<div class="col-lg-12">
-									<p><button class="btn btn-default add_payment" type="button">Add Payment</button></p>
+									<p>
+										<!-- add button -->
+										<button class="btn btn-primary add_payment" type="button">
+											<i class="fa fa-plus" aria-hidden="true"></i>&nbsp;Add Payment
+										</button>
+									</p>
 								</div>
 							</div>
 
@@ -390,40 +531,58 @@ $(document).on('keyup', '#apel, #catel', function () {
 
 ////////////////////////////////////////////////////////////////////////////////////
 // date input helper
-$(document).on('mouseenter', '.date', function () {
-	$(this).datepicker({
+	$('#da').datepicker({
 		autoclose:true,
 		format:'yyyy-mm-dd',
 		todayHighlight : true,
 		// startDate: '<?= 1 - (date('j', mktime(0, 0, 0, date('m'), 0, date('Y'))) + date('j') ) ?>d',
 		// endDate: '<?= (date('j') == 1) ? 1 - date('j') : 0 - date('j') ?>d',
-	});	
-});
+	})
+	// https://bootstrap-datepicker.readthedocs.io/en/latest/events.html
+	.on('changeDate show', function(e) {
+		$('#form').bootstrapValidator('revalidateField', 'date_sale');
+	});
 
 ////////////////////////////////////////////////////////////////////////////////////
-// slip serial number : add and remove row
-var add_buttons	= $(".add_serial");
-var wrappers	= $(".serial_wrap");
-
-var xs = 1;
-$(add_buttons).click(function(){
-	// e.preventDefault();
-	xs++;
-	wrappers.append(
-		'<div class="form-group <?php echo ( count($errors->get('serial.*.tracking_number')) ) > 0 ? 'has-error' : '' ?> rowserial">' +
-			'<button type="button" class="btn btn-danger col-lg-1 remove_serial">-</button>{!! Form::label('catel', 'Receipt or Postage Tracking :', ['class' => 'col-sm-4 control-label']) !!}' +
-			'<div class="col-sm-7">' +
-				'<input type="text" name="serial[' + xs + '][tracking_number]" value="{!! @$value !!}" class="form-control" placeholder="Receipt or Tracking Serial Number" id="catel" />' +
-			'</div>' +
-		'</div>'
-	); //add input box
-});
-
-$(wrappers).on("click",".remove_serial", function(e){
-	//user click on remove text
-	e.preventDefault();
-	$(this).parent('.rowserial').remove();
+// date input payment
+$(document).on('mouseenter', '#date_paym', function () {
+	// $('#date_paym').datepicker({
+	$(this).datepicker({
+		autoclose:true,
+		format:'yyyy-mm-dd',
+		todayHighlight : true
+	})
 })
+	// https://bootstrap-datepicker.readthedocs.io/en/latest/events.html
+	.on('changeDate show', function(e) {
+		$('#form').bootstrapValidator('revalidateField', 'pay[][date_payment]');
+	});
+
+////////////////////////////////////////////////////////////////////////////////////
+// obsolote, found better way doing this
+// slip serial number : add and remove row
+// var add_buttons	= $(".add_serial");
+// var wrappers	= $(".serial_wrap");
+
+// var xs = 1;
+// $(add_buttons).click(function(){
+// 	// e.preventDefault();
+// 	xs++;
+// 	wrappers.append(
+// 		'<div class="form-group <?php echo ( count($errors->get('serial.*.tracking_number')) ) > 0 ? 'has-error' : '' ?> rowserial" id="optionTemplate">' +
+// 			'<button type="button" class="btn btn-danger col-lg-1 remove_serial">-</button>{!! Form::label('catel', 'Receipt or Postage Tracking :', ['class' => 'col-sm-4 control-label']) !!}' +
+// 			'<div class="col-sm-7">' +
+// 				'<input type="text" name="serial[][tracking_number]" value="{!! @$value !!}" class="form-control tracking_number" placeholder="Receipt or Tracking Serial Number" id="catel" data-id=" + xs +" />' +
+// 			'</div>' +
+// 		'</div>'
+// 	); //add input box
+// });
+
+// $(wrappers).on("click",".remove_serial", function(e){
+// 	//user click on remove text
+// 	e.preventDefault();
+// 	$(this).parent('.rowserial').remove();
+// })
 
 ////////////////////////////////////////////////////////////////////////////////////
 // helper tax 
@@ -477,78 +636,78 @@ function num(obj) {
 
 ////////////////////////////////////////////////////////////////////////////////////
 // adding and removing rows for invoice items
-var add_button	= $(".add_field");
+// var add_button	= $(".add_field");
 var wrapper		= $(".input_fields_wrap");
-var x = 1;
-$(add_button).click(function(){
-	x++;
-	$(wrapper).append(
-		'<div class="row rowinvoice">' +
-			'<div class="col-sm-12">' +
-				'<div class="col-sm-1">' +
-					'<div class="row">' +
-						'<div class="col-sm-12">' +
-							'<button class="btn btn-danger remove_field" type="button">-</button>' +
-						'</div>' +
-					'</div>' +
-				'</div>' +
-				'<div class="col-sm-4">' +
-					'<div class="row">' +
-						'<div class="col-sm-12 form-group <?php echo ( count($errors->get('inv.*.id_product')) ) >0 ? 'has-error' : '' ?>">' +
-							'<select name="inv[' + x + '][id_product]" class="series form-control" onload="select2()">' +
-								'<option value="">Choose Product</option>' +
-
-								<?php $cate = App\ProductCategory::where(['active' => 1])->get(); ?>
-								@foreach ($cate as $key)
-									'<optgroup label="{!! $key->product_category !!}">' +
-										<?php $pro = App\Product::where(['id_category' => $key->id, 'active' => 1])->get() ?>
-										@foreach($pro as $r)
-											'<option value="{!! $r->id !!}" data-commission="{!! $r->commission !!}" data-retail="{!! $r->retail !!}">{!! $r->product !!}</option>' +
-										@endforeach
-									'</optgroup>' +
-								@endforeach
-							'</select>' +
-						'</div>' +
-					'</div>' +
-				'</div>' +
-				'<div class="col-sm-2">' +
-					'<div class="row">' +
-						'<div class="col-sm-12 form-group {!! ( count($errors->get('inv.*.commission')) ) >0 ? 'has-error' : '' !!}">' +
-							'<input <?=(auth()->user()->id_group == 1)? 'type="text"' : 'type="hidden"' ?> name="inv[' + x + '][commission]" class="comm form-control" placeholder="Commission (RM)" />' +
-						'</div>' +
-					'</div>' +
-				'</div>' +
-				'<div class="col-sm-2">' +
-					'<div class="row">' +
-						'<div class="col-sm-12 form-group {!! ( count($errors->get('inv.*.retail')) ) >0 ? 'has-error' : '' !!}">' +
-							'<input type="text" name="inv[' + x + '][retail]" class="rate form-control" placeholder="Retail (RM)"/>' +
-						'</div>' +
-					'</div>' +
-				'</div>' +
-				'<div class="col-sm-2">' +
-					'<div class="row">' +
-						'<div class="col-sm-12 form-group {!! ( count($errors->get('inv.*.quantity')) ) >0 ? 'has-error' : '' !!}">' +
-							'<input type="text" name="inv[' + x + '][quantity]" class="quan form-control" placeholder="Quantity" />' +
-						'</div>' +
-					'</div>' +
-				'</div>' +
-				'<div class="col-sm-1">' +
-					'<div class="row">' +
-						'<div class="col-sm-12">' +
-							'<p class="text-right"><span class="total_price">0.00</span></p>' +
-						'</div>' +
-					'</div>' +
-				'</div>' +
-			'</div>' +
-		'</div>'
-	); //add input box
-});
+// var x = 1;
+// $(add_button).click(function(){
+// 	x++;
+// 	$(wrapper).append(
+// 		'<div class="row rowinvoice">' +
+// 			'<div class="col-sm-12">' +
+// 				'<div class="col-sm-1">' +
+// 					'<div class="row">' +
+// 						'<div class="col-sm-12">' +
+// 							'<button class="btn btn-danger remove_field" type="button">-</button>' +
+// 						'</div>' +
+// 					'</div>' +
+// 				'</div>' +
+// 				'<div class="col-sm-4">' +
+// 					'<div class="row">' +
+// 						'<div class="col-sm-12 form-group <?php echo ( count($errors->get('inv.*.id_product')) ) >0 ? 'has-error' : '' ?>">' +
+// 							'<select name="inv[' + x + '][id_product]" class="series form-control" onload="select2()">' +
+// 								'<option value="">Choose Product</option>' +
+// 
+// 								<?php $cate = App\ProductCategory::where(['active' => 1])->get(); ?>
+// 								@foreach ($cate as $key)
+// 									'<optgroup label="{!! $key->product_category !!}">' +
+// 										<?php $pro = App\Product::where(['id_category' => $key->id, 'active' => 1])->get() ?>
+// 										@foreach($pro as $r)
+// 											'<option value="{!! $r->id !!}" data-commission="{!! $r->commission !!}" data-retail="{!! $r->retail !!}">{!! $r->product !!}</option>' +
+// 										@endforeach
+// 									'</optgroup>' +
+// 								@endforeach
+// 							'</select>' +
+// 						'</div>' +
+// 					'</div>' +
+// 				'</div>' +
+// 				'<div class="col-sm-2">' +
+// 					'<div class="row">' +
+// 						'<div class="col-sm-12 form-group {!! ( count($errors->get('inv.*.commission')) ) >0 ? 'has-error' : '' !!}">' +
+// 							'<input <?=(auth()->user()->id_group == 1)? 'type="text"' : 'type="hidden"' ?> name="inv[' + x + '][commission]" class="comm form-control" placeholder="Commission (RM)" />' +
+// 						'</div>' +
+// 					'</div>' +
+// 				'</div>' +
+// 				'<div class="col-sm-2">' +
+// 					'<div class="row">' +
+// 						'<div class="col-sm-12 form-group {!! ( count($errors->get('inv.*.retail')) ) >0 ? 'has-error' : '' !!}">' +
+// 							'<input type="text" name="inv[' + x + '][retail]" class="rate form-control" placeholder="Retail (RM)"/>' +
+// 						'</div>' +
+// 					'</div>' +
+// 				'</div>' +
+// 				'<div class="col-sm-2">' +
+// 					'<div class="row">' +
+// 						'<div class="col-sm-12 form-group {!! ( count($errors->get('inv.*.quantity')) ) >0 ? 'has-error' : '' !!}">' +
+// 							'<input type="text" name="inv[' + x + '][quantity]" class="quan form-control" placeholder="Quantity" />' +
+// 						'</div>' +
+// 					'</div>' +
+// 				'</div>' +
+// 				'<div class="col-sm-1">' +
+// 					'<div class="row">' +
+// 						'<div class="col-sm-12">' +
+// 							'<p class="text-right"><span class="total_price">0.00</span></p>' +
+// 						'</div>' +
+// 					'</div>' +
+// 				'</div>' +
+// 			'</div>' +
+// 		'</div>'
+// 	); //add input box
+// });
 
 $(wrapper).on("click",".remove_field", function(e){
 	//user click on remove text
 	e.preventDefault();
 	// $(this).parent().parent().parent().parent().parent('.rowinvoice').css({"color": "red", "border": "2px solid red"});
-	$(this).parent().parent().parent().parent().parent('.rowinvoice').remove();
+	// $(this).parent().parent().parent().parent().parent('.rowinvoice').remove();
 
 	// update total amount
 	update_tamount();
@@ -586,57 +745,57 @@ $(document).on('change', '.series', function () {
 
 ////////////////////////////////////////////////////////////////////////////////////
 // payment add and remove payment row
-var add_buttonp	= $(".add_payment");
+// var add_buttonp	= $(".add_payment");
 var wrapperp		= $(".payment_wrap");
-var xp = 1;
-$(add_buttonp).click(function(){
-	xp++;
-	$(wrapperp).append(
-		'<div class="row rowpayment">' +
-			'<div class="col-sm-12">' +
-				'<div class="col-sm-1">' +
-					'<div class="row">' +
-						'<div class="col-sm-12">' +
-							'<button class="btn btn-danger remove_payment" type="button">-</button>' +
-						'</div>' +
-					'</div>' +
-				'</div>' +
-				'<div class="col-sm-6">' +
-					'<div class="row">' +
-						'<div class="col-sm-12 form-group <?php echo ( count($errors->get('pay.*.id_bank')) ) >0 ? 'has-error' : '' ?>">' +
-							'<select name="pay[' + xp + '][id_bank]" class="form-control">' +
-								'<option value="">Choose Bank</option>' +
-								<?php $ba = App\Banks::where(['active' => 1])->get(); ?>
-								@foreach ($ba as $r)
-								'<option value="{!! $r->id !!}" >{!! $r->bank !!}</option>' +
-								@endforeach
-							'</select>' +
-						'</div>' +
-					'</div>' +
-				'</div>' +
-				'<div class="col-sm-2">' +
-					'<div class="row">' +
-						'<div class="col-sm-12 form-group {!! ( count($errors->get('pay.*.date_payment')) ) >0 ? 'has-error' : '' !!}">' +
-							'<input type="text" name="pay[' + xp + '][date_payment]" class="form-control date" placeholder="Date Payment"/>' +
-						'</div>' +
-					'</div>' +
-				'</div>' +
-				'<div class="col-sm-3">' +
-					'<div class="row">' +
-						'<div class="col-sm-12 form-group {!! ( count($errors->get('pay.*.amount')) ) >0 ? 'has-error' : '' !!}">' +
-							'<input type="text" name="pay[' + xp + '][amount]" class="pamount form-control" placeholder="Amount (RM)"/>' +
-						'</div>' +
-					'</div>' +
-				'</div>' +
-			'</div>' +
-		'</div>'
-	); //add input box
-});
+// var xp = 1;
+// $(add_buttonp).click(function(){
+// 	xp++;
+// 	$(wrapperp).append(
+// 		'<div class="row rowpayment">' +
+// 			'<div class="col-sm-12">' +
+// 				'<div class="col-sm-1">' +
+// 					'<div class="row">' +
+// 						'<div class="col-sm-12">' +
+// 							'<button class="btn btn-danger remove_payment" type="button">-</button>' +
+// 						'</div>' +
+// 					'</div>' +
+// 				'</div>' +
+// 				'<div class="col-sm-6">' +
+// 					'<div class="row">' +
+// 						'<div class="col-sm-12 form-group <?php echo ( count($errors->get('pay.*.id_bank')) ) >0 ? 'has-error' : '' ?>">' +
+// 							'<select name="pay[' + xp + '][id_bank]" class="form-control">' +
+// 								'<option value="">Choose Bank</option>' +
+// 								<?php $ba = App\Banks::where(['active' => 1])->get(); ?>
+// 								@foreach ($ba as $r)
+// 								'<option value="{!! $r->id !!}" >{!! $r->bank !!}</option>' +
+// 								@endforeach
+// 							'</select>' +
+// 						'</div>' +
+// 					'</div>' +
+// 				'</div>' +
+// 				'<div class="col-sm-2">' +
+// 					'<div class="row">' +
+// 						'<div class="col-sm-12 form-group {!! ( count($errors->get('pay.*.date_payment')) ) >0 ? 'has-error' : '' !!}">' +
+// 							'<input type="text" name="pay[' + xp + '][date_payment]" class="form-control date" placeholder="Date Payment"/>' +
+// 						'</div>' +
+// 					'</div>' +
+// 				'</div>' +
+// 				'<div class="col-sm-3">' +
+// 					'<div class="row">' +
+// 						'<div class="col-sm-12 form-group {!! ( count($errors->get('pay.*.amount')) ) >0 ? 'has-error' : '' !!}">' +
+// 							'<input type="text" name="pay[' + xp + '][amount]" class="pamount form-control" placeholder="Amount (RM)"/>' +
+// 						'</div>' +
+// 					'</div>' +
+// 				'</div>' +
+// 			'</div>' +
+// 		'</div>'
+// 	); //add input box
+// });
 
 $(wrapperp).on("click",".remove_payment", function(e){
 	//user click on remove text
-	e.preventDefault();
-	$(this).parent().parent().parent().parent().parent('.rowpayment').remove();
+	// e.preventDefault();
+	// $(this).parent().parent().parent().parent().parent('.rowpayment').remove();
 
 	// update total payment
 	update_tpayment();
@@ -737,8 +896,9 @@ function update_balance() {
 
 ////////////////////////////////////////////////////////////////////////////////////
 // bootstrap validator
-$(document).on('keydown', '#form', function () {
-$(this).bootstrapValidator({
+var MAX_OPTIONS = 500;
+
+$('#form').bootstrapValidator({
 	feedbackIcons: {
 		valid: 'glyphicon glyphicon-ok',
 		invalid: 'glyphicon glyphicon-remove',
@@ -763,8 +923,8 @@ $(this).bootstrapValidator({
 				}
 			}
 		},
-@for ($ie = 1; $ie < 10; $ie++)
-		'serial[{{ $ie }}][tracking_number]': {
+
+		'serial[][tracking_number]': {
 			validators: {
 				remote: {
 					type: 'POST',
@@ -780,7 +940,7 @@ $(this).bootstrapValidator({
 				}
 			}
 		},
-@endfor
+
 		client: {
 			validators: {
 				remote: {
@@ -840,16 +1000,14 @@ $(this).bootstrapValidator({
 			}
 		},
 
-@for ($i = 1; $i < 10; $i++)
-
-		'inv[{{ $i }}][id_product]': {
+		'inv[][id_product]': {
 			validators: {
 				notEmpty: {
 					message: 'Please choose an item. '
 				}
 			}
 		},
-		'inv[{{ $i }}][commission]': {
+		'inv[][commission]': {
 			validators: {
 				notEmpty: {
 					message: 'Please insert commission for this item. '
@@ -860,7 +1018,7 @@ $(this).bootstrapValidator({
 				},
 			},
 		},
-		'inv[{{ $i }}][retail]': {
+		'inv[][retail]': {
 			validators: {
 				notEmpty: {
 					message: 'Please insert retail price for this item. '
@@ -871,7 +1029,7 @@ $(this).bootstrapValidator({
 				},
 			},
 		},
-		'inv[{{ $i }}][quantity]': {
+		'inv[][quantity]': {
 			validators: {
 				notEmpty: {
 					message: 'Please insert quantity for this item. '
@@ -882,14 +1040,14 @@ $(this).bootstrapValidator({
 				},
 			},
 		},
-		'pay[{{ $i }}][id_bank]': {
+		'pay[][id_bank]': {
 			validators: {
 				notEmpty: {
 					message: 'Please choose payment bank. '
 				},
 			},
 		},
-		'pay[{{ $i }}][date_payment]': {
+		'pay[][date_payment]': {
 			validators: {
 				notEmpty: {
 					message: 'Please insert payment date. '
@@ -900,7 +1058,7 @@ $(this).bootstrapValidator({
 				}
 			},
 		},
-		'pay[{{ $i }}][amount]': {
+		'pay[][amount]': {
 			validators: {
 				notEmpty: {
 					message: 'Please insert payment amount. '
@@ -911,13 +1069,219 @@ $(this).bootstrapValidator({
 				},
 			},
 		},
-@endfor
-
 
 	}
 })
-})
 
+// http://bootstrapvalidator.votintsev.ru/examples/adding-dynamic-field/
+// Add button click handler
+	.on('click', '.add_serial', function(){
+		var $template = $('#optionTemplate'),
+		$clone = $template
+							.clone()
+							.removeClass('hide')
+							.removeAttr('id')
+							.insertBefore($template),
+		$option = $clone.find('[name="serial[][tracking_number]"]');
+		
+		// Add new field
+		$('#form').bootstrapValidator('addField', $option);
+	})
+	// Remove button click handler
+	.on('click', '.remove_serial', function() {
+		var $row    = $(this).parents('.form-group'),
+		$option = $row.find('[name="serial[][tracking_number]"]');
+
+		// Remove element containing the option
+		$row.remove();
+
+		// Remove field
+		$('#form').bootstrapValidator('removeField', $option);
+	})
+	
+	// Called after adding new field
+	.on('added.field.bv', function(e, data) {
+		if (data.field === 'serial[][tracking_number]') {
+			if ($('#form').find(':visible[name="serial[][tracking_number]"]').length >= MAX_OPTIONS) {
+				$('#form').find('.add_serial').attr('disabled', 'disabled');
+			}
+		}
+	})
+	
+	// Called after removing the field
+	.on('removed.field.bv', function(e, data) {
+		if (data.field === 'serial[][tracking_number]') {
+			if ($('#form').find(':visible[name="serial[][tracking_number]"]').length < MAX_OPTIONS) {
+				$('#form').find('.add_serial').removeAttr('disabled');
+			}
+		}
+	})
+/////////////////////////////////////////////////////////////////////
+// Add button click handler
+	.on('click', '.add_field', function(){
+		var $template = $('#rowinvoice'),
+		$clone = $template
+							//.html( $('#rowinvoice').html() )
+							.clone()
+							.removeClass('hide')
+							.removeAttr('id')
+							.insertBefore($template),
+		$option1 = $clone.find('[name="inv[][id_product]"]');
+		$option2 = $clone.find('[name="inv[][commission]"]');
+		$option3 = $clone.find('[name="inv[][retail]"]');
+		$option4 = $clone.find('[name="inv[][quantity]"]');
+		
+		// Add new field
+		$('#form').bootstrapValidator('addField', $option1);
+		$('#form').bootstrapValidator('addField', $option2);
+		$('#form').bootstrapValidator('addField', $option3);
+		$('#form').bootstrapValidator('addField', $option4);
+	})
+	// Remove button click handler
+	.on('click', '.remove_field', function() {
+		var $row    = $(this).parents().parents().parents().parents().parents('.row .inv'),
+		$option1 = $row.find('[name="inv[][id_product]"]');
+		$option2 = $row.find('[name="inv[][commission]"]');
+		$option3 = $row.find('[name="inv[][retail]"]');
+		$option4 = $row.find('[name="inv[][quantity]"]');
+
+		// Remove element containing the option
+		$row.remove();
+		// $row.css({"color": "red", "border": "5px solid red"});
+
+		// Remove field
+		$('#form').bootstrapValidator('removeField', $option1);
+		$('#form').bootstrapValidator('removeField', $option2);
+		$('#form').bootstrapValidator('removeField', $option3);
+		$('#form').bootstrapValidator('removeField', $option4);
+	})
+	
+	// Called after adding new field
+	.on('added.field.bv', function(e, data) {
+		if (data.field === 'inv[][id_product]') {
+			if ($('#form').find(':visible[name="inv[][id_product]"]').length >= MAX_OPTIONS) {
+				$('#form').find('.add_field').attr('disabled', 'disabled');
+			}
+		}
+		if (data.field === 'inv[][commission]') {
+			if ($('#form').find(':visible[name="inv[][commission]"]').length >= MAX_OPTIONS) {
+				$('#form').find('.add_field').attr('disabled', 'disabled');
+			}
+		}
+		if (data.field === 'inv[][retail]') {
+			if ($('#form').find(':visible[name="inv[][retail]"]').length >= MAX_OPTIONS) {
+				$('#form').find('.add_field').attr('disabled', 'disabled');
+			}
+		}
+		if (data.field === 'inv[][quantity]') {
+			if ($('#form').find(':visible[name="inv[][quantity]"]').length >= MAX_OPTIONS) {
+				$('#form').find('.add_field').attr('disabled', 'disabled');
+			}
+		}
+	})
+	
+	// Called after removing the field
+	.on('removed.field.bv', function(e, data) {
+		if (data.field === 'inv[][id_product]') {
+			if ($('#form').find(':visible[name="inv[][id_product]"]').length < MAX_OPTIONS) {
+				$('#form').find('.add_field').removeAttr('disabled');
+			}
+		}
+		if (data.field === 'inv[][commission]') {
+			if ($('#form').find(':visible[name="inv[][commission]"]').length < MAX_OPTIONS) {
+				$('#form').find('.add_field').removeAttr('disabled');
+			}
+		}
+		if (data.field === 'inv[][retail]') {
+			if ($('#form').find(':visible[name="inv[][retail]"]').length < MAX_OPTIONS) {
+				$('#form').find('.add_field').removeAttr('disabled');
+			}
+		}
+		if (data.field === 'inv[][quantity]') {
+			if ($('#form').find(':visible[name="inv[][quantity]"]').length < MAX_OPTIONS) {
+				$('#form').find('.add_field').removeAttr('disabled');
+			}
+		}
+	})
+
+/////////////////////////////////////////////////////////////////////
+// Add button click handler
+	.on('click', '.add_payment', function(){
+		var $template = $('#optionpayment'),
+		$clone = $template
+							.clone()
+							.removeClass('hide')
+							.removeAttr('id')
+							.insertBefore($template),
+		$option1 = $clone.find('[name="pay[][id_bank]"]');
+		$option2 = $clone.find('[name="pay[][date_payment]"]');
+		$option3 = $clone.find('[name="pay[][amount]"]');
+		
+		// Add new field
+		$('#form').bootstrapValidator('addField', $option1);
+		$('#form').bootstrapValidator('addField', $option2);
+		$('#form').bootstrapValidator('addField', $option3);
+	})
+	// Remove button click handler
+	.on('click', '.remove_payment', function() {
+		var $row    = $(this).parents().parents().parents().parents().parents('.row .rowpayment'),
+		$option1 = $row.find('[name="pay[][id_product]"]');
+		$option2 = $row.find('[name="pay[][date_payment]"]');
+		$option3 = $row.find('[name="pay[][amount]"]');
+
+		// Remove element containing the option
+		$row.remove();
+		// $row.css({"color": "red", "border": "5px solid red"});
+
+		// Remove field
+		$('#form').bootstrapValidator('removeField', $option1);
+		$('#form').bootstrapValidator('removeField', $option2);
+		$('#form').bootstrapValidator('removeField', $option3);
+	})
+	
+	// Called after adding new field
+	.on('added.field.bv', function(e, data) {
+		if (data.field === 'pay[][id_product]') {
+			if ($('#form').find(':visible[name="pay[][id_product]"]').length >= MAX_OPTIONS) {
+				$('#form').find('.add_field').attr('disabled', 'disabled');
+			}
+		}
+		if (data.field === 'pay[][date_payment]') {
+			if ($('#form').find(':visible[name="pay[][date_payment]"]').length >= MAX_OPTIONS) {
+				$('#form').find('.add_field').attr('disabled', 'disabled');
+			}
+		}
+		if (data.field === 'pay[][amount]') {
+			if ($('#form').find(':visible[name="pay[][amount]"]').length >= MAX_OPTIONS) {
+				$('#form').find('.add_field').attr('disabled', 'disabled');
+			}
+		}
+	})
+	
+	// Called after removing the field
+	.on('removed.field.bv', function(e, data) {
+		if (data.field === 'pay[][id_bank]') {
+			if ($('#form').find(':visible[name="pay[][id_bank]"]').length < MAX_OPTIONS) {
+				$('#form').find('.add_field').removeAttr('disabled');
+			}
+		}
+		if (data.field === 'pay[][date_payment]') {
+			if ($('#form').find(':visible[name="pay[][date_payment]"]').length < MAX_OPTIONS) {
+				$('#form').find('.add_field').removeAttr('disabled');
+			}
+		}
+		if (data.field === 'pay[][amount]') {
+			if ($('#form').find(':visible[name="pay[][amount]"]').length < MAX_OPTIONS) {
+				$('#form').find('.add_field').removeAttr('disabled');
+			}
+		}
+	})
+
+;
 ////////////////////////////////////////////////////////////////////////////////////
+// select 2
+$('#taxs, #custsel, #us').select2({
+	placeholder: 'Please select'
+});
 
 @endsection
