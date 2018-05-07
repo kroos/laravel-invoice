@@ -80,16 +80,27 @@ class SlipNumbersController extends Controller
      * @param  \App\SlipNumbers  $slipNumbers
      * @return \Illuminate\Http\Response
      */
-    public function destroy(SlipNumbers $slipNumbers)
+    public function destroy(Request $request)
     {
-        $si = SlipNumbers::find($slipNumbers->id);
+        $si = SlipNumbers::find($request->id);
         // delete related model
-        $si->delete();
+        $result = $si->delete();
 
         // info when update success
-        Session::flash('flash_message', 'Data successfully deleted!');
-    
-        return redirect()->back();      // redirect back to original route
+        // Session::flash('flash_message', 'Data successfully deleted!');
+        // return redirect()->back();      // redirect back to original route
+
+        if ($result) {
+            return response()->json([
+                                    'message' => 'Data deleted',
+                                    'status' => 'success'
+                                ]);
+        } else {
+            return response()->json([
+                                    'message' => 'Data cant be deleted, Please try again later.',
+                                    'status' => 'error'
+                                ]);
+        }
     }
 
     public function search(Request $request)

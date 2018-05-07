@@ -290,7 +290,7 @@ Route::patch('slippostage/update/{slipPostage}', [
 		'uses' => 'SlipPostageController@update'
 	]);
 
-Route::get('slippostage/destroy/{slipPostage}', [
+Route::delete('slippostage/destroy', [
 		'as' => 'slippostage.destroy',
 		'uses' => 'SlipPostageController@destroy'
 	]);
@@ -323,7 +323,7 @@ Route::patch('salesitems/update/{salesItems}', [
 		'uses' => 'SalesItemsController@update'
 	]);
 
-Route::get('salesitems/destroy/{salesItems}', [
+Route::delete('salesitems/destroy', [
 		'as' => 'salesitems.destroy',
 		'uses' => 'SalesItemsController@destroy'
 	]);
@@ -356,7 +356,7 @@ Route::patch('payments/update/{payments}', [
 		'uses' => 'PaymentsController@update'
 	]);
 
-Route::get('payments/destroy/{payments}', [
+Route::delete('payments/destroy', [
 		'as' => 'payments.destroy',
 		'uses' => 'PaymentsController@destroy'
 	]);
@@ -364,7 +364,7 @@ Route::get('payments/destroy/{payments}', [
 ####################################################################
 // slipNumbers controller
 
-Route::get('slipnumbers/destroy/{slipNumbers}', [
+Route::delete('slipnumbers/destroy', [
 		'as' => 'slipnumbers.destroy',
 		'uses' => 'SlipNumbersController@destroy'
 	]);
