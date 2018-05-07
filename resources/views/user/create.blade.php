@@ -179,8 +179,15 @@
 					});
 				});
 			},
-		});
-	}
+		})
+		.then(
+			(result) => {
+				if(result.dismiss === swal.DismissReason.cancel){
+    				swal('Cancelled', 'Your data is safe', 'info' )
+				}
+			}
+		);
+	};
 
 /////////////////////////////////////////////////////////////////////////////////////////
 $("#nam").keyup(function() {
@@ -197,6 +204,9 @@ $('#rgba').minicolors({
 	theme: 'bootstrap',
 });
 
+$('#ug').select2({
+	placeholder: 'Please choose'
+});
 ////////////////////////////////////////////////////////////////////////////////////
 // bootstrap validator
 $("#form").bootstrapValidator({

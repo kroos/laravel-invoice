@@ -102,7 +102,11 @@
 											
 											?>
 										</td>
-										<td><a href="{!! route('productimage.destroy', $k->id) !!}" class="btn btn-danger remove">delete {!! $k->id !!}</a></td>
+										<td>
+											<button href="{!! route('productimage.destroy', $k->id) !!}" id="remove_image_{{ $k->id }}" data-id="{{ $k->id }}" class="btn btn-danger remove">
+												<i class="fa fa-trash fa-lg" aria-hidden="true"></i>
+											</button>
+										</td>
 									</tr>
 									@endforeach
 								</tbody>
@@ -122,7 +126,13 @@
 
 
 @section('jquery')
+////////////////////////////////////////////////////////////////////////////////////
+// select2
+$('#ug').select2({
+	placeholder: 'Please Choose'
+});
 
+////////////////////////////////////////////////////////////////////////////////////
 	$("input").keyup(function() {
 		tch(this);
 	});
@@ -192,4 +202,62 @@ $("#form").bootstrapValidator({
 })
 
 ////////////////////////////////////////////////////////////////////////////////////
+// ajax post delete row
+	// readProducts(); /* it will load products when document loads */
+
+	$('.remove').click(function(e){
+		var productId = $(this).data('id');
+		SwalDelete(productId);
+		e.preventDefault();
+	});
+	
+	// function readProducts(){
+	// 	$('#load-products').load('read.php');
+	// }
+
+	function SwalDelete(productId){
+		swal({
+			title: 'Are you sure?',
+			text: "It will be deleted permanently!",
+			type: 'warning',
+			showCancelButton: true,
+			confirmButtonColor: '#3085d6',
+			cancelButtonColor: '#d33',
+			confirmButtonText: '<i class="fa fa-trash-o" aria-hidden="true"></i>	Yes, delete it!',
+			showLoaderOnConfirm: true,
+			allowOutsideClick: false,
+
+			preConfirm: function()                {
+				return new Promise(function(resolve) {
+					$.ajax({
+						headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+						url: '<?=route('productimage.destroy')?>',
+						type: 'delete',
+						data:	{
+									id: productId,
+									_token : $('meta[name=csrf-token]').attr('content')
+								},
+						dataType: 'json'
+					})
+					.done(function(response){
+						swal('Deleted!', response.message, response.status);
+						// readProducts();
+						// $('#remove_image_' + productId).text('imhere').css({"color": "red"});
+						$('#remove_image_' + productId).parent().parent().remove();
+					})
+					.fail(function(){
+						swal('Oops...', 'Something went wrong with ajax !', 'error');
+					});
+				});
+			},
+		})
+		.then((result) => {
+			if (result.dismiss === swal.DismissReason.cancel) {
+				swal('Cancelled','Your data is safe.','info')
+			}
+		});
+	};
+
+/////////////////////////////////////////////////////////////////////////////////////////
+
 @endsection

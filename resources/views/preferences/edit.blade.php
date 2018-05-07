@@ -134,22 +134,10 @@
 // uppercase input for tracking number and customer section
 
 	$(document).on('keyup', 'input, textarea', function () {
-		toUppercase(this);
+		uch(this);
 	});
 
-	function toUppercase(obj) {
-		var mystring = obj.value;
-		var sp = mystring.split(' ');
-		var wl=0;
-		var f ,r;
-		var word = new Array();
-		for (i = 0 ; i < sp.length ; i ++ ) {
-			f = sp[i].substring(0,1).toUpperCase();
-			r = sp[i].substring(1).toUpperCase();
-			word[i] = f+r;
-		}
-		newstring = word.join(' ');
-		obj.value = newstring;
-		return true;
-	}
+$('#own, #comppersonincharge').select2({
+	placeholder: 'Please choose'
+});
 @endsection

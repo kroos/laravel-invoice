@@ -192,7 +192,7 @@ Route::patch('productimage/update/{productImage}', [
 		'uses' => 'ProductImageController@update'
 	]);
 
-Route::get('productimage/destroy/{productImage}', [
+Route::delete('productimage/destroy', [
 		'as' => 'productimage.destroy',
 		'uses' => 'ProductImageController@destroy'
 	]);

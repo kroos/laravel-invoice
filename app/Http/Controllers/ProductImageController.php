@@ -95,15 +95,17 @@ echo 'test';
 		return redirect(route('product.edit', $productImage->id_product));		// redirect back to original route
 	}
 	
-	public function destroy(ProductImage $productImage)
+	public function destroy(Request $request)
 	{
-		$prod = ProductImage::find($productImage->id);
-		// delete related model
-		$prod->delete();
+		$prod = ProductImage::destroy($request->id);
 
 		// info when update success
-		Session::flash('flash_message', 'Image successfully deleted!');
+		// Session::flash('flash_message', 'Image successfully deleted!');
 	
-		return redirect()->back();		// redirect back to original route
+		// return redirect()->back();		// redirect back to original route
+		return response()->json([
+									'message' => 'Data deleted',
+									'status' => 'success'
+								]);
 	}
 }

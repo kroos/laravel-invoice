@@ -97,6 +97,9 @@ $('#rgba').minicolors({
 	theme: 'bootstrap',
 });
 
+$('#ug').select2({
+	placeholder: 'Please Choose'
+});
 ////////////////////////////////////////////////////////////////////////////////////
 // bootstrap validator
 $("#form").bootstrapValidator({

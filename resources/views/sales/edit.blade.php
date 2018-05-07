@@ -1171,8 +1171,8 @@ $('#form').bootstrapValidator({
 					message: 'Please insert payment amount. '
 				},
 				greaterThan: {
-					value: 1,
-					message: 'Amount must be equal or greater than 1. '
+					value: 0,
+					message: 'Amount must be equal or greater than 0. '
 				},
 			},
 		},

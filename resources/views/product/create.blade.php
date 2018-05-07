@@ -119,8 +119,12 @@
 										?>
 									</td>
 									<td>
-										<a href="{!! route('product.edit' ,$k->slug) !!}" ><i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i></a>
-										<a href="{!! route('product.destroy', $k->slug) !!}" data-id="{!! $k->slug !!}" id="delete_product_<?=$k->slug ?>" title="Delete" class="delete_button"><i class="fa fa-trash fa-lg" aria-hidden="true"></i></a>
+										<a href="{!! route('product.edit' ,$k->slug) !!}" >
+											<i class="fa fa-pencil-square-o fa-lg" aria-hidden="true"></i>
+										</a>
+										<a href="{!! route('product.destroy', $k->slug) !!}" data-id="{!! $k->slug !!}" id="delete_product_<?=$k->slug ?>" title="Delete" class="delete_button">
+											<i class="fa fa-trash fa-lg" aria-hidden="true"></i>
+										</a>
 									</td>
 								</tr>
 							@endforeach
@@ -141,10 +145,16 @@
 
 @section('jquery')
 /////////////////////////////////////////////////////////////////////////////////////////
+// select2
+$('#cat').select2({
+	placeholder: 'Please choose'
+});
+
+/////////////////////////////////////////////////////////////////////////////////////////
 // ajax post delete row
 	// readProducts(); /* it will load products when document loads */
 
-	$(document).on('click', '.delete_button', function(e){
+	$('.delete_button').click(function(e){
 		var productId = $(this).data('id');
 		SwalDelete(productId);
 		e.preventDefault();
@@ -162,7 +172,7 @@
 			showCancelButton: true,
 			confirmButtonColor: '#3085d6',
 			cancelButtonColor: '#d33',
-			confirmButtonText: 'Yes, delete it!',
+			confirmButtonText: '<i class="fa fa-trash-o" aria-hidden="true"></i>	Yes, delete it!',
 			showLoaderOnConfirm: true,
 			allowOutsideClick: false,
 
@@ -181,17 +191,21 @@
 					.done(function(response){
 						swal('Deleted!', response.message, response.status);
 						// readProducts();
-						$('#delete_product_' + productId).text('imhere').css({"color": "red"});
+						// $('#delete_product_' + productId).text('imhere').css({"color": "red"});
 						$('#delete_product_' + productId).parent().parent().remove();
 					})
 					.fail(function(){
 						swal('Oops...', 'Something went wrong with ajax !', 'error');
 					});
-					console.log()
 				});
 			},
+		})
+		.then((result) => {
+			if (result.dismiss === swal.DismissReason.cancel) {
+				swal('Cancelled','Your data is safe.','info')
+			}
 		});
-	}
+	};
 
 /////////////////////////////////////////////////////////////////////////////////////////
 	$("input").keyup(function() {
