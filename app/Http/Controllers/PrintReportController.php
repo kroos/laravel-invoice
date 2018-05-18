@@ -35,8 +35,8 @@ class PrintReportController extends Controller
     public function store(Request $request)
     {
     	$this->validate($request, [
-    			'from' => 'required|date_format:Y-m-d',
-    			'to' => 'required|date_format:Y-m-d|after:from',
+    			'from' => 'required|date_format:Y-m-d|before_or_equal:to',
+    			'to' => 'required|date_format:Y-m-d|after_or_equal:from',
     			'user' => 'required',
     			'user.*' => 'integer',
     		]);
@@ -46,8 +46,8 @@ class PrintReportController extends Controller
     public function audit(Request $request)
     {
         $this->validate($request, [
-                'from1' => 'required|date_format:Y-m-d',
-                'to1' => 'required|date_format:Y-m-d|after:from1',
+                'from1' => 'required|date_format:Y-m-d|before_or_equal:to1',
+                'to1' => 'required|date_format:Y-m-d|after_or_equal:from1',
                 'user1' => 'required',
                 'user1.*' => 'integer',
         ]);
@@ -65,7 +65,7 @@ class PrintReportController extends Controller
     public function payment(Request $request)
     {
         $this->validate($request, [
-                'from2' => 'required|date_format:Y-m-d',
+                'from2' => 'required|date_format:Y-m-d|before_or_equal:to2',
                 'to2' => 'required|date_format:Y-m-d|after:from2',
                 'user2' => 'required',
                 'user2.*' => 'integer',

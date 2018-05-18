@@ -177,9 +177,13 @@ $.ajaxSetup({
 					.fail(function(){
 						swal('Oops...', 'Something went wrong with ajax !', 'error');
 					});
-					console.log()
 				});
 			},
+		})
+		.then((result) => {
+			if(result.dismiss === swal.DismissReason.cancel) {
+				swal('Cancelled', 'Your data is safe', 'info');
+			}
 		});
 	}
 
