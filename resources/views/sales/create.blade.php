@@ -324,14 +324,14 @@
 						</div>
 					</div>
 				</div>
-				<div class="col-sm-2">
+				<div class="col-sm-3">
 					<div class="row">
 						<div class="col-sm-12 form-group {!! ( count($errors->get('pay.*.date_payment')) ) >0 ? 'has-error' : '' !!}">
-							<input type="text" name="pay[1][date_payment]" class="form-control datep" placeholder="Date Payment"/>
+							<input type="text" name="pay[1][date_payment]" class="form-control datep" id="datep" placeholder="Date Payment"/>
 						</div>
 					</div>
 				</div>
-				<div class="col-sm-3">
+				<div class="col-sm-2">
 					<div class="row">
 						<div class="col-sm-12 form-group {!! ( count($errors->get('pay.*.amount')) ) >0 ? 'has-error' : '' !!}">
 							<input type="text" name="pay[1][amount]" class="pamount form-control" placeholder="Amount (RM)"/>
@@ -420,18 +420,15 @@ $(document).on('keyup', '#apel, #catel', function () {
 
 ////////////////////////////////////////////////////////////////////////////////////
 // date input payment
-$(document).on('mouseenter', '.datep', function () {
-	$(this).datepicker({
-		autoclose:true,
-		format:'yyyy-mm-dd',
-		todayHighlight : true
-	})
+$('#datep').datepicker({
+	autoclose:true,
+	format:'yyyy-mm-dd',
+	todayHighlight : true
 })
-	// https://bootstrap-datepicker.readthedocs.io/en/latest/events.html
-	.on('changeDate show', function(e) {
-		$('#form').bootstrapValidator('revalidateField', 'pay[1][date_payment]');
-	});
-
+// https://bootstrap-datepicker.readthedocs.io/en/latest/events.html
+.on('changeDate show', function(e) {
+	$('#form').bootstrapValidator('revalidateField', 'pay[1][date_payment]');
+});
 
 ////////////////////////////////////////////////////////////////////////////////////
 // slip serial number : add and remove row
@@ -450,12 +447,17 @@ $(add_buttons).click(function(){
 			'</div>' +
 		'</div>'
 	); //add input box
-});
-
+	//bootstrap validate
+	$('#form').bootstrapValidator('addField',	$('.rowserial')	.find('[name="serial['+ xs +'][tracking_number]"]'));
+})
 $(wrappers).on("click",".remove_serial", function(e){
 	//user click on remove text
 	e.preventDefault();
-	$(this).parent('.rowserial').remove();
+	var $row = $(this).parent('.rowserial');
+	var $option = $row.find('[name="serial[' + xs + '][tracking_number]"]');
+	$row.remove();
+	$('#form').bootstrapValidator('removeField', $option);
+	console.log();
 })
 
 ////////////////////////////////////////////////////////////////////////////////////
@@ -528,7 +530,7 @@ $(add_button).click(function(){
 				'<div class="col-sm-4">' +
 					'<div class="row">' +
 						'<div class="col-sm-12 form-group <?php echo ( count($errors->get('inv.*.id_product')) ) >0 ? 'has-error' : '' ?>">' +
-							'<select name="inv[' + x + '][id_product]" class="series form-control" onload="select2()">' +
+							'<select name="inv[' + x + '][id_product]" class="series form-control">' +
 								'<option value="">Choose Product</option>' +
 
 								<?php $cate = App\ProductCategory::where(['active' => 1])->get(); ?>
@@ -576,13 +578,32 @@ $(add_button).click(function(){
 		'</div>'
 	); //add input box
 	$('.series').select2();
+
+	// validate the field in rowinvoice
+	$('#form').bootstrapValidator('addField', $('.rowinvoice').find('[name="inv[' + x + '][id_product]"]') );
+	$('#form').bootstrapValidator('addField', $('.rowinvoice').find('[name="inv[' + x + '][commission]"]') );
+	$('#form').bootstrapValidator('addField', $('.rowinvoice').find('[name="inv[' + x + '][retail]"]') );
+	$('#form').bootstrapValidator('addField', $('.rowinvoice').find('[name="inv[' + x + '][quantity]"]') );
 });
 
 $(wrapper).on("click",".remove_field", function(e){
 	//user click on remove text
 	e.preventDefault();
-	// $(this).parent().parent().parent().parent().parent('.rowinvoice').css({"color": "red", "border": "2px solid red"});
-	$(this).parent().parent().parent().parent().parent('.rowinvoice').remove();
+	var $row = $(this).parent().parent().parent().parent().parent('.rowinvoice');
+
+	// $row.css({"color": "red", "border": "2px solid red"});
+
+	var $option1 = $row.find('[name="inv[' + x + '][id_product]"]');
+	var $option2 = $row.find('[name="inv[' + x + '][commission]"]');
+	var $option3 = $row.find('[name="inv[' + x + '][retail]"]');
+	var $option4 = $row.find('[name="inv[' + x + '][quantity]"]');
+
+	$row.remove();
+
+	$('#form').bootstrapValidator('removeField', $option1);
+	$('#form').bootstrapValidator('removeField', $option2);
+	$('#form').bootstrapValidator('removeField', $option3);
+	$('#form').bootstrapValidator('removeField', $option4);
 
 	// update total amount
 	update_tamount();
@@ -648,14 +669,14 @@ $(add_buttonp).click(function(){
 						'</div>' +
 					'</div>' +
 				'</div>' +
-				'<div class="col-sm-2">' +
+				'<div class="col-sm-3">' +
 					'<div class="row">' +
 						'<div class="col-sm-12 form-group {!! ( count($errors->get('pay.*.date_payment')) ) >0 ? 'has-error' : '' !!}">' +
 							'<input type="text" name="pay[' + xp + '][date_payment]" class="form-control datep" placeholder="Date Payment"/>' +
 						'</div>' +
 					'</div>' +
 				'</div>' +
-				'<div class="col-sm-3">' +
+				'<div class="col-sm-2">' +
 					'<div class="row">' +
 						'<div class="col-sm-12 form-group {!! ( count($errors->get('pay.*.amount')) ) >0 ? 'has-error' : '' !!}">' +
 							'<input type="text" name="pay[' + xp + '][amount]" class="pamount form-control" placeholder="Amount (RM)"/>' +
@@ -666,12 +687,39 @@ $(add_buttonp).click(function(){
 		'</div>'
 	); //add input box
 	$('.bank').select2();
+	$('.datep').datepicker({
+		autoclose:true,
+		format:'yyyy-mm-dd',
+		todayHighlight : true
+	})
+	.on('changeDate show', function(e) {
+		$('#form').bootstrapValidator('revalidateField', 'pay[' + xp + '][date_payment]');
+	});
+
+	// bootstrap validate
+	$('#form').bootstrapValidator('addField', $('.rowpayment').find('[name="pay[' + xp + '][id_bank]"]') );
+	$('#form').bootstrapValidator('addField', $('.rowpayment').find('[name="pay[' + xp + '][date_payment]"]') );
+	$('#form').bootstrapValidator('addField', $('.rowpayment').find('[name="pay[' + xp + '][amount]"]') );
 });
 
 $(wrapperp).on("click",".remove_payment", function(e){
 	//user click on remove text
 	e.preventDefault();
-	$(this).parent().parent().parent().parent().parent('.rowpayment').remove();
+	
+
+	var $row = $(this).parent().parent().parent().parent().parent('.rowpayment');
+
+	// $row.css({"color": "red", "border": "2px solid red"});
+
+	var $option11 = $row.find('[name="inv[' + xp + '][id_bank]"]');
+	var $option21 = $row.find('[name="inv[' + xp + '][date_payment]"]');
+	var $option31 = $row.find('[name="inv[' + xp + '][amount]"]');
+
+	$row.remove();
+
+	$('#form').bootstrapValidator('removeField', $option11);
+	$('#form').bootstrapValidator('removeField', $option21);
+	$('#form').bootstrapValidator('removeField', $option31);
 
 	// update total payment
 	update_tpayment();
@@ -874,7 +922,7 @@ $('#form').bootstrapValidator({
 			}
 		},
 
-@for ($i = 1; $i < 10; $i++)
+@for ($i = 1; $i < 1000; $i++)
 
 		'inv[{{ $i }}][id_product]': {
 			validators: {

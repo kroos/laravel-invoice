@@ -11,7 +11,7 @@
 		<div class="panel-body">
 			<div class="col-lg-12">
 
-				{!! Form::model($sales, ['route' => ['sales.update', $sales->id], 'method' => 'PATCH', 'class' => 'form-horizontal', 'autocomplete' => 'off', 'files' => true]) !!}
+				{!! Form::model($sales, ['route' => ['sales.update', $sales->id], 'method' => 'PATCH', 'id' => 'form', 'class' => 'form-horizontal', 'autocomplete' => 'off', 'files' => true]) !!}
 
 				@if( auth()->user()->id_group == 1 )
 					<?php
@@ -404,7 +404,7 @@ $y = $y + ( $y * ($tcharge / 100) );
 								<div class="col-lg-12 payment_wrap">
 <?php
 $nm = App\Payments::where(['id_sales' => $sales->id, 'deleted_at' => null])->get();
-$z = 990;
+$z = 9990;
 $m = 0;
 if($nm->count() > 0):
 foreach($nm as $o):
@@ -435,14 +435,14 @@ $z++;
 				</div>
 			</div>
 		</div>
-		<div class="col-sm-2">
+		<div class="col-sm-3">
 			<div class="row">
 				<div class="col-sm-12 form-group {!! ( count($errors->get('pay.*.date_payment')) ) >0 ? 'has-error' : '' !!}">
-					<input type="text" name="pay[{!! $z !!}][date_payment]" value="{!! $o->date_payment !!}" class="form-control date" placeholder="Date Payment"/>
+					<input type="text" name="pay[{!! $z !!}][date_payment]" value="{!! $o->date_payment !!}" class="form-control" id="datep{{ $z }}" placeholder="Date Payment"/>
 				</div>
 			</div>
 		</div>
-		<div class="col-sm-3">
+		<div class="col-sm-2">
 			<div class="row">
 				<div class="col-sm-12 form-group {!! ( count($errors->get('pay.*.amount')) ) >0 ? 'has-error' : '' !!}">
 					<input type="text" name="pay[{!! $z !!}][amount]" value="{!! $o->amount !!}" class="pamount form-control" placeholder="Amount (RM)"/><?php $m += $o->amount ?>
@@ -512,42 +512,50 @@ endif;
 // ucwords input
 	$(document).on('keyup', '#pel', function () {
 	// $("input").keyup(function() {
-		toUpper(this);
+		tch(this);
 	});
 
 ////////////////////////////////////////////////////////////////////////////////////
 // uppercase input for tracking number and customer section
 	$(document).on('keyup', '#apel, #catel', function () {
-		toUppercase(this);
+		uch(this);
 	});
 
 ////////////////////////////////////////////////////////////////////////////////////
 // date input helper
-	$(document).on('mouseenter', '.date', function () {
-		$(this).datepicker({
-			autoclose:true,
-			format:'yyyy-mm-dd',
-			todayHighlight : true,
-		});	
-	});
+	$('#da').datepicker({
+		autoclose:true,
+		format:'yyyy-mm-dd',
+		todayHighlight : true,
+	})
+	.on('changeDate show', function(e) {
+		$('#form').bootstrapValidator('revalidateField', 'date_sale');
+	});	
 
 ////////////////////////////////////////////////////////////////////////////////////
-// capital case helper
-	function toUppercase(obj) {
-		var mystring = obj.value;
-		var sp = mystring.split(' ');
-		var wl=0;
-		var f ,r;
-		var word = new Array();
-		for (i = 0 ; i < sp.length ; i ++ ) {
-			f = sp[i].substring(0,1).toUpperCase();
-			r = sp[i].substring(1).toUpperCase();
-			word[i] = f+r;
-		}
-		newstring = word.join(' ');
-		obj.value = newstring;
-		return true;
-	}
+// date input payment
+<?php
+$nm2 = App\Payments::where(['id_sales' => $sales->id, 'deleted_at' => null])->get();
+$z2 = 9990;
+$m2 = 0;
+if($nm2->count() > 0):
+foreach($nm2 as $o):
+$z2++;
+?>
+
+$('#datep{{ $z2 }}').datepicker({
+	autoclose:true,
+	format:'yyyy-mm-dd',
+	todayHighlight : true
+})
+// https://bootstrap-datepicker.readthedocs.io/en/latest/events.html
+.on('changeDate show', function(e) {
+	$('#form').bootstrapValidator('revalidateField', 'pay[{{ $z2 }}][date_payment]');
+});
+<?php
+endforeach;
+endif;
+?>
 
 ////////////////////////////////////////////////////////////////////////////////////
 // slip serial number : add and remove row
@@ -569,13 +577,17 @@ $(add_buttons).click(function(){
 			'</div>' +
 		'</div>'
 	); //add input box
+	//bootstrap validate
+	$('#form').bootstrapValidator('addField',	$('.rowserial')	.find('[name="serial['+ xs +'][tracking_number]"]'));
 });
 			
 $(wrappers).on("click",".remove_serial", function(e){
 	//user click on remove text
 	e.preventDefault();
-	$(this).parent('.rowserial').remove();
-})
+	var $row = $(this).parent('.rowserial');
+	var $option = $row.find('[name="serial[' + xs + '][tracking_number]"]');
+	$row.remove();
+	$('#form').bootstrapValidator('removeField', $option);})
 
 ////////////////////////////////////////////////////////////////////////////////////
 // helper tax 
@@ -696,13 +708,33 @@ $(add_button).click(function(){
 		'</div>'
 	); //add input box
 	$('.series').select2();
+	// validate the field in rowinvoice
+	$('#form').bootstrapValidator('addField', $('.rowinvoice').find('[name="inv[' + x + '][id_product]"]') );
+	$('#form').bootstrapValidator('addField', $('.rowinvoice').find('[name="inv[' + x + '][commission]"]') );
+	$('#form').bootstrapValidator('addField', $('.rowinvoice').find('[name="inv[' + x + '][retail]"]') );
+	$('#form').bootstrapValidator('addField', $('.rowinvoice').find('[name="inv[' + x + '][quantity]"]') );
 });
 
 $(wrapper).on("click",".remove_field", function(e){
 	//user click on remove text
 	e.preventDefault();
 	// $(this).parent().parent().parent().parent().parent('.rowinvoice').css({"color": "red", "border": "2px solid red"});
-	$(this).parent().parent().parent().parent().parent('.rowinvoice').remove();
+
+	var $row = $(this).parent().parent().parent().parent().parent('.rowinvoice');
+
+	// $row.css({"color": "red", "border": "2px solid red"});
+
+	var $option1 = $row.find('[name="inv[' + x + '][id_product]"]');
+	var $option2 = $row.find('[name="inv[' + x + '][commission]"]');
+	var $option3 = $row.find('[name="inv[' + x + '][retail]"]');
+	var $option4 = $row.find('[name="inv[' + x + '][quantity]"]');
+
+	$row.remove();
+
+	$('#form').bootstrapValidator('removeField', $option1);
+	$('#form').bootstrapValidator('removeField', $option2);
+	$('#form').bootstrapValidator('removeField', $option3);
+	$('#form').bootstrapValidator('removeField', $option4);
 
 	// update total amount
 	update_tamount();
@@ -769,14 +801,14 @@ $(add_buttonp).click(function(){
 						'</div>' +
 					'</div>' +
 				'</div>' +
-				'<div class="col-sm-2">' +
+				'<div class="col-sm-3">' +
 					'<div class="row">' +
 						'<div class="col-sm-12 form-group {!! ( count($errors->get('pay[][date_payment]')) ) >0 ? 'has-error' : '' !!}">' +
-							'<input type="text" name="pay[' + xp + '][date_payment]" class="form-control date" placeholder="Date Payment"/>' +
+							'<input type="text" name="pay[' + xp + '][date_payment]" class="form-control datep" id="datep" placeholder="Date Payment"/>' +
 						'</div>' +
 					'</div>' +
 				'</div>' +
-				'<div class="col-sm-3">' +
+				'<div class="col-sm-2">' +
 					'<div class="row">' +
 						'<div class="col-sm-12 form-group {!! ( count($errors->get('pay[][amount]')) ) >0 ? 'has-error' : '' !!}">' +
 							'<input type="text" name="pay[' + xp + '][amount]" class="pamount form-control" placeholder="Amount (RM)"/>' +
@@ -786,7 +818,22 @@ $(add_buttonp).click(function(){
 			'</div>' +
 		'</div>'
 	); //add input box
+
 	$('.bank').select2();
+
+	$('.datep').datepicker({
+		autoclose:true,
+		format:'yyyy-mm-dd',
+		todayHighlight : true
+	})
+	.on('changeDate show', function(e) {
+		$('#form').bootstrapValidator('revalidateField', 'pay[' + xp + '][date_payment]');
+	});
+
+	// bootstrap validate
+	$('#form').bootstrapValidator('addField', $('.rowpayment').find('[name="pay[' + xp + '][id_bank]"]') );
+	$('#form').bootstrapValidator('addField', $('.rowpayment').find('[name="pay[' + xp + '][date_payment]"]') );
+	$('#form').bootstrapValidator('addField', $('.rowpayment').find('[name="pay[' + xp + '][amount]"]') );
 });
 			
 $(wrapperp).on("click",".remove_payment", function(e){
@@ -1118,4 +1165,247 @@ $('#taxs, #custsel, #us, .series, .bank').select2({
 });
 
 ////////////////////////////////////////////////////////////////////////////////////
+// bootstrap validator
+$('#form').bootstrapValidator({
+	feedbackIcons: {
+		valid: 'glyphicon glyphicon-ok',
+		invalid: 'glyphicon glyphicon-remove',
+		validating: 'glyphicon glyphicon-refresh'
+	},
+	fields: {
+		id_user: {
+			validators: {
+				notEmpty: {
+					message: 'Please choose user.'
+				},
+			}
+		},
+		date_sale: {
+			validators: {
+				notEmpty: {
+					message: 'Please insert date. '
+				},
+				date: {
+					format: 'YYYY-MM-DD',
+					message: 'The date format is not valid. '
+				}
+			}
+		},
+<?php
+$vs1 = 9990;
+$ys1 = 0;
+if($d->count() > 0):
+foreach ($d as $e):
+$vs1++;
+?>
+		'serial[{{ $vs1 }}][tracking_number]': {
+			validators: {
+				notEmpty: {
+					message: 'Please insert tracking number/bill number/receipt number. '
+				}
+			}
+		},
+<?php
+endforeach;
+endif;
+?>
+@for ($ie = 1; $ie < 1000; $ie++)
+		'serial[{{ $ie }}][tracking_number]': {
+			validators: {
+				notEmpty: {
+					message: 'Please insert tracking number/bill number/receipt number. '
+				}
+			}
+		},
+@endfor
+		'image[]': {
+			validators: {
+				notEmpty: {
+					message: 'Please select an image'
+				},
+				file: {
+					extension: 'jpeg,jpg,png,bmp',
+					type: 'image/jpeg,image/png,image/bmp',
+					maxSize: 7990272,   // 3264 * 2448
+					message: 'The selected file is not valid'
+				}
+			}
+		},
+		repeatcust: {
+			validators: {
+				notEmpty: {
+					message: 'Please choose a client'
+				}
+			}
+		},
+<?php
+$ty1 = App\SalesItems::where(['id_sales' => $sales->id, 'deleted_at' => null])->get();
+$v1 = 9990;
+$y1 = 0;
+if($ty1->count() > 0):
+foreach ($ty1 as $e):
+$v1++;
+?>
+		'inv[{{ $v1 }}][id_product]': {
+			validators: {
+				notEmpty: {
+					message: 'Please choose an item. '
+				}
+			}
+		},
+		'inv[{{ $v1 }}][commission]': {
+			validators: {
+				notEmpty: {
+					message: 'Please insert commission for this item. '
+				},
+				greaterThan: {
+					value: 0,
+					message: 'Commission must be equal or greater than 0. '
+				},
+			},
+		},
+		'inv[{{ $v1 }}][retail]': {
+			validators: {
+				notEmpty: {
+					message: 'Please insert retail price for this item. '
+				},
+				greaterThan: {
+					value: 0,
+					message: 'Retail price must be equal or greater than 0. '
+				},
+			},
+		},
+		'inv[{{ $v1 }}][quantity]': {
+			validators: {
+				notEmpty: {
+					message: 'Please insert quantity for this item. '
+				},
+				greaterThan: {
+					value: 0,
+					message: 'Quantity must be equal or greater than 0. '
+				},
+			},
+		},
+<?php
+endforeach;
+endif;
+
+
+$nm1 = App\Payments::where(['id_sales' => $sales->id, 'deleted_at' => null])->get();
+$z1 = 9990;
+$m1 = 0;
+if($nm1->count() > 0):
+foreach($nm1 as $o):
+$z1++;
+?>
+		'pay[{{ $z1 }}][id_bank]': {
+			validators: {
+				notEmpty: {
+					message: 'Please choose payment bank. '
+				},
+			},
+		},
+		'pay[{{ $z1 }}][date_payment]': {
+			validators: {
+				notEmpty: {
+					message: 'Please insert payment date. '
+				},
+				date: {
+					format: 'YYYY-MM-DD',
+					message: 'The date format is not valid. '
+				}
+			},
+		},
+		'pay[{{ $z1 }}][amount]': {
+			validators: {
+				notEmpty: {
+					message: 'Please insert payment amount. '
+				},
+				greaterThan: {
+					value: 1,
+					message: 'Amount must be equal or greater than 1. '
+				},
+			},
+		},
+<?php
+endforeach;
+endif;
+?>
+@for ($i = 1; $i < 1000; $i++)
+
+		'inv[{{ $i }}][id_product]': {
+			validators: {
+				notEmpty: {
+					message: 'Please choose an item. '
+				}
+			}
+		},
+		'inv[{{ $i }}][commission]': {
+			validators: {
+				notEmpty: {
+					message: 'Please insert commission for this item. '
+				},
+				greaterThan: {
+					value: 0,
+					message: 'Commission must be equal or greater than 0. '
+				},
+			},
+		},
+		'inv[{{ $i }}][retail]': {
+			validators: {
+				notEmpty: {
+					message: 'Please insert retail price for this item. '
+				},
+				greaterThan: {
+					value: 0,
+					message: 'Retail price must be equal or greater than 0. '
+				},
+			},
+		},
+		'inv[{{ $i }}][quantity]': {
+			validators: {
+				notEmpty: {
+					message: 'Please insert quantity for this item. '
+				},
+				greaterThan: {
+					value: 0,
+					message: 'Quantity must be equal or greater than 0. '
+				},
+			},
+		},
+		'pay[{{ $i }}][id_bank]': {
+			validators: {
+				notEmpty: {
+					message: 'Please choose payment bank. '
+				},
+			},
+		},
+		'pay[{{ $i }}][date_payment]': {
+			validators: {
+				notEmpty: {
+					message: 'Please insert payment date. '
+				},
+				date: {
+					format: 'YYYY-MM-DD',
+					message: 'The date format is not valid. '
+				}
+			},
+		},
+		'pay[{{ $i }}][amount]': {
+			validators: {
+				notEmpty: {
+					message: 'Please insert payment amount. '
+				},
+				greaterThan: {
+					value: 1,
+					message: 'Amount must be equal or greater than 1. '
+				},
+			},
+		},
+@endfor
+	}
+});
+
+////////////////////////////////////////////////////////////////////////////////////
+
 @endsection
