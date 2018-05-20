@@ -839,7 +839,20 @@ $(add_buttonp).click(function(){
 $(wrapperp).on("click",".remove_payment", function(e){
 	//user click on remove text
 	e.preventDefault();
-	$(this).parent().parent().parent().parent().parent('.rowpayment').remove();
+
+	var $row = $(this).parent().parent().parent().parent().parent('.rowpayment');
+
+	// $row.css({"color": "red", "border": "2px solid red"});
+
+	var $option11 = $row.find('[name="inv[' + xp + '][id_bank]"]');
+	var $option21 = $row.find('[name="inv[' + xp + '][date_payment]"]');
+	var $option31 = $row.find('[name="inv[' + xp + '][amount]"]');
+
+	$row.remove();
+
+	$('#form').bootstrapValidator('removeField', $option11);
+	$('#form').bootstrapValidator('removeField', $option21);
+	$('#form').bootstrapValidator('removeField', $option31);
 
 	// update total payment
 	update_tpayment();
