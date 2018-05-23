@@ -672,7 +672,7 @@ $(add_buttonp).click(function(){
 				'<div class="col-sm-3">' +
 					'<div class="row">' +
 						'<div class="col-sm-12 form-group {!! ( count($errors->get('pay.*.date_payment')) ) >0 ? 'has-error' : '' !!}">' +
-							'<input type="text" name="pay[' + xp + '][date_payment]" class="form-control datep" placeholder="Date Payment"/>' +
+							'<input type="text" name="pay[' + xp + '][date_payment]" class="form-control" id="datep_' + xp + '" placeholder="Date Payment"/>' +
 						'</div>' +
 					'</div>' +
 				'</div>' +
@@ -687,7 +687,7 @@ $(add_buttonp).click(function(){
 		'</div>'
 	); //add input box
 	$('.bank').select2();
-	$('.datep').datepicker({
+	$('#datep_' + xp).datepicker({
 		autoclose:true,
 		format:'yyyy-mm-dd',
 		todayHighlight : true
