@@ -21,7 +21,7 @@ class ContactUs extends Mailable
 
     public function build()
     {
-           $re = Preferences::find(1);
+        $re = Preferences::find(1);
         return $this->markdown('email.contactus')
                 ->from($re->company_email, $re->company_name)
                 ->subject(ucwords(strtolower(request('subject'))));
