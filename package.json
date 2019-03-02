@@ -11,26 +11,28 @@
   },
   "devDependencies": {
     "axios": "^0.15.3",
-    "bootstrap-sass": "^3.3.7",
+    "bootstrap-sass": "^3.4.1",
     "cross-env": "^3.2.3",
     "jquery": "^3.1.1",
-    "lodash": "^4.17.10"
+    "lodash": "^4.17.11"
   },
   "dependencies": {
-    "@claviska/jquery-minicolors": "^2.2.6",
+    "@claviska/jquery-minicolors": "^2.3.4",
     "bootstrap-datepicker": "^1.8.0",
     "bootstrapvalidator": "^0.5.4",
-    "datatables.net": "^1.10.16",
-    "datatables.net-bs": "^1.10.16",
-    "datatables.net-responsive": "^2.2.1",
-    "datatables.net-responsive-bs": "^2.2.1",
+    "datatables.net": "^1.10.19",
+    "datatables.net-bs": "^1.10.19",
+    "datatables.net-responsive": "^2.2.3",
+    "datatables.net-responsive-bs": "^2.2.3",
     "font-awesome": "^4.7.0",
+    "imagemin": "^6.1.0",
     "jquery-chained": "^2.0.0-beta.2",
     "jquery.cookie": "^1.4.1",
-    "laravel-mix": "^2.1.11",
+    "laravel-mix": "^2.1.14",
     "pc-bootstrap4-datetimepicker": "^4.17.50",
+    "popper.js": "^1.14.7",
     "select2": "^4.0.6-rc.1",
     "select2-bootstrap-css": "^1.4.6",
-    "sweetalert2": "^7.19.3"
+    "sweetalert2": "^7.33.1"
   }
 }

@@ -92,6 +92,8 @@ class MockConfiguration
      */
     protected $mockOriginalDestructor = false;
 
+    protected $constantsMap = array();
+
     public function __construct(
         array $targets = array(),
         array $blackListedMethods = array(),
@@ -99,7 +101,8 @@ class MockConfiguration
         $name = null,
         $instanceMock = false,
         array $parameterOverrides = array(),
-        $mockOriginalDestructor = false
+        $mockOriginalDestructor = false,
+        array $constantsMap = array()
     ) {
         $this->addTargets($targets);
         $this->blackListedMethods = $blackListedMethods;
@@ -108,6 +111,7 @@ class MockConfiguration
         $this->instanceMock = $instanceMock;
         $this->parameterOverrides = $parameterOverrides;
         $this->mockOriginalDestructor = $mockOriginalDestructor;
+        $this->constantsMap = $constantsMap;
     }
 
     /**
@@ -247,7 +251,8 @@ class MockConfiguration
             $className,
             $this->instanceMock,
             $this->parameterOverrides,
-            $this->mockOriginalDestructor
+            $this->mockOriginalDestructor,
+            $this->constantsMap
         );
     }
 
@@ -516,6 +521,34 @@ class MockConfiguration
             return true;
         });
 
+        // In HHVM, class methods can be annotated with the built-in
+        // <<__Memoize>> attribute (similar to a Python decorator),
+        // which builds an LRU cache of method arguments and their
+        // return values.
+        // https://docs.hhvm.com/hack/attributes/special#__memoize
+        //
+        // HHVM implements this behavior by inserting a private helper
+        // method into the class at runtime which is named as the
+        // method to be memoized, suffixed by `$memoize_impl`.
+        // https://github.com/facebook/hhvm/blob/6aa46f1e8c2351b97d65e67b73e26f274a7c3f2e/hphp/runtime/vm/func.cpp#L364
+        //
+        // Ordinarily, PHP does not all allow the `$` token in method
+        // names, but since the memoization helper is inserted at
+        // runtime (and not in userland), HHVM allows it.
+        //
+        // We use code generation and eval() for some types of mocks,
+        // so to avoid syntax errors from these memoization helpers,
+        // we must filter them from our list of class methods.
+        //
+        // This effectively disables the memoization behavior in HHVM,
+        // but that's preferable to failing catastrophically when
+        // attempting to mock a class using the attribute.
+        if (defined('HHVM_VERSION')) {
+            $methods = array_filter($methods, function ($method) {
+                return strpos($method->getName(), '$memoize_impl') === false;
+            });
+        }
+
         return $this->allMethods = $methods;
     }
 
@@ -537,5 +570,10 @@ class MockConfiguration
     protected function setTargetObject($object)
     {
         $this->targetObject = $object;
+    }
+
+    public function getConstantsMap()
+    {
+        return $this->constantsMap;
     }
 }

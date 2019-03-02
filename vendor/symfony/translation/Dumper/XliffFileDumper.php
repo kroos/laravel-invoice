@@ -11,8 +11,8 @@
 
 namespace Symfony\Component\Translation\Dumper;
 
-use Symfony\Component\Translation\MessageCatalogue;
 use Symfony\Component\Translation\Exception\InvalidArgumentException;
+use Symfony\Component\Translation\MessageCatalogue;
 
 /**
  * XliffFileDumper generates xliff files from a message catalogue.
@@ -24,7 +24,7 @@ class XliffFileDumper extends FileDumper
     /**
      * {@inheritdoc}
      */
-    public function formatCatalogue(MessageCatalogue $messages, $domain, array $options = array())
+    public function formatCatalogue(MessageCatalogue $messages, $domain, array $options = [])
     {
         $xliffVersion = '1.2';
         if (array_key_exists('xliff_version', $options)) {
@@ -55,9 +55,9 @@ class XliffFileDumper extends FileDumper
         return 'xlf';
     }
 
-    private function dumpXliff1($defaultLocale, MessageCatalogue $messages, $domain, array $options = array())
+    private function dumpXliff1($defaultLocale, MessageCatalogue $messages, $domain, array $options = [])
     {
-        $toolInfo = array('tool-id' => 'symfony', 'tool-name' => 'Symfony');
+        $toolInfo = ['tool-id' => 'symfony', 'tool-name' => 'Symfony'];
         if (array_key_exists('tool_info', $options)) {
             $toolInfo = array_merge($toolInfo, $options['tool_info']);
         }
@@ -129,7 +129,7 @@ class XliffFileDumper extends FileDumper
         return $dom->saveXML();
     }
 
-    private function dumpXliff2($defaultLocale, MessageCatalogue $messages, $domain, array $options = array())
+    private function dumpXliff2($defaultLocale, MessageCatalogue $messages, $domain, array $options = [])
     {
         $dom = new \DOMDocument('1.0', 'utf-8');
         $dom->formatOutput = true;
@@ -146,6 +146,11 @@ class XliffFileDumper extends FileDumper
         foreach ($messages->all($domain) as $source => $target) {
             $translation = $dom->createElement('unit');
             $translation->setAttribute('id', strtr(substr(base64_encode(hash('sha256', $source, true)), 0, 7), '/+', '._'));
+            $name = $source;
+            if (\strlen($source) > 80) {
+                $name = substr(md5($source), -7);
+            }
+            $translation->setAttribute('name', $name);
             $metadata = $messages->getMetadata($source, $domain);
 
             // Add notes section
@@ -195,6 +200,6 @@ class XliffFileDumper extends FileDumper
      */
     private function hasMetadataArrayInfo($key, $metadata = null)
     {
-        return null !== $metadata && array_key_exists($key, $metadata) && ($metadata[$key] instanceof \Traversable || is_array($metadata[$key]));
+        return null !== $metadata && array_key_exists($key, $metadata) && ($metadata[$key] instanceof \Traversable || \is_array($metadata[$key]));
     }
 }

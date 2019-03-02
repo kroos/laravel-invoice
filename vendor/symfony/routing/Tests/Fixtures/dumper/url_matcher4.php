@@ -1,7 +1,6 @@
 <?php
 
-use Symfony\Component\Routing\Exception\MethodNotAllowedException;
-use Symfony\Component\Routing\Exception\ResourceNotFoundException;
+use Symfony\Component\Routing\Matcher\Dumper\PhpMatcherTrait;
 use Symfony\Component\Routing\RequestContext;
 
 /**
@@ -10,99 +9,20 @@ use Symfony\Component\Routing\RequestContext;
  */
 class ProjectUrlMatcher extends Symfony\Component\Routing\Matcher\UrlMatcher
 {
+    use PhpMatcherTrait;
+
     public function __construct(RequestContext $context)
     {
         $this->context = $context;
-    }
-
-    public function match($rawPathinfo)
-    {
-        $allow = array();
-        $pathinfo = rawurldecode($rawPathinfo);
-        $trimmedPathinfo = rtrim($pathinfo, '/');
-        $context = $this->context;
-        $request = $this->request ?: $this->createRequest($pathinfo);
-        $requestMethod = $canonicalMethod = $context->getMethod();
-
-        if ('HEAD' === $requestMethod) {
-            $canonicalMethod = 'GET';
-        }
-
-        // just_head
-        if ('/just_head' === $pathinfo) {
-            $ret = array('_route' => 'just_head');
-            if (!in_array($requestMethod, array('HEAD'))) {
-                $allow = array_merge($allow, array('HEAD'));
-                goto not_just_head;
-            }
-
-            return $ret;
-        }
-        not_just_head:
-
-        // head_and_get
-        if ('/head_and_get' === $pathinfo) {
-            $ret = array('_route' => 'head_and_get');
-            if (!in_array($canonicalMethod, array('HEAD', 'GET'))) {
-                $allow = array_merge($allow, array('HEAD', 'GET'));
-                goto not_head_and_get;
-            }
-
-            return $ret;
-        }
-        not_head_and_get:
-
-        // get_and_head
-        if ('/get_and_head' === $pathinfo) {
-            $ret = array('_route' => 'get_and_head');
-            if (!in_array($canonicalMethod, array('GET', 'HEAD'))) {
-                $allow = array_merge($allow, array('GET', 'HEAD'));
-                goto not_get_and_head;
-            }
-
-            return $ret;
-        }
-        not_get_and_head:
-
-        // post_and_head
-        if ('/post_and_head' === $pathinfo) {
-            $ret = array('_route' => 'post_and_head');
-            if (!in_array($requestMethod, array('POST', 'HEAD'))) {
-                $allow = array_merge($allow, array('POST', 'HEAD'));
-                goto not_post_and_head;
-            }
-
-            return $ret;
-        }
-        not_post_and_head:
-
-        if (0 === strpos($pathinfo, '/put_and_post')) {
-            // put_and_post
-            if ('/put_and_post' === $pathinfo) {
-                $ret = array('_route' => 'put_and_post');
-                if (!in_array($requestMethod, array('PUT', 'POST'))) {
-                    $allow = array_merge($allow, array('PUT', 'POST'));
-                    goto not_put_and_post;
-                }
-
-                return $ret;
-            }
-            not_put_and_post:
-
-            // put_and_get_and_head
-            if ('/put_and_post' === $pathinfo) {
-                $ret = array('_route' => 'put_and_get_and_head');
-                if (!in_array($canonicalMethod, array('PUT', 'GET', 'HEAD'))) {
-                    $allow = array_merge($allow, array('PUT', 'GET', 'HEAD'));
-                    goto not_put_and_get_and_head;
-                }
-
-                return $ret;
-            }
-            not_put_and_get_and_head:
-
-        }
-
-        throw 0 < count($allow) ? new MethodNotAllowedException(array_unique($allow)) : new ResourceNotFoundException();
+        $this->staticRoutes = [
+            '/just_head' => [[['_route' => 'just_head'], null, ['HEAD' => 0], null, false, false, null]],
+            '/head_and_get' => [[['_route' => 'head_and_get'], null, ['HEAD' => 0, 'GET' => 1], null, false, false, null]],
+            '/get_and_head' => [[['_route' => 'get_and_head'], null, ['GET' => 0, 'HEAD' => 1], null, false, false, null]],
+            '/post_and_head' => [[['_route' => 'post_and_head'], null, ['POST' => 0, 'HEAD' => 1], null, false, false, null]],
+            '/put_and_post' => [
+                [['_route' => 'put_and_post'], null, ['PUT' => 0, 'POST' => 1], null, false, false, null],
+                [['_route' => 'put_and_get_and_head'], null, ['PUT' => 0, 'GET' => 1, 'HEAD' => 2], null, false, false, null],
+            ],
+        ];
     }
 }

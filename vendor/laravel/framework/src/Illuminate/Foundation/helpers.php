@@ -1,17 +1,22 @@
 <?php
 
-use Illuminate\Support\Str;
-use Illuminate\Support\Carbon;
+use Illuminate\Foundation\Mix;
 use Illuminate\Support\HtmlString;
 use Illuminate\Container\Container;
+use Illuminate\Support\Facades\Date;
+use Illuminate\Queue\CallQueuedClosure;
 use Illuminate\Contracts\Bus\Dispatcher;
+use Illuminate\Queue\SerializableClosure;
 use Illuminate\Contracts\Auth\Access\Gate;
+use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Contracts\Routing\UrlGenerator;
 use Illuminate\Foundation\Bus\PendingDispatch;
+use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Contracts\Debug\ExceptionHandler;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Contracts\Auth\Factory as AuthFactory;
 use Illuminate\Contracts\View\Factory as ViewFactory;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Contracts\Cookie\Factory as CookieFactory;
 use Symfony\Component\Debug\Exception\FatalThrowableError;
 use Illuminate\Database\Eloquent\Factory as EloquentFactory;
@@ -22,7 +27,7 @@ if (! function_exists('abort')) {
     /**
      * Throw an HttpException with the given data.
      *
-     * @param  int     $code
+     * @param  \Symfony\Component\HttpFoundation\Response|\Illuminate\Contracts\Support\Responsable|int     $code
      * @param  string  $message
      * @param  array   $headers
      * @return void
@@ -32,6 +37,12 @@ if (! function_exists('abort')) {
      */
     function abort($code, $message = '', array $headers = [])
     {
+        if ($code instanceof Response) {
+            throw new HttpResponseException($code);
+        } elseif ($code instanceof Responsable) {
+            throw new HttpResponseException($code->toResponse(request()));
+        }
+
         app()->abort($code, $message, $headers);
     }
 }
@@ -82,8 +93,8 @@ if (! function_exists('action')) {
     /**
      * Generate the URL to a controller action.
      *
-     * @param  string  $name
-     * @param  array   $parameters
+     * @param  string|array  $name
+     * @param  mixed   $parameters
      * @param  bool    $absolute
      * @return string
      */
@@ -99,7 +110,7 @@ if (! function_exists('app')) {
      *
      * @param  string  $abstract
      * @param  array   $parameters
-     * @return mixed|\Illuminate\Foundation\Application
+     * @return mixed|\Illuminate\Contracts\Foundation\Application
      */
     function app($abstract = null, array $parameters = [])
     {
@@ -230,7 +241,7 @@ if (! function_exists('cache')) {
         }
 
         if (is_string($arguments[0])) {
-            return app('cache')->get($arguments[0], $arguments[1] ?? null);
+            return app('cache')->get(...$arguments);
         }
 
         if (! is_array($arguments[0])) {
@@ -363,11 +374,12 @@ if (! function_exists('decrypt')) {
      * Decrypt the given value.
      *
      * @param  string  $value
-     * @return string
+     * @param  bool   $unserialize
+     * @return mixed
      */
-    function decrypt($value)
+    function decrypt($value, $unserialize = true)
     {
-        return app('encrypter')->decrypt($value);
+        return app('encrypter')->decrypt($value, $unserialize);
     }
 }
 
@@ -380,6 +392,10 @@ if (! function_exists('dispatch')) {
      */
     function dispatch($job)
     {
+        if ($job instanceof Closure) {
+            $job = new CallQueuedClosure(new SerializableClosure($job));
+        }
+
         return new PendingDispatch($job);
     }
 }
@@ -443,11 +459,12 @@ if (! function_exists('encrypt')) {
      * Encrypt the given value.
      *
      * @param  mixed  $value
+     * @param  bool   $serialize
      * @return string
      */
-    function encrypt($value)
+    function encrypt($value, $serialize = true)
     {
-        return app('encrypter')->encrypt($value);
+        return app('encrypter')->encrypt($value, $serialize);
     }
 }
 
@@ -553,53 +570,13 @@ if (! function_exists('mix')) {
      *
      * @param  string  $path
      * @param  string  $manifestDirectory
-     * @return \Illuminate\Support\HtmlString
+     * @return \Illuminate\Support\HtmlString|string
      *
      * @throws \Exception
      */
     function mix($path, $manifestDirectory = '')
     {
-        static $manifests = [];
-
-        if (! Str::startsWith($path, '/')) {
-            $path = "/{$path}";
-        }
-
-        if ($manifestDirectory && ! Str::startsWith($manifestDirectory, '/')) {
-            $manifestDirectory = "/{$manifestDirectory}";
-        }
-
-        if (file_exists(public_path($manifestDirectory.'/hot'))) {
-            $url = file_get_contents(public_path($manifestDirectory.'/hot'));
-
-            if (Str::startsWith($url, ['http://', 'https://'])) {
-                return new HtmlString(Str::after($url, ':').$path);
-            }
-
-            return new HtmlString("//localhost:8080{$path}");
-        }
-
-        $manifestPath = public_path($manifestDirectory.'/mix-manifest.json');
-
-        if (! isset($manifests[$manifestPath])) {
-            if (! file_exists($manifestPath)) {
-                throw new Exception('The Mix manifest does not exist.');
-            }
-
-            $manifests[$manifestPath] = json_decode(file_get_contents($manifestPath), true);
-        }
-
-        $manifest = $manifests[$manifestPath];
-
-        if (! isset($manifest[$path])) {
-            report(new Exception("Unable to locate Mix file: {$path}."));
-
-            if (! app('config')->get('app.debug')) {
-                return $path;
-            }
-        }
-
-        return new HtmlString($manifestDirectory.$manifest[$path]);
+        return app(Mix::class)(...func_get_args());
     }
 }
 
@@ -612,7 +589,7 @@ if (! function_exists('now')) {
      */
     function now($tz = null)
     {
-        return Carbon::now($tz);
+        return Date::now($tz);
     }
 }
 
@@ -770,10 +747,10 @@ if (! function_exists('response')) {
     /**
      * Return a new response from the application.
      *
-     * @param  string  $content
+     * @param  \Illuminate\View\View|string|array|null  $content
      * @param  int     $status
      * @param  array   $headers
-     * @return \Symfony\Component\HttpFoundation\Response|\Illuminate\Contracts\Routing\ResponseFactory
+     * @return \Illuminate\Http\Response|\Illuminate\Contracts\Routing\ResponseFactory
      */
     function response($content = '', $status = 200, array $headers = [])
     {
@@ -792,7 +769,7 @@ if (! function_exists('route')) {
      * Generate the URL to a named route.
      *
      * @param  array|string  $name
-     * @param  array  $parameters
+     * @param  mixed  $parameters
      * @param  bool  $absolute
      * @return string
      */
@@ -875,7 +852,7 @@ if (! function_exists('today')) {
      */
     function today($tz = null)
     {
-        return Carbon::today($tz);
+        return Date::today($tz);
     }
 }
 
@@ -956,7 +933,7 @@ if (! function_exists('validator')) {
      * @param  array  $rules
      * @param  array  $messages
      * @param  array  $customAttributes
-     * @return \Illuminate\Contracts\Validation\Validator
+     * @return \Illuminate\Contracts\Validation\Validator|\Illuminate\Contracts\Validation\Factory
      */
     function validator(array $data = [], array $rules = [], array $messages = [], array $customAttributes = [])
     {

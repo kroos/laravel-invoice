@@ -3,6 +3,7 @@
 namespace Illuminate\Support;
 
 use Illuminate\Console\Application as Artisan;
+use Illuminate\Contracts\Support\DeferrableProvider;
 
 abstract class ServiceProvider
 {
@@ -15,6 +16,8 @@ abstract class ServiceProvider
 
     /**
      * Indicates if loading of the provider is deferred.
+     *
+     * @deprecated Implement the \Illuminate\Contracts\Support\DeferrableProvider interface instead. Will be removed in Laravel 5.9.
      *
      * @var bool
      */
@@ -43,6 +46,16 @@ abstract class ServiceProvider
     public function __construct($app)
     {
         $this->app = $app;
+    }
+
+    /**
+     * Register any application services.
+     *
+     * @return void
+     */
+    public function register()
+    {
+        //
     }
 
     /**
@@ -75,7 +88,7 @@ abstract class ServiceProvider
     /**
      * Register a view file namespace.
      *
-     * @param  string  $path
+     * @param  string|array  $path
      * @param  string  $namespace
      * @return void
      */
@@ -134,17 +147,19 @@ abstract class ServiceProvider
      * Register paths to be published by the publish command.
      *
      * @param  array  $paths
-     * @param  string  $group
+     * @param  mixed  $groups
      * @return void
      */
-    protected function publishes(array $paths, $group = null)
+    protected function publishes(array $paths, $groups = null)
     {
         $this->ensurePublishArrayInitialized($class = static::class);
 
         static::$publishes[$class] = array_merge(static::$publishes[$class], $paths);
 
-        if ($group) {
-            $this->addPublishGroup($group, $paths);
+        if (! is_null($groups)) {
+            foreach ((array) $groups as $group) {
+                $this->addPublishGroup($group, $paths);
+            }
         }
     }
 
@@ -295,6 +310,6 @@ abstract class ServiceProvider
      */
     public function isDeferred()
     {
-        return $this->defer;
+        return $this->defer || $this instanceof DeferrableProvider;
     }
 }

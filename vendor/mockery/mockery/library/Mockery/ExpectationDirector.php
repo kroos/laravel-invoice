@@ -150,7 +150,7 @@ class ExpectationDirector
      * Make the given expectation a default for all others assuming it was
      * correctly created last
      *
-     * @param \Mockery\Expectation
+     * @param \Mockery\Expectation $expectation
      */
     public function makeExpectationDefault(\Mockery\Expectation $expectation)
     {
@@ -213,6 +213,6 @@ class ExpectationDirector
      */
     public function getExpectationCount()
     {
-        return count($this->getExpectations());
+        return count($this->getExpectations()) ?: count($this->getDefaultExpectations());
     }
 }

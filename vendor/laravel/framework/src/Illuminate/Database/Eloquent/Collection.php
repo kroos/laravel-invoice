@@ -4,8 +4,9 @@ namespace Illuminate\Database\Eloquent;
 
 use LogicException;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 use Illuminate\Contracts\Support\Arrayable;
-use Illuminate\Database\Eloquent\Relations\Pivot;
+use Illuminate\Contracts\Queue\QueueableEntity;
 use Illuminate\Contracts\Queue\QueueableCollection;
 use Illuminate\Support\Collection as BaseCollection;
 
@@ -44,7 +45,7 @@ class Collection extends BaseCollection implements QueueableCollection
     /**
      * Load a set of relationships onto the collection.
      *
-     * @param  mixed  $relations
+     * @param  array|string  $relations
      * @return $this
      */
     public function load($relations)
@@ -63,6 +64,111 @@ class Collection extends BaseCollection implements QueueableCollection
     }
 
     /**
+     * Load a set of relationship counts onto the collection.
+     *
+     * @param  array|string  $relations
+     * @return $this
+     */
+    public function loadCount($relations)
+    {
+        if ($this->isEmpty()) {
+            return $this;
+        }
+
+        $models = $this->first()->newModelQuery()
+            ->whereKey($this->modelKeys())
+            ->select($this->first()->getKeyName())
+            ->withCount(...func_get_args())
+            ->get();
+
+        $attributes = Arr::except(
+            array_keys($models->first()->getAttributes()),
+            $models->first()->getKeyName()
+        );
+
+        $models->each(function ($model) use ($attributes) {
+            $this->find($model->getKey())->forceFill(
+                Arr::only($model->getAttributes(), $attributes)
+            )->syncOriginalAttributes($attributes);
+        });
+
+        return $this;
+    }
+
+    /**
+     * Load a set of relationships onto the collection if they are not already eager loaded.
+     *
+     * @param  array|string  $relations
+     * @return $this
+     */
+    public function loadMissing($relations)
+    {
+        if (is_string($relations)) {
+            $relations = func_get_args();
+        }
+
+        foreach ($relations as $key => $value) {
+            if (is_numeric($key)) {
+                $key = $value;
+            }
+
+            $segments = explode('.', explode(':', $key)[0]);
+
+            if (Str::contains($key, ':')) {
+                $segments[count($segments) - 1] .= ':'.explode(':', $key)[1];
+            }
+
+            $path = [];
+
+            foreach ($segments as $segment) {
+                $path[] = [$segment => $segment];
+            }
+
+            if (is_callable($value)) {
+                $path[count($segments) - 1][end($segments)] = $value;
+            }
+
+            $this->loadMissingRelation($this, $path);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Load a relationship path if it is not already eager loaded.
+     *
+     * @param  \Illuminate\Database\Eloquent\Collection  $models
+     * @param  array  $path
+     * @return void
+     */
+    protected function loadMissingRelation(Collection $models, array $path)
+    {
+        $relation = array_shift($path);
+
+        $name = explode(':', key($relation))[0];
+
+        if (is_string(reset($relation))) {
+            $relation = reset($relation);
+        }
+
+        $models->filter(function ($model) use ($name) {
+            return ! is_null($model) && ! $model->relationLoaded($name);
+        })->load($relation);
+
+        if (empty($path)) {
+            return;
+        }
+
+        $models = $models->pluck($name);
+
+        if ($models->first() instanceof BaseCollection) {
+            $models = $models->collapse();
+        }
+
+        $this->loadMissingRelation(new static($models), $path);
+    }
+
+    /**
      * Load a set of relationships onto the mixed relationship collection.
      *
      * @param  string  $relation
@@ -72,29 +178,13 @@ class Collection extends BaseCollection implements QueueableCollection
     public function loadMorph($relation, $relations)
     {
         $this->pluck($relation)
+            ->filter()
             ->groupBy(function ($model) {
                 return get_class($model);
             })
-            ->filter(function ($models, $className) use ($relations) {
-                return Arr::has($relations, $className);
-            })
             ->each(function ($models, $className) use ($relations) {
-                $className::with($relations[$className])
-                    ->eagerLoadRelations($models->all());
+                static::make($models)->load($relations[$className] ?? []);
             });
-
-        return $this;
-    }
-
-    /**
-     * Add an item to the collection.
-     *
-     * @param  mixed  $item
-     * @return $this
-     */
-    public function add($item)
-    {
-        $this->items[] = $item;
 
         return $this;
     }
@@ -290,9 +380,7 @@ class Collection extends BaseCollection implements QueueableCollection
      */
     public function makeHidden($attributes)
     {
-        return $this->each(function ($model) use ($attributes) {
-            $model->addHidden($attributes);
-        });
+        return $this->each->addHidden($attributes);
     }
 
     /**
@@ -303,9 +391,7 @@ class Collection extends BaseCollection implements QueueableCollection
      */
     public function makeVisible($attributes)
     {
-        return $this->each(function ($model) use ($attributes) {
-            $model->makeVisible($attributes);
-        });
+        return $this->each->makeVisible($attributes);
     }
 
     /**
@@ -411,6 +497,7 @@ class Collection extends BaseCollection implements QueueableCollection
      * Get the type of the entities being queued.
      *
      * @return string|null
+     *
      * @throws \LogicException
      */
     public function getQueueableClass()
@@ -441,7 +528,7 @@ class Collection extends BaseCollection implements QueueableCollection
             return [];
         }
 
-        return $this->first() instanceof Pivot
+        return $this->first() instanceof QueueableEntity
                     ? $this->map->getQueueableId()->all()
                     : $this->modelKeys();
     }
@@ -460,6 +547,7 @@ class Collection extends BaseCollection implements QueueableCollection
      * Get the connection of the entities being queued.
      *
      * @return string|null
+     *
      * @throws \LogicException
      */
     public function getQueueableConnection()

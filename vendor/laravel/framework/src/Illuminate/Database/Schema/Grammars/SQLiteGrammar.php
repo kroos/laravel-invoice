@@ -3,7 +3,9 @@
 namespace Illuminate\Database\Schema\Grammars;
 
 use RuntimeException;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Fluent;
+use Doctrine\DBAL\Schema\Index;
 use Illuminate\Database\Connection;
 use Illuminate\Database\Schema\Blueprint;
 
@@ -177,6 +179,7 @@ class SQLiteGrammar extends Grammar
      *
      * @param  \Illuminate\Database\Schema\Blueprint  $blueprint
      * @param  \Illuminate\Support\Fluent  $command
+     *
      * @throws \RuntimeException
      */
     public function compileSpatialIndex(Blueprint $blueprint, Fluent $command)
@@ -228,6 +231,26 @@ class SQLiteGrammar extends Grammar
     public function compileDropAllTables()
     {
         return "delete from sqlite_master where type in ('table', 'index', 'trigger')";
+    }
+
+    /**
+     * Compile the SQL needed to drop all views.
+     *
+     * @return string
+     */
+    public function compileDropAllViews()
+    {
+        return "delete from sqlite_master where type in ('view')";
+    }
+
+    /**
+     * Compile the SQL needed to rebuild the database.
+     *
+     * @return string
+     */
+    public function compileRebuild()
+    {
+        return 'vacuum';
     }
 
     /**
@@ -286,6 +309,7 @@ class SQLiteGrammar extends Grammar
      *
      * @param  \Illuminate\Database\Schema\Blueprint  $blueprint
      * @param  \Illuminate\Support\Fluent  $command
+     *
      * @throws \RuntimeException
      */
     public function compileDropSpatialIndex(Blueprint $blueprint, Fluent $command)
@@ -305,6 +329,39 @@ class SQLiteGrammar extends Grammar
         $from = $this->wrapTable($blueprint);
 
         return "alter table {$from} rename to ".$this->wrapTable($command->to);
+    }
+
+    /**
+     * Compile a rename index command.
+     *
+     * @param  \Illuminate\Database\Schema\Blueprint $blueprint
+     * @param  \Illuminate\Support\Fluent $command
+     * @param  \Illuminate\Database\Connection $connection
+     * @return array
+     */
+    public function compileRenameIndex(Blueprint $blueprint, Fluent $command, Connection $connection)
+    {
+        $schemaManager = $connection->getDoctrineSchemaManager();
+
+        $indexes = $schemaManager->listTableIndexes($this->getTablePrefix().$blueprint->getTable());
+
+        $index = Arr::get($indexes, $command->from);
+
+        if (! $index) {
+            throw new RuntimeException("Index [{$command->from}] does not exist.");
+        }
+
+        $newIndex = new Index(
+            $command->to, $index->getColumns(), $index->isUnique(),
+            $index->isPrimary(), $index->getFlags(), $index->getOptions()
+        );
+
+        $platform = $schemaManager->getDatabasePlatform();
+
+        return [
+            $platform->getDropIndexSQL($command->from, $this->getTablePrefix().$blueprint->getTable()),
+            $platform->getCreateIndexSQL($newIndex, $this->getTablePrefix().$blueprint->getTable()),
+        ];
     }
 
     /**
@@ -557,7 +614,7 @@ class SQLiteGrammar extends Grammar
      */
     protected function typeDateTime(Fluent $column)
     {
-        return 'datetime';
+        return $this->typeTimestamp($column);
     }
 
     /**

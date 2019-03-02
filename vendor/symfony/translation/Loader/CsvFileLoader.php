@@ -29,7 +29,7 @@ class CsvFileLoader extends FileLoader
      */
     protected function loadResource($resource)
     {
-        $messages = array();
+        $messages = [];
 
         try {
             $file = new \SplFileObject($resource, 'rb');
@@ -41,7 +41,7 @@ class CsvFileLoader extends FileLoader
         $file->setCsvControl($this->delimiter, $this->enclosure, $this->escape);
 
         foreach ($file as $data) {
-            if ('#' !== substr($data[0], 0, 1) && isset($data[1]) && 2 === count($data)) {
+            if ('#' !== substr($data[0], 0, 1) && isset($data[1]) && 2 === \count($data)) {
                 $messages[$data[0]] = $data[1];
             }
         }

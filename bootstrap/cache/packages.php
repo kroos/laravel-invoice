@@ -1,13 +1,9 @@
 <?php return array (
-  'intervention/image' => 
+  'crabbly/fpdf-laravel' => 
   array (
     'providers' => 
     array (
-      0 => 'Intervention\\Image\\ImageServiceProvider',
-    ),
-    'aliases' => 
-    array (
-      'Image' => 'Intervention\\Image\\Facades\\Image',
+      0 => 'Crabbly\\FPDF\\FpdfServiceProvider',
     ),
   ),
   'cviebrock/eloquent-sluggable' => 
@@ -17,18 +13,22 @@
       0 => 'Cviebrock\\EloquentSluggable\\ServiceProvider',
     ),
   ),
-  'crabbly/fpdf-laravel' => 
-  array (
-    'providers' => 
-    array (
-      0 => 'Crabbly\\FPDF\\FpdfServiceProvider',
-    ),
-  ),
   'fideloper/proxy' => 
   array (
     'providers' => 
     array (
       0 => 'Fideloper\\Proxy\\TrustedProxyServiceProvider',
+    ),
+  ),
+  'intervention/image' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'Intervention\\Image\\ImageServiceProvider',
+    ),
+    'aliases' => 
+    array (
+      'Image' => 'Intervention\\Image\\Facades\\Image',
     ),
   ),
   'laravel/tinker' => 
@@ -48,6 +48,13 @@
     array (
       'Form' => 'Collective\\Html\\FormFacade',
       'Html' => 'Collective\\Html\\HtmlFacade',
+    ),
+  ),
+  'nesbot/carbon' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'Carbon\\Laravel\\ServiceProvider',
     ),
   ),
 );

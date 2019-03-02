@@ -29,8 +29,8 @@ abstract class Input implements InputInterface, StreamableInputInterface
 {
     protected $definition;
     protected $stream;
-    protected $options = array();
-    protected $arguments = array();
+    protected $options = [];
+    protected $arguments = [];
     protected $interactive = true;
 
     public function __construct(InputDefinition $definition = null)
@@ -48,8 +48,8 @@ abstract class Input implements InputInterface, StreamableInputInterface
      */
     public function bind(InputDefinition $definition)
     {
-        $this->arguments = array();
-        $this->options = array();
+        $this->arguments = [];
+        $this->options = [];
         $this->definition = $definition;
 
         $this->parse();
@@ -72,7 +72,7 @@ abstract class Input implements InputInterface, StreamableInputInterface
             return !array_key_exists($argument, $givenArguments) && $definition->getArgument($argument)->isRequired();
         });
 
-        if (count($missingArguments) > 0) {
+        if (\count($missingArguments) > 0) {
             throw new RuntimeException(sprintf('Not enough arguments (missing: "%s").', implode(', ', $missingArguments)));
         }
     }

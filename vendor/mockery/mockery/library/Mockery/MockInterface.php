@@ -24,13 +24,13 @@ interface MockInterface
 {
     /**
      * @param mixed $something  String method name or map of method => return
-     * @return self|\Mockery\ExpectationInterface|\Mockery\HigherOrderMessage
+     * @return self|\Mockery\ExpectationInterface|\Mockery\Expectation|\Mockery\HigherOrderMessage
      */
     public function allows($something = []);
 
     /**
      * @param mixed $something  String method name (optional)
-     * @return \Mockery\ExpectationInterface|\Mockery\ExpectsHigherOrderMessage
+     * @return \Mockery\ExpectationInterface|\Mockery\Expectation|\Mockery\ExpectsHigherOrderMessage
      */
     public function expects($something = null);
 
@@ -46,17 +46,17 @@ interface MockInterface
     /**
      * Set expected method calls
      *
-     * @param array ...$methodNames one or many methods that are expected to be called in this mock
+     * @param mixed ...$methodNames one or many methods that are expected to be called in this mock
      *
-     * @return \Mockery\ExpectationInterface|\Mockery\HigherOrderMessage
+     * @return \Mockery\ExpectationInterface|\Mockery\Expectation|\Mockery\HigherOrderMessage
      */
     public function shouldReceive(...$methodNames);
 
     /**
      * Shortcut method for setting an expectation that a method should not be called.
      *
-     * @param array $methodNames one or many methods that are expected not to be called in this mock
-     * @return \Mockery\Expectation|\Mockery\HigherOrderMessage
+     * @param mixed ...$methodNames one or many methods that are expected not to be called in this mock
+     * @return \Mockery\ExpectationInterface|\Mockery\Expectation|\Mockery\HigherOrderMessage
      */
     public function shouldNotReceive(...$methodNames);
 
@@ -81,10 +81,12 @@ interface MockInterface
     /**
      * Set mock to defer unexpected methods to its parent if possible
      *
+     * @deprecated 2.0.0 Please use makePartial() instead
+     *
      * @return Mock
      */
     public function shouldDeferMissing();
-    
+
     /**
      * Set mock to defer unexpected methods to its parent if possible
      *
@@ -97,7 +99,12 @@ interface MockInterface
      * @param null $args
      * @return mixed
      */
-    public function shouldHaveReceived($method, $args = null);
+    public function shouldHaveReceived($method = null, $args = null);
+
+    /**
+     * @return mixed
+     */
+    public function shouldHaveBeenCalled();
 
     /**
      * @param null|string $method
@@ -106,6 +113,11 @@ interface MockInterface
      */
     public function shouldNotHaveReceived($method, $args = null);
 
+    /**
+     * @param array $args (optional)
+     * @return mixed
+     */
+    public function shouldNotHaveBeenCalled(array $args = null);
 
     /**
      * In the event shouldReceive() accepting an array of methods/returns

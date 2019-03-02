@@ -1,7 +1,6 @@
 <?php
 
-use Symfony\Component\Routing\Exception\MethodNotAllowedException;
-use Symfony\Component\Routing\Exception\ResourceNotFoundException;
+use Symfony\Component\Routing\Matcher\Dumper\PhpMatcherTrait;
 use Symfony\Component\Routing\RequestContext;
 
 /**
@@ -10,42 +9,27 @@ use Symfony\Component\Routing\RequestContext;
  */
 class ProjectUrlMatcher extends Symfony\Component\Routing\Matcher\UrlMatcher
 {
+    use PhpMatcherTrait;
+
     public function __construct(RequestContext $context)
     {
         $this->context = $context;
-    }
-
-    public function match($rawPathinfo)
-    {
-        $allow = array();
-        $pathinfo = rawurldecode($rawPathinfo);
-        $trimmedPathinfo = rtrim($pathinfo, '/');
-        $context = $this->context;
-        $request = $this->request ?: $this->createRequest($pathinfo);
-        $requestMethod = $canonicalMethod = $context->getMethod();
-
-        if ('HEAD' === $requestMethod) {
-            $canonicalMethod = 'GET';
-        }
-
-        if (0 === strpos($pathinfo, '/rootprefix')) {
-            // static
-            if ('/rootprefix/test' === $pathinfo) {
-                return array('_route' => 'static');
+        $this->staticRoutes = [
+            '/rootprefix/test' => [[['_route' => 'static'], null, null, null, false, false, null]],
+            '/with-condition' => [[['_route' => 'with-condition'], null, null, null, false, false, -1]],
+        ];
+        $this->regexpList = [
+            0 => '{^(?'
+                    .'|/rootprefix/([^/]++)(*:27)'
+                .')/?$}sD',
+        ];
+        $this->dynamicRoutes = [
+            27 => [[['_route' => 'dynamic'], ['var'], null, null, false, true, null]],
+        ];
+        $this->checkCondition = static function ($condition, $context, $request) {
+            switch ($condition) {
+                case -1: return ($context->getMethod() == "GET");
             }
-
-            // dynamic
-            if (preg_match('#^/rootprefix/(?P<var>[^/]++)$#sD', $pathinfo, $matches)) {
-                return $this->mergeDefaults(array_replace($matches, array('_route' => 'dynamic')), array ());
-            }
-
-        }
-
-        // with-condition
-        if ('/with-condition' === $pathinfo && ($context->getMethod() == "GET")) {
-            return array('_route' => 'with-condition');
-        }
-
-        throw 0 < count($allow) ? new MethodNotAllowedException(array_unique($allow)) : new ResourceNotFoundException();
+        };
     }
 }

@@ -41,10 +41,10 @@ class UndefinedMethodFatalErrorHandler implements FatalErrorHandlerInterface
             return new UndefinedMethodException($message, $exception);
         }
 
-        $candidates = array();
+        $candidates = [];
         foreach ($methods as $definedMethodName) {
             $lev = levenshtein($methodName, $definedMethodName);
-            if ($lev <= strlen($methodName) / 3 || false !== strpos($definedMethodName, $methodName)) {
+            if ($lev <= \strlen($methodName) / 3 || false !== strpos($definedMethodName, $methodName)) {
                 $candidates[] = $definedMethodName;
             }
         }

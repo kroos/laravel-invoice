@@ -99,7 +99,7 @@ class Kernel implements KernelContract
     protected function defineConsoleSchedule()
     {
         $this->app->singleton(Schedule::class, function ($app) {
-            return new Schedule;
+            return new Schedule($this->scheduleTimezone());
         });
 
         $schedule = $this->app->make(Schedule::class);
@@ -158,6 +158,18 @@ class Kernel implements KernelContract
     protected function schedule(Schedule $schedule)
     {
         //
+    }
+
+    /**
+     * Get the timezone that should be used by default for scheduled events.
+     *
+     * @return \DateTimeZone|string|null
+     */
+    protected function scheduleTimezone()
+    {
+        $config = $this->app['config'];
+
+        return $config->get('app.schedule_timezone', $config->get('app.timezone'));
     }
 
     /**
@@ -242,6 +254,8 @@ class Kernel implements KernelContract
      * @param  array  $parameters
      * @param  \Symfony\Component\Console\Output\OutputInterface  $outputBuffer
      * @return int
+     *
+     * @throws \Symfony\Component\Console\Exception\CommandNotFoundException
      */
     public function call($command, array $parameters = [], $outputBuffer = null)
     {
@@ -354,7 +368,7 @@ class Kernel implements KernelContract
     }
 
     /**
-     * Report the exception to the exception handler.
+     * Render the given exception.
      *
      * @param  \Symfony\Component\Console\Output\OutputInterface  $output
      * @param  \Exception  $e

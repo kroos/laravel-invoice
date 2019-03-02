@@ -234,7 +234,7 @@ method which accepts one or more closure:
     $mock->shouldReceive('name_of_method')
         ->andReturnUsing(closure, ...);
 
-Closures can queued by passing them as extra parameters as for ``andReturn()``.
+Closures can be queued by passing them as extra parameters as for ``andReturn()``.
 
 .. note::
 
@@ -270,7 +270,7 @@ use when throwing an ``Exception`` from the mocked method:
 
     $mock = \Mockery::mock('MyClass');
     $mock->shouldReceive('name_of_method')
-        ->andThrow(exception_name, message);
+        ->andThrow('exception_name', 'message');
 
 .. _expectations-setting-public-properties:
 

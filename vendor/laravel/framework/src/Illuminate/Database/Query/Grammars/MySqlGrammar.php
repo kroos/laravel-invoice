@@ -3,7 +3,6 @@
 namespace Illuminate\Database\Query\Grammars;
 
 use Illuminate\Support\Arr;
-use Illuminate\Support\Str;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Query\JsonExpression;
 
@@ -43,6 +42,10 @@ class MySqlGrammar extends Grammar
      */
     public function compileSelect(Builder $query)
     {
+        if ($query->unions && $query->aggregate) {
+            return $this->compileUnionAggregate($query);
+        }
+
         $sql = parent::compileSelect($query);
 
         if ($query->unions) {
@@ -50,6 +53,35 @@ class MySqlGrammar extends Grammar
         }
 
         return $sql;
+    }
+
+    /**
+     * Compile a "JSON contains" statement into SQL.
+     *
+     * @param  string  $column
+     * @param  string  $value
+     * @return string
+     */
+    protected function compileJsonContains($column, $value)
+    {
+        [$field, $path] = $this->wrapJsonFieldAndPath($column);
+
+        return 'json_contains('.$field.', '.$value.$path.')';
+    }
+
+    /**
+     * Compile a "JSON length" statement into SQL.
+     *
+     * @param  string  $column
+     * @param  string  $operator
+     * @param  string  $value
+     * @return string
+     */
+    protected function compileJsonLength($column, $operator, $value)
+    {
+        [$field, $path] = $this->wrapJsonFieldAndPath($column);
+
+        return 'json_length('.$field.$path.') '.$operator.' '.$value;
     }
 
     /**
@@ -167,13 +199,9 @@ class MySqlGrammar extends Grammar
      */
     protected function compileJsonUpdateColumn($key, JsonExpression $value)
     {
-        $path = explode('->', $key);
+        [$field, $path] = $this->wrapJsonFieldAndPath($key);
 
-        $field = $this->wrapValue(array_shift($path));
-
-        $accessor = "'$.\"".implode('"."', $path)."\"'";
-
-        return "{$field} = json_set({$field}, {$accessor}, {$value->getValue()})";
+        return "{$field} = json_set({$field}{$path}, {$value->getValue()})";
     }
 
     /**
@@ -188,8 +216,7 @@ class MySqlGrammar extends Grammar
     public function prepareBindingsForUpdate(array $bindings, array $values)
     {
         $values = collect($values)->reject(function ($value, $column) {
-            return $this->isJsonSelector($column) &&
-                in_array(gettype($value), ['boolean', 'integer', 'double']);
+            return $this->isJsonSelector($column) && is_bool($value);
         })->all();
 
         return parent::prepareBindingsForUpdate($bindings, $values);
@@ -265,7 +292,7 @@ class MySqlGrammar extends Grammar
     {
         $joins = ' '.$this->compileJoins($query, $query->joins);
 
-        $alias = strpos(strtolower($table), ' as ') !== false
+        $alias = stripos($table, ' as ') !== false
                 ? explode(' as ', $table)[1] : $table;
 
         return trim("delete {$alias} from {$table}{$joins} {$where}");
@@ -279,18 +306,7 @@ class MySqlGrammar extends Grammar
      */
     protected function wrapValue($value)
     {
-        if ($value === '*') {
-            return $value;
-        }
-
-        // If the given value is a JSON selector we will wrap it differently than a
-        // traditional value. We will need to split this path and wrap each part
-        // wrapped, etc. Otherwise, we will simply wrap the value as a string.
-        if ($this->isJsonSelector($value)) {
-            return $this->wrapJsonSelector($value);
-        }
-
-        return '`'.str_replace('`', '``', $value).'`';
+        return $value === '*' ? $value : '`'.str_replace('`', '``', $value).'`';
     }
 
     /**
@@ -301,23 +317,8 @@ class MySqlGrammar extends Grammar
      */
     protected function wrapJsonSelector($value)
     {
-        $path = explode('->', $value);
+        [$field, $path] = $this->wrapJsonFieldAndPath($value);
 
-        $field = $this->wrapValue(array_shift($path));
-
-        return sprintf('%s->\'$.%s\'', $field, collect($path)->map(function ($part) {
-            return '"'.$part.'"';
-        })->implode('.'));
-    }
-
-    /**
-     * Determine if the given string is a JSON selector.
-     *
-     * @param  string  $value
-     * @return bool
-     */
-    protected function isJsonSelector($value)
-    {
-        return Str::contains($value, '->');
+        return 'json_unquote(json_extract('.$field.$path.'))';
     }
 }

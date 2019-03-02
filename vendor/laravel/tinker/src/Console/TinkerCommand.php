@@ -54,7 +54,7 @@ class TinkerCommand extends Command
         $shell->addCommands($this->getCommands());
         $shell->setIncludes($this->argument('include'));
 
-        $path = $this->getLaravel()->basePath('vendor/composer/autoload_classmap.php');
+        $path = $this->getLaravel()->basePath().DIRECTORY_SEPARATOR.'vendor/composer/autoload_classmap.php';
 
         $loader = ClassAliasAutoloader::register($shell, $path);
 
@@ -78,6 +78,10 @@ class TinkerCommand extends Command
             if (in_array($name, $this->commandWhitelist)) {
                 $commands[] = $command;
             }
+        }
+
+        foreach (config('tinker.commands', []) as $command) {
+            $commands[] = $this->getApplication()->resolve($command);
         }
 
         return $commands;

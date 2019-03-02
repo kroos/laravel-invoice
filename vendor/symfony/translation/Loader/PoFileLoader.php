@@ -64,25 +64,25 @@ class PoFileLoader extends FileLoader
     {
         $stream = fopen($resource, 'r');
 
-        $defaults = array(
-            'ids' => array(),
+        $defaults = [
+            'ids' => [],
             'translated' => null,
-        );
+        ];
 
-        $messages = array();
+        $messages = [];
         $item = $defaults;
-        $flags = array();
+        $flags = [];
 
         while ($line = fgets($stream)) {
             $line = trim($line);
 
             if ('' === $line) {
                 // Whitespace indicated current item is done
-                if (!in_array('fuzzy', $flags)) {
+                if (!\in_array('fuzzy', $flags)) {
                     $this->addMessage($messages, $item);
                 }
                 $item = $defaults;
-                $flags = array();
+                $flags = [];
             } elseif ('#,' === substr($line, 0, 2)) {
                 $flags = array_map('trim', explode(',', substr($line, 2)));
             } elseif ('msgid "' === substr($line, 0, 7)) {
@@ -96,7 +96,7 @@ class PoFileLoader extends FileLoader
             } elseif ('"' === $line[0]) {
                 $continues = isset($item['translated']) ? 'translated' : 'ids';
 
-                if (is_array($item[$continues])) {
+                if (\is_array($item[$continues])) {
                     end($item[$continues]);
                     $item[$continues][key($item[$continues])] .= substr($line, 1, -1);
                 } else {
@@ -110,7 +110,7 @@ class PoFileLoader extends FileLoader
             }
         }
         // save last item
-        if (!in_array('fuzzy', $flags)) {
+        if (!\in_array('fuzzy', $flags)) {
             $this->addMessage($messages, $item);
         }
         fclose($stream);
@@ -126,7 +126,7 @@ class PoFileLoader extends FileLoader
      */
     private function addMessage(array &$messages, array $item)
     {
-        if (is_array($item['translated'])) {
+        if (\is_array($item['translated'])) {
             $messages[stripcslashes($item['ids']['singular'])] = stripcslashes($item['translated'][0]);
             if (isset($item['ids']['plural'])) {
                 $plurals = $item['translated'];

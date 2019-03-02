@@ -7,14 +7,14 @@ namespace Symfony\Component\Debug;
 
 $vendor = __DIR__;
 while (!file_exists($vendor.'/vendor')) {
-    $vendor = dirname($vendor);
+    $vendor = \dirname($vendor);
 }
 require $vendor.'/vendor/autoload.php';
 
 if (true) {
     class TestLogger extends \Psr\Log\AbstractLogger
     {
-        public function log($level, $message, array $context = array())
+        public function log($level, $message, array $context = [])
         {
             echo $message, "\n";
         }

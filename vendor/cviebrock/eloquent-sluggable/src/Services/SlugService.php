@@ -2,6 +2,7 @@
 
 use Cocur\Slugify\Slugify;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 
 /**
@@ -41,9 +42,10 @@ class SlugService
 
             $slug = $this->buildSlug($attribute, $config, $force);
 
-            $this->model->setAttribute($attribute, $slug);
-
-            $attributes[] = $attribute;
+            if ($slug !== null) {
+                $this->model->setAttribute($attribute, $slug);
+                $attributes[] = $attribute;
+            }
         }
 
         return $this->model->isDirty($attributes);
@@ -403,7 +405,7 @@ class SlugService
         $instance = (new static())->setModel($model);
 
         if ($config === null) {
-            $config = array_get($model->sluggable(), $attribute);
+            $config = Arr::get($model->sluggable(), $attribute);
             if ($config === null) {
                 $modelClass = get_class($model);
                 throw new \InvalidArgumentException("Argument 2 passed to SlugService::createSlug ['{$attribute}'] is not a valid slug attribute for model {$modelClass}.");

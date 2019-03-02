@@ -25,11 +25,25 @@ class SendQueuedNotifications implements ShouldQueue
     public $notification;
 
     /**
-     * All of the channels to send the notification too.
+     * All of the channels to send the notification to.
      *
      * @var array
      */
     public $channels;
+
+    /**
+     * The number of times the job may be attempted.
+     *
+     * @var int
+     */
+    public $tries;
+
+    /**
+     * The number of seconds the job can run before timing out.
+     *
+     * @var int
+     */
+    public $timeout;
 
     /**
      * Create a new job instance.
@@ -44,6 +58,8 @@ class SendQueuedNotifications implements ShouldQueue
         $this->channels = $channels;
         $this->notifiables = $notifiables;
         $this->notification = $notification;
+        $this->tries = property_exists($notification, 'tries') ? $notification->tries : null;
+        $this->timeout = property_exists($notification, 'timeout') ? $notification->timeout : null;
     }
 
     /**

@@ -10,7 +10,7 @@ class HashManager extends Manager implements Hasher
     /**
      * Create an instance of the Bcrypt hash Driver.
      *
-     * @return BcryptHasher
+     * @return \Illuminate\Hashing\BcryptHasher
      */
     public function createBcryptDriver()
     {
@@ -18,13 +18,23 @@ class HashManager extends Manager implements Hasher
     }
 
     /**
-     * Create an instance of the Argon2 hash Driver.
+     * Create an instance of the Argon2i hash Driver.
      *
-     * @return ArgonHasher
+     * @return \Illuminate\Hashing\ArgonHasher
      */
     public function createArgonDriver()
     {
         return new ArgonHasher($this->app['config']['hashing.argon'] ?? []);
+    }
+
+    /**
+     * Create an instance of the Argon2id hash Driver.
+     *
+     * @return \Illuminate\Hashing\Argon2IdHasher
+     */
+    public function createArgon2idDriver()
+    {
+        return new Argon2IdHasher($this->app['config']['hashing.argon'] ?? []);
     }
 
     /**

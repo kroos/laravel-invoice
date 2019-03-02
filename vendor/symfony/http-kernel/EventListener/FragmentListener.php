@@ -11,12 +11,12 @@
 
 namespace Symfony\Component\HttpKernel\EventListener;
 
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
-use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpKernel\UriSigner;
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
  * Handles content fragments represented by special URIs.
@@ -70,7 +70,7 @@ class FragmentListener implements EventSubscriberInterface
 
         parse_str($request->query->get('_path', ''), $attributes);
         $request->attributes->add($attributes);
-        $request->attributes->set('_route_params', array_replace($request->attributes->get('_route_params', array()), $attributes));
+        $request->attributes->set('_route_params', array_replace($request->attributes->get('_route_params', []), $attributes));
         $request->query->remove('_path');
     }
 
@@ -92,8 +92,8 @@ class FragmentListener implements EventSubscriberInterface
 
     public static function getSubscribedEvents()
     {
-        return array(
-            KernelEvents::REQUEST => array(array('onKernelRequest', 48)),
-        );
+        return [
+            KernelEvents::REQUEST => [['onKernelRequest', 48]],
+        ];
     }
 }
