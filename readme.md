@@ -10,3 +10,6 @@ it will be perfect if it can used graph for this purpose.
 finally managed to integrate graph into this project. have a look yourself.
 
 contact me if u r interested to make something awesome!
+
+
+just upgraded it to laravel 5.8
