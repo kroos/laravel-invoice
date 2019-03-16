@@ -15,6 +15,9 @@ contact me if u r interested to make something awesome!
 just upgraded it to laravel 5.8
 
 before using it, please do this
+
 composer update
+
 and then
-npm update
+
+npm install
