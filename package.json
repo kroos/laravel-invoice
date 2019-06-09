@@ -18,7 +18,7 @@
   },
   "dependencies": {
     "@claviska/jquery-minicolors": "^2.3.4",
-    "bootstrap-datepicker": "^1.8.0",
+    "bootstrap-datepicker": "^1.9.0",
     "bootstrapvalidator": "^0.5.4",
     "datatables.net": "^1.10.19",
     "datatables.net-bs": "^1.10.19",
