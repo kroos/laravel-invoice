@@ -16,6 +16,13 @@ Current Laravel version suported 5.8
 - 2 `` composer update``
 - 3 ``npm install``
 
+### Login info.
+|Username|Password|Role|
+|--|--|--|
+|dhiauddin|123123|admin|
+|fatihah|123123|staff|
+
+
 ## Enhances
 I've got a few idea on this partial project such as :
 1. Daily income and expenses for the individual, family or/and organisations (a very simple one that is and easy to operate and understand)
