@@ -23,6 +23,3 @@ I've got a few idea on this partial project such as :
 
 ## More info.
 contact me if u r interested to make something awesome! @kroos
-
-## Contributors
-@cristianmarint
