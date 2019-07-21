@@ -1,23 +1,28 @@
-this is an invoice system based on laravel 5.4 using mysql. im trying not to make it scroll side by side or scrolling right or left cos im not using "table" for the invoice part i.e adding or removing invoice item. the invoice page was running perfectly according to me.. :D
-created to help me for the commission to my staff and to keep track of the products, sales and some other things.
+# About Laravel-Invoice
+Created to help me for the commission to my staff and to keep track of the products, sales and some other things.
+This is an invoice system based on laravel 5.4 using mysql. im trying not to make it scroll side by side or scrolling right or left cos im not using "table" for the invoice part i.e adding or removing invoice item. the invoice page was running perfectly according to me.. :D
 
-ive got a few idea on this partial project such as :
-1. daily income and expenses for the individual, family or/and organisations (a very simple one that is and easy to operate and understand)
-2. more to come.. :D
+## Features:
 
-it will be perfect if it can used graph for this purpose.
+ - Print invoices
+ - Graphs
+ - Customers list
+ - Invoices manament
+ - Product manament
 
-finally managed to integrate graph into this project. have a look yourself.
+## Installation
+Current Laravel version suported 5.8
+- 1 Import the lastest DB version from _database/versions_
+- 2 `` composer update``
+- 3 ``npm install``
 
-contact me if u r interested to make something awesome!
+## Enhances
+I've got a few idea on this partial project such as :
+1. Daily income and expenses for the individual, family or/and organisations (a very simple one that is and easy to operate and understand)
 
 
-just upgraded it to laravel 5.8
+## More info.
+contact me if u r interested to make something awesome! @kroos
 
-before using it, please do this
-
-composer update
-
-and then
-
-npm install
+## Contributors
+@cristianmarint
