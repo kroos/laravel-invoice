@@ -14,8 +14,8 @@ class CreateProductImagesTable extends Migration
 	public function up()
 	{
 		Schema::create('product_images', function (Blueprint $table) {
-			$table->increments('id');
-			$table->integer('id_product')->unsigned();
+			$table->integerIncrements('id');
+			$table->integer('id_product')->unsigned()->index();
 			$table->foreign('id_product')->references('id')->on('products');
 			$table->text('mime');
 			//$table->longText('image')->unique(); // --> for sqlite

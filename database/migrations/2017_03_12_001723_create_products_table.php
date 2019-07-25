@@ -14,12 +14,12 @@ class CreateProductsTable extends Migration
     public function up()
     {
         Schema::create('products', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('id_user');
-           // $table->foreign('id_user')->references('id')->on('users');   // table name itself
-            $table->string('product')->unique();
-            $table->integer('id_category');
-           // $table->foreign('id_category')->references('id')->on('categories');
+            $table->integerIncrements('id');
+            $table->integer('id_user')->unsigned()->index();
+            $table->foreign('id_user')->references('id')->on('users');   // table name itself
+            $table->string('product');
+            $table->integer('id_category')->unsigned()->index();
+            $table->foreign('id_category')->references('id')->on('product_categories');
             $table->float('retail', 8, 2);
             $table->float('commission', 8, 2);
             $table->boolean('active');

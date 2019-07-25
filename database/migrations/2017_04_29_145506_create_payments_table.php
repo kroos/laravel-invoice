@@ -14,10 +14,10 @@ class CreatePaymentsTable extends Migration
     public function up()
     {
         Schema::create('payments', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('id_sales')->unsigned();
+            $table->integerIncrements('id');
+            $table->integer('id_sales')->unsigned()->index();
             $table->foreign('id_sales')->references('id')->on('sales');
-            $table->integer('id_bank')->unsigned();
+            $table->integer('id_bank')->unsigned()->index();
             $table->foreign('id_bank')->references('id')->on('banks');
             $table->date('date_payment');
             $table->float('amount', 8, 2);

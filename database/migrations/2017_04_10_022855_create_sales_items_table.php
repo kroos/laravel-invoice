@@ -14,10 +14,10 @@ class CreateSalesItemsTable extends Migration
     public function up()
     {
         Schema::create('sales_items', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('id_sales')->unsigned();
+            $table->integerIncrements('id');
+            $table->integer('id_sales')->unsigned()->index();
             $table->foreign('id_sales')->references('id')->on('sales');
-            $table->integer('id_product')->unsigned();
+            $table->integer('id_product')->unsigned()->index();
             $table->foreign('id_product')->references('id')->on('products');
             $table->float('commission', 8, 2);
             $table->float('retail', 8, 2);

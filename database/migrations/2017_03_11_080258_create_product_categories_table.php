@@ -14,8 +14,8 @@ class CreateProductCategoriesTable extends Migration
 	public function up()
 	{
 		Schema::create('product_categories', function (Blueprint $table) {
-			$table->increments('id');
-            $table->integer('id_user')->unsigned();
+			$table->integerIncrements('id');
+            $table->integer('id_user')->unsigned()->index();
             $table->foreign('id_user')->references('id')->on('users')->onUpdate('cascade');   // table name itself
             $table->string('product_category')->unique();
             $table->boolean('active')->nullable();

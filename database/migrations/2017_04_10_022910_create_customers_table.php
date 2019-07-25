@@ -9,7 +9,7 @@ class CreateCustomersTable extends Migration
     public function up()
     {
         Schema::create('customers', function (Blueprint $table) {
-            $table->increments('id');
+            $table->integerIncrements('id');
             $table->text('client');
             $table->longText('client_address')->nullable();
             $table->string('client_poskod')->nullable();

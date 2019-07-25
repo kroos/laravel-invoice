@@ -12,7 +12,7 @@ class CreateBanksTable extends Migration
     public function up()
     {
         Schema::create('banks', function (Blueprint $table) {
-            $table->increments('id');
+            $table->integerIncrements('id');
             $table->string('bank');
             $table->string('city');
             $table->string('swift_code');
