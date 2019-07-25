@@ -15,9 +15,9 @@ class CreatePaymentsTable extends Migration
     {
         Schema::create('payments', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('id_sales');
+            $table->integer('id_sales')->unsigned();
             $table->foreign('id_sales')->references('id')->on('sales');
-            $table->integer('id_bank');
+            $table->integer('id_bank')->unsigned();
             $table->foreign('id_bank')->references('id')->on('banks');
             $table->date('date_payment');
             $table->float('amount', 8, 2);

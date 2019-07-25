@@ -15,7 +15,7 @@ class CreateSlipNumbersTable extends Migration
     {
         Schema::create('slip_numbers', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('id_sales');
+            $table->integer('id_sales')->unsigned();
             $table->foreign('id_sales')->references('id')->on('sales');
             $table->text('tracking_number');
             $table->softDeletes();

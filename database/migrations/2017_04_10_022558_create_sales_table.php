@@ -10,7 +10,7 @@ class CreateSalesTable extends Migration
 	{
 		Schema::create('sales', function (Blueprint $table) {
 			$table->increments('id');
-			$table->integer('id_user');
+			$table->integer('id_user')->unsigned();
 			$table->foreign('id_user')->references('id')->on('users');
 			$table->date('date_sale');
 			$table->softDeletes();

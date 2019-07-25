@@ -16,10 +16,10 @@ class CreateProductsTable extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('id_user');
-            $table->foreign('id_user')->references('id')->on('users');   // table name itself
+           // $table->foreign('id_user')->references('id')->on('users');   // table name itself
             $table->string('product')->unique();
             $table->integer('id_category');
-            $table->foreign('id_category')->references('id')->on('categories');
+           // $table->foreign('id_category')->references('id')->on('categories');
             $table->float('retail', 8, 2);
             $table->float('commission', 8, 2);
             $table->boolean('active');

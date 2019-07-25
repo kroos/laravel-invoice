@@ -15,9 +15,9 @@ class CreateSalesCustomersTable extends Migration
     {
         Schema::create('sales_customers', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('id_sales');
+            $table->integer('id_sales')->unsigned();
             $table->foreign('id_sales')->references('id')->on('sales');
-            $table->integer('id_customer');
+            $table->integer('id_customer')->unsigned();
             $table->foreign('id_customer')->references('id')->on('customers');
             $table->softDeletes();
             $table->timestamps();

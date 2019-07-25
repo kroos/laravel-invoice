@@ -15,9 +15,9 @@ class CreateSalesItemsTable extends Migration
     {
         Schema::create('sales_items', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('id_sales');
+            $table->integer('id_sales')->unsigned();
             $table->foreign('id_sales')->references('id')->on('sales');
-            $table->integer('id_product');
+            $table->integer('id_product')->unsigned();
             $table->foreign('id_product')->references('id')->on('products');
             $table->float('commission', 8, 2);
             $table->float('retail', 8, 2);

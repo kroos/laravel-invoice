@@ -15,10 +15,10 @@ class CreateProductImagesTable extends Migration
 	{
 		Schema::create('product_images', function (Blueprint $table) {
 			$table->increments('id');
-			$table->integer('id_product');
+			$table->integer('id_product')->unsigned();
 			$table->foreign('id_product')->references('id')->on('products');
 			$table->text('mime');
-			// $table->longText('image')->unique(); // --> for sqlite
+			//$table->longText('image')->unique(); // --> for sqlite
 			$table->longText('image');
 			$table->timestamps();
 		});
