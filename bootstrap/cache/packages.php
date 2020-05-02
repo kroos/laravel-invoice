@@ -3,7 +3,7 @@
   array (
     'providers' => 
     array (
-      0 => 'Crabbly\\FPDF\\FpdfServiceProvider',
+      0 => 'Crabbly\\Fpdf\\FpdfServiceProvider',
     ),
   ),
   'cviebrock/eloquent-sluggable' => 

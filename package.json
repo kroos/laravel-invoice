@@ -10,11 +10,11 @@
     "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"
   },
   "devDependencies": {
-    "axios": "^0.15.3",
+    "axios": "^0.19.2",
     "bootstrap-sass": "^3.4.1",
     "cross-env": "^3.2.3",
-    "jquery": "^3.1.1",
-    "lodash": "^4.17.11"
+    "jquery": "^3.5.0",
+    "lodash": "^4.17.15"
   },
   "dependencies": {
     "@claviska/jquery-minicolors": "^2.3.4",
@@ -28,7 +28,7 @@
     "imagemin": "^6.1.0",
     "jquery-chained": "^2.0.0-beta.2",
     "jquery.cookie": "^1.4.1",
-    "laravel-mix": "^2.1.14",
+    "laravel-mix": "^5.0.4",
     "pc-bootstrap4-datetimepicker": "^4.17.50",
     "popper.js": "^1.14.7",
     "select2": "^4.0.6-rc.1",
