@@ -24,7 +24,7 @@
     "@claviska/jquery-minicolors": "^2.3.5",
     "bootstrap-datepicker": "^1.9.0",
     "bootstrapvalidator": "^0.5.4",
-    "datatables.net": "^1.10.21",
+    "datatables.net": "^1.10.22",
     "datatables.net-bs": "^1.10.21",
     "datatables.net-responsive": "^2.2.5",
     "datatables.net-responsive-bs": "^2.2.5",
