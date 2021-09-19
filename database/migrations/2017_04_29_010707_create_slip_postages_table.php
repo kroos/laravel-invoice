@@ -14,8 +14,9 @@ class CreateSlipPostagesTable extends Migration
     public function up()
     {
         Schema::create('slip_postages', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('id_sales');
+            $table->bigIncrements('id');
+            // $table->integer('id_sales');
+            $table->unsignedBigInteger('id_sales');
             $table->foreign('id_sales')->references('id')->on('sales');
             $table->text('mime');
             $table->longText('image');

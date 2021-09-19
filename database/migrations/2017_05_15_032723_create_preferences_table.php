@@ -10,7 +10,7 @@ class CreatePreferencesTable extends Migration
 	public function up()
 	{
 		Schema::create('preferences', function (Blueprint $table) {
-			$table->increments('id');
+			$table->bigIncrements('id');
 			$table->text('company_name');
 			$table->text('company_registration');
 			$table->longText('company_logo_image');

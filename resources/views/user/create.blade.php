@@ -145,7 +145,7 @@
 	// }
 
 	function SwalDelete(productId){
-		swal({
+		swal.fire({
 			title: 'Are you sure?',
 			text: "It will be deleted permanently!",
 			type: 'warning',
@@ -169,13 +169,13 @@
 						dataType: 'json'
 					})
 					.done(function(response){
-						swal('Deleted!', response.message, response.status);
+						swal.fire('Deleted!', response.message, response.status);
 						// readProducts();
 						// $('#delete_product_' + productId).text('imhere').css({"color": "red"});
 						$('#delete_product_' + productId).parent().parent().remove();
 					})
 					.fail(function(){
-						swal('Oops...', 'Something went wrong with ajax !', 'error');
+						swal.fire('Oops...', 'Something went wrong with ajax !', 'error');
 					});
 				});
 			},
@@ -183,7 +183,7 @@
 		.then(
 			(result) => {
 				if(result.dismiss === swal.DismissReason.cancel){
-    				swal('Cancelled', 'Your data is safe', 'info' )
+    				swal.fire('Cancelled', 'Your data is safe', 'info' )
 				}
 			}
 		);

@@ -16,7 +16,7 @@ use App\Preferences;
 use App\Taxes;
 use App\Banks;
 
-use Crabbly\FPDF\FPDF as Fpdf;
+use Crabbly\Fpdf\Fpdf as Fpdf;
 use Carbon\Carbon;
 
 

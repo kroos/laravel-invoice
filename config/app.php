@@ -180,15 +180,15 @@ return [
 ###################################################################################################################################
 
         // $ composer require laravelcollective/html
-        Collective\Html\HtmlServiceProvider::class,
+        //// Collective\Html\HtmlServiceProvider::class,
 
 
         // $ composer require intervention/image
         // Intervention\Image\ImageServiceProviderLaravel5::class,
-        Intervention\Image\ImageServiceProvider::class,
+        //// Intervention\Image\ImageServiceProvider::class,
 
         // $ composer require crabbly/fpdf-laravel
-        Crabbly\FPDF\FpdfServiceProvider::class,
+        //// Crabbly\FPDF\FpdfServiceProvider::class,
 
 		// $ composer require anhskohbo/no-captcha
 		// https://github.com/anhskohbo/no-captcha
@@ -197,7 +197,7 @@ return [
 
 
         // $ composer require cviebrock/eloquent-sluggable
-        Cviebrock\EloquentSluggable\ServiceProvider::class,
+        //// Cviebrock\EloquentSluggable\ServiceProvider::class,
         // https://github.com/cviebrock/eloquent-sluggable
     ],
 
@@ -251,14 +251,14 @@ return [
 ###################################################################################################################################
 
         // $ composer require laravelcollective/html
-        'Form' => Collective\Html\FormFacade::class,
+        //// 'Form' => Collective\Html\FormFacade::class,
 
         // $ composer require intervention/image
         // "require": {
         //     "laravel/framework": "5.4.*",
         //     "intervention/image": "dev-master"
         // },
-        'Image' => Intervention\Image\Facades\Image::class,
+        //// 'Image' => Intervention\Image\Facades\Image::class,
 
     ],
 

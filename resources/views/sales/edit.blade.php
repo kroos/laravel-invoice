@@ -964,7 +964,7 @@ $.ajaxSetup({
 	});
 
 	function SwalDelete1(productId){
-		swal({
+		swal.fire({
 			title: 'Are you sure?',
 			text: "It will be deleted permanently!",
 			type: 'warning',
@@ -988,19 +988,19 @@ $.ajaxSetup({
 						dataType: 'json'
 					})
 					.done(function(response){
-						swal('Deleted!', response.message, response.status);
+						swal.fire('Deleted!', response.message, response.status);
 						// $('#delete_serial_' + productId).text('imhere').css({"color": "red"});
 						$('#delete_serial_' + productId).parent().remove();
 					})
 					.fail(function(){
-						swal('Oops...', 'Something went wrong with ajax !', 'error');
+						swal.fire('Oops...', 'Something went wrong with ajax !', 'error');
 					});
 				});
 			},
 		})
 		.then((result) => {
 			if (result.dismiss === swal.DismissReason.cancel) {
-				swal('Cancelled', 'Your data is safe from delete', 'info')
+				swal.fire('Cancelled', 'Your data is safe from delete', 'info')
 			}
 		});
 	};
@@ -1018,7 +1018,7 @@ $.ajaxSetup({
 	});
 
 	function SwalDelete2(productId){
-		swal({
+		swal.fire({
 			title: 'Are you sure?',
 			text: "It will be deleted permanently!",
 			type: 'warning',
@@ -1042,19 +1042,19 @@ $.ajaxSetup({
 						dataType: 'json'
 					})
 					.done(function(response){
-						swal('Deleted!', response.message, response.status);
+						swal.fire('Deleted!', response.message, response.status);
 						// $('#delete_slippostage_' + productId).text('imhere').css({"color": "red"});
 						$('#delete_slippostage_' + productId).parent().remove();
 					})
 					.fail(function(){
-						swal('Oops...', 'Something went wrong with ajax !', 'error');
+						swal.fire('Oops...', 'Something went wrong with ajax !', 'error');
 					});
 				});
 			},
 		})
 		.then((result) => {
 			if (result.dismiss === swal.DismissReason.cancel) {
-				swal('Cancelled', 'Your data is safe from delete', 'info')
+				swal.fire('Cancelled', 'Your data is safe from delete', 'info')
 			}
 		});
 	};
@@ -1072,7 +1072,7 @@ $.ajaxSetup({
 	});
 
 	function SwalDelete3(productId){
-		swal({
+		swal.fire({
 			title: 'Are you sure?',
 			text: "It will be deleted permanently!",
 			type: 'warning',
@@ -1096,7 +1096,7 @@ $.ajaxSetup({
 						dataType: 'json'
 					})
 					.done(function(response){
-						swal('Deleted!', response.message, response.status);
+						swal.fire('Deleted!', response.message, response.status);
 						// $('#delete_item_' + productId).text('imhere').css({"color": "red"});
 						$('#delete_item_' + productId).parent().parent().parent().parent().parent().remove();
 
@@ -1105,14 +1105,14 @@ $.ajaxSetup({
 						update_balance();
 					})
 					.fail(function(){
-						swal('Oops...', 'Something went wrong with ajax !', 'error');
+						swal.fire('Oops...', 'Something went wrong with ajax !', 'error');
 					});
 				});
 			},
 		})
 		.then((result) => {
 			if (result.dismiss === swal.DismissReason.cancel) {
-				swal('Cancelled', 'Your data is safe from delete', 'info')
+				swal.fire('Cancelled', 'Your data is safe from delete', 'info')
 			}
 		});
 	};
@@ -1126,7 +1126,7 @@ $.ajaxSetup({
 	});
 
 	function SwalDelete4(productId){
-		swal({
+		swal.fire({
 			title: 'Are you sure?',
 			text: "It will be deleted permanently!",
 			type: 'warning',
@@ -1150,7 +1150,7 @@ $.ajaxSetup({
 						dataType: 'json'
 					})
 					.done(function(response){
-						swal('Deleted!', response.message, response.status);
+						swal.fire('Deleted!', response.message, response.status);
 						// $('#remove_payment_' + productId).text('imhere').css({"color": "red"});
 						$('#remove_payment_' + productId).parent().parent().parent().parent().parent().remove();
 
@@ -1159,14 +1159,14 @@ $.ajaxSetup({
 						update_balance();
 					})
 					.fail(function(){
-						swal('Oops...', 'Something went wrong with ajax !', 'error');
+						swal.fire('Oops...', 'Something went wrong with ajax !', 'error');
 					});
 				});
 			},
 		})
 		.then((result) => {
 			if (result.dismiss === swal.DismissReason.cancel) {
-				swal('Cancelled', 'Your data is safe from delete', 'info')
+				swal.fire('Cancelled', 'Your data is safe from delete', 'info')
 			}
 		});
 	};

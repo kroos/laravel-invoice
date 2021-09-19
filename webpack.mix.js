@@ -16,6 +16,8 @@ mix.js('resources/assets/js/app.js', 'public/js')
 	.combine([
 				'public/css/app.css',
 				'node_modules/@claviska/jquery-minicolors/jquery.minicolors.css',
+				'node_modules/bootstrap/dist/css/bootstrap.css',
+				'node_modules/bootstrap/dist/css/bootstrap-theme.css',
 				'node_modules/bootstrapvalidator/dist/css/bootstrapValidator.css',
 				'node_modules/datatables.net-bs/css/dataTables.bootstrap.css',
 				'node_modules/datatables.net-responsive-bs/css/responsive.bootstrap.css',
