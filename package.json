@@ -16,7 +16,7 @@
     "bootstrap-datepicker": "^1.9.0",
     "bootstrap-sass": "^3.4.1",
     "bootstrapvalidator": "^0.5.4",
-    "datatables.net": "^1.11.2",
+    "datatables.net": "^1.11.3",
     "datatables.net-bs": "^1.11.2",
     "datatables.net-responsive": "^2.2.9",
     "datatables.net-responsive-bs": "^2.2.9",
