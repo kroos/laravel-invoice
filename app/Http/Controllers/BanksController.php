@@ -22,12 +22,12 @@ class BanksController extends Controller
 	{
 		return view('banks.index');
 	}
-	
+
 	public function create()
 	{
 		return view('banks.create');
 	}
-	
+
 	public function store(BanksFormRequest $request)
 	{
 		if ($request->active == NULL) {
@@ -43,22 +43,21 @@ class BanksController extends Controller
 		Session::flash('flash_message', 'Data successfully edited!');
 		return redirect(route('banks.index'));
 	}
-	
+
 	public function show(Banks $banks)
 	{
 		//
 	}
-	
+
 	public function edit(Banks $banks)
 	{
 		return view('banks.edit', compact(['banks']));
 	}
-	
+
 	public function update(BanksFormRequest $request, Banks $banks)
 	{
 		// dd(request()->all());
-		$duit = Banks::find($banks->id)
-				->update(request([
+		$duit = $banks->update(request([
 						'bank', 'city', 'swift_code', 'account',
 					]));
 		$banks->touch();
@@ -66,7 +65,7 @@ class BanksController extends Controller
 		Session::flash('flash_message', 'Data successfully edited!');
 		return redirect(route('banks.index'));
 	}
-	
+
 	public function destroy(Banks $banks)
 	{
 		//
@@ -74,25 +73,20 @@ class BanksController extends Controller
 
 	public function active(Banks $banks)
 	{
-		// toggle
-		$act = Banks::find($banks->id);
-
 		// get active value
-		$act->active;
-		if($act->active == 1) {
-			$act->update([
+		if($banks->active == 1) {
+			$banks->update([
 					'active' => 0,
 				]);
 			// info when update success
 			Session::flash('flash_message', 'Successfully deactivate '.$banks->bank);
 		} else {
-			$act->update([
+			$banks->update([
 					'active' => 1,
 				]);
 			// info when update success
 			Session::flash('flash_message', 'Successfully activate '.$banks->bank);
 		}
-		$banks->touch();
 		return redirect()->back();
 	}
 }

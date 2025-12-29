@@ -1,174 +1,172 @@
 @extends('layout.master')
 
 @section('content')
-	@include('layout.errorform')
-	@include('layout.info')
+<div class="card">
+	<div class="card-header">Print Report</div>
+	<div class="card-body">
+		<div class="col-sm-12 row">
 
-	<div class="col-lg-12">
-		<div class="row">
-			<div class="col-lg-12">
-				<div class="panel panel-default">
-					<div class="panel-heading">Print Report</div>
-					<div class="panel-body">
+			<form method="POST" action="{{ route('printreport.store') }}" accept-charset="UTF-8" id="form" autocomplete="off" class="needs-validation" enctype="multipart/form-data">
+				@csrf
+				<div class="card">
+					<div class="card-header">Sales Report</div>
+					<div class="card-body">
 
-						<div class="col-sm-12">
-							<div class="row">
-								<div class="col-sm-6">
-									<div class="panel panel-default">
-										<div class="panel-heading">Sales Report</div>
-										<div class="panel-body">
-
-											{!! Form::open(['route' => 'printreport.store', 'class' => 'form-horizontal', 'id' => 'salesform', 'files' => true, 'autocomplete' => 'off']) !!}
-											<div class="form-group {!! ( count($errors->get('from')) ) >0 ? 'has-error' : '' !!}">
-												{!! Form::label('from1', 'Start Date :', ['class' => 'col-sm-2 control-label']) !!}
-												<div class="col-sm-10">
-													{!! Form::input('text', 'from', @$value, ['class' => 'form-control date', 'placeholder' => 'Start Date', 'id' => 'from1']) !!}
-												</div>
-											</div>
-											<div class="form-group {!! ( count($errors->get('to')) ) >0 ? 'has-error' : '' !!}">
-												{!! Form::label('to1', 'End Date :', ['class' => 'col-sm-2 control-label']) !!}
-												<div class="col-sm-10">
-													{!! Form::input('text', 'to', @$value, ['class' => 'form-control date', 'placeholder' => 'End Date', 'id' => 'to1']) !!}
-												</div>
-											</div>
-											<?php
-											if (auth()->user()->id_group == 1) {
-												$us = App\User::all();
-											} else {
-												$us = App\User::where('id', auth()->user()->id)->get();
-											}
-											foreach($us as $usr) {
-												$user[$usr->id] = $usr->name;
-											}
-											?>
-											<div class="form-group {!! ( count($errors->get('user')) ) >0 ? 'has-error' : '' !!}">
-												{!! Form::label('seller', 'Merchandiser :', ['class' => 'col-sm-2 control-label']) !!}
-												<div class="col-sm-10">
-													{!! Form::select('user[]', $user, @$value, ['class' => 'form-control', 'id' => 'seller', 'multiple' => 'multiple']) !!}
-												</div>
-											</div>
-											<div class="form-group">
-												<div class="col-sm-offset-2 col-sm-10">
-													{!! Form::submit('Show', ['class' => 'btn btn-primary btn-lg btn-block']) !!}
-												</div>
-											</div>
-											{!! Form::close() !!}
-
-										</div>
-									</div>
+						<div class="form-group row m-1 @error('from') has-error @enderror">
+							<label for="from1" class="col-form-label col-sm-2">From : </label>
+							<div class="col-sm-6 my-auto">
+								<input type="text" name="from" value="{{ old('from', @$variable->from) }}" id="from1" class="form-control form-control-sm @error('from') is-invalid @enderror" placeholder="From">
+								@error('from')
+								<div class="invalid-feedback">
+									{{ $message }}
 								</div>
-								<div class="col-sm-6">
-									<div class="panel panel-default">
-										<div class="panel-heading">Audit</div>
-										<div class="panel-body">
-
-											{!! Form::open(['route' => 'printreport.audit', 'class' => 'form-horizontal', 'files' => true, 'autocomplete' => 'off', 'id' => 'auditsales']) !!}
-											<div class="form-group {!! ( count($errors->get('from1')) ) >0 ? 'has-error' : '' !!}">
-												{!! Form::label('from2', 'Start Date :', ['class' => 'col-sm-2 control-label']) !!}
-												<div class="col-sm-10">
-													{!! Form::input('text', 'from1', @$value, ['class' => 'form-control date', 'placeholder' => 'Start Date', 'id' => 'from2']) !!}
-												</div>
-											</div>
-											<div class="form-group {!! ( count($errors->get('to1')) ) >0 ? 'has-error' : '' !!}">
-												{!! Form::label('to2', 'End Date :', ['class' => 'col-sm-2 control-label']) !!}
-												<div class="col-sm-10">
-													{!! Form::input('text', 'to1', @$value, ['class' => 'form-control date', 'placeholder' => 'End Date', 'id' => 'to2']) !!}
-												</div>
-											</div>
-											<?php
-											if (auth()->user()->id_group == 1) {
-												$us = App\User::all();
-											} else {
-												$us = App\User::where('id', auth()->user()->id)->get();
-											}
-											foreach($us as $usr) {
-												$user[$usr->id] = $usr->name;
-											}
-											?>
-											<div class="form-group {!! ( count($errors->get('user1')) ) >0 ? 'has-error' : '' !!}">
-												{!! Form::label('seller1', 'Merchandiser :', ['class' => 'col-sm-2 control-label']) !!}
-												<div class="col-sm-10">
-													{!! Form::select('user1[]', $user, @$value, ['class' => 'form-control', 'id' => 'seller1', 'multiple' => 'multiple']) !!}
-												</div>
-											</div>
-											<div class="form-group">
-												<div class="col-sm-offset-2 col-sm-10">
-													{!! Form::submit('Show', ['class' => 'btn btn-primary btn-lg btn-block']) !!}
-												</div>
-											</div>
-											{!! Form::close() !!}
-
-										</div>
-									</div>
-								</div>
+								@enderror
 							</div>
+						</div>
 
-
-
-
-							<div class="row">
-								<div class="col-sm-6">
-									<div class="panel panel-default">
-										<div class="panel-heading">Income Report</div>
-										<div class="panel-body">
-
-											{!! Form::open(['route' => 'printreport.payment', 'class' => 'form-horizontal', 'files' => true, 'autocomplete' => 'off', 'id' => 'incomesales']) !!}
-											<div class="form-group {!! ( count($errors->get('from2')) ) >0 ? 'has-error' : '' !!}">
-												{!! Form::label('from3', 'Start Date :', ['class' => 'col-sm-2 control-label']) !!}
-												<div class="col-sm-10">
-													{!! Form::input('text', 'from2', @$value, ['class' => 'form-control date', 'placeholder' => 'Start Date', 'id' => 'from3']) !!}
-												</div>
-											</div>
-											<div class="form-group {!! ( count($errors->get('to2')) ) >0 ? 'has-error' : '' !!}">
-												{!! Form::label('to3', 'End Date :', ['class' => 'col-sm-2 control-label']) !!}
-												<div class="col-sm-10">
-													{!! Form::input('text', 'to2', @$value, ['class' => 'form-control date', 'placeholder' => 'End Date', 'id' => 'to3']) !!}
-												</div>
-											</div>
-											<?php
-											if (auth()->user()->id_group == 1) {
-												$us = App\User::all();
-											} else {
-												$us = App\User::where('id', auth()->user()->id)->get();
-											}
-											foreach($us as $usr) {
-												$user[$usr->id] = $usr->name;
-											}
-											?>
-											<div class="form-group {!! ( count($errors->get('user2')) ) >0 ? 'has-error' : '' !!}">
-												{!! Form::label('seller2', 'Merchandiser :', ['class' => 'col-sm-2 control-label']) !!}
-												<div class="col-sm-10">
-													{!! Form::select('user2[]', $user, @$value, ['class' => 'form-control', 'id' => 'seller2', 'multiple' => 'multiple']) !!}
-												</div>
-											</div>
-											<div class="form-group">
-												<div class="col-sm-offset-2 col-sm-10">
-													{!! Form::submit('Show', ['class' => 'btn btn-primary btn-lg btn-block']) !!}
-												</div>
-											</div>
-											{!! Form::close() !!}
-
-										</div>
-									</div>
+						<div class="form-group row m-1 @error('to') has-error @enderror">
+							<label for="to1" class="col-form-label col-sm-2">To : </label>
+							<div class="col-sm-6 my-auto">
+								<input type="text" name="to" value="{{ old('to', @$variable->to) }}" id="to1" class="form-control form-control-sm @error('to') is-invalid @enderror" placeholder="To">
+								@error('to')
+								<div class="invalid-feedback">
+									{{ $message }}
 								</div>
-								<div class="col-sm-6">
-									<div class="panel panel-default">
-										<div class="panel-heading">Audit</div>
-										<div class="panel-body"></div>
-									</div>
-								</div>
+								@enderror
 							</div>
+						</div>
+
+						<div class="form-group row m-1 @error('user.*') has-error @enderror">
+							<label for="seller" class="col-form-label col-sm-2">Merchandiser : </label>
+							<div class="col-sm-6 my-auto">
+								<select name="user[]" id="seller" class="form-select form-select-sm col-sm-12 @error('user.*') is-invalid @enderror" multiple></select>
+								@error('user.*')
+								<div class="invalid-feedback">
+									{{ $message }}
+								</div>
+								@enderror
+							</div>
+						</div>
+					</div>
+					<div class="card-footer d-flex justify-content-end">
+						<button type="submit" class="btn btn-sm btn-outline-primary me-1">
+							<i class="fa fa-save"></i> Submit
+						</button>
+						<a href="{{-- route('banks.index') --}}" class="btn btn-sm btn-outline-secondary me-1">Cancel</a>
+					</div>
+				</div>
+			</form>
 
 
 
 
+			<form method="POST" action="{{ route('printreport.audit') }}" accept-charset="UTF-8" id="form" autocomplete="off" class="needs-validation" enctype="multipart/form-data">
+				@csrf
+				<div class="card">
+					<div class="card-header">Audit</div>
+
+					<div class="card-body">
+
+						<div class="form-group row m-1 @error('from1') has-error @enderror">
+							<label for="from2" class="col-form-label col-sm-2">From : </label>
+							<div class="col-sm-6 my-auto">
+								<input type="text" name="from1" value="{{ old('from1', @$variable->from1) }}" id="from2" class="form-control form-control-sm @error('from1') is-invalid @enderror" placeholder="From">
+								@error('from1')
+								<div class="invalid-feedback">
+									{{ $message }}
+								</div>
+								@enderror
+							</div>
+						</div>
+
+						<div class="form-group row m-1 @error('to1') has-error @enderror">
+							<label for="to2" class="col-form-label col-sm-2">To : </label>
+							<div class="col-sm-6 my-auto">
+								<input type="text" name="to1" value="{{ old('to1', @$variable->to1) }}" id="to2" class="form-control form-control-sm @error('to1') is-invalid @enderror" placeholder="To">
+								@error('to1')
+								<div class="invalid-feedback">
+									{{ $message }}
+								</div>
+								@enderror
+							</div>
+						</div>
+
+						<div class="form-group row m-1 @error('user1.*') has-error @enderror">
+							<label for="seller1" class="col-form-label col-sm-2">Merchandiser : </label>
+							<div class="col-sm-6 my-auto">
+								<select name="user1[]" id="seller1" class="form-select form-select-sm col-sm-12 @error('user1[]') is-invalid @enderror" multiple></select>
+								@error('user1.*')
+								<div class="invalid-feedback">
+									{{ $message }}
+								</div>
+								@enderror
+							</div>
+						</div>
+					</div>
+
+					<div class="card-footer d-flex justify-content-end">
+						<button type="submit" class="btn btn-sm btn-outline-primary me-1"><i class="fa fa-save"></i> Submit</button>
+						<a href="{{-- route('banks.index') --}}" class="btn btn-sm btn-outline-secondary me-1">Cancel</a>
+					</div>
+				</div>
+			</form>
+
+			<form method="POST" action="{{ route('printreport.payment') }}" accept-charset="UTF-8" id="incomesales" autocomplete="off" class="needs-validation" enctype="multipart/form-data">
+				@csrf
+				<div class="card">
+					<div class="card-header">Income Report</div>
+					<div class="card-body">
+
+						<div class="form-group row m-1 @error('from2') has-error @enderror">
+							<label for="from3" class="col-form-label col-sm-2">From : </label>
+							<div class="col-sm-6 my-auto">
+								<input type="text" name="from2" value="{{ old('from2', @$variable->from2) }}" id="from3" class="form-control form-control-sm @error('from2') is-invalid @enderror" placeholder="From">
+								@error('from2')
+								<div class="invalid-feedback">
+									{{ $message }}
+								</div>
+								@enderror
+							</div>
+						</div>
+
+						<div class="form-group row m-1 @error('to2') has-error @enderror">
+							<label for="to3" class="col-form-label col-sm-2">To : </label>
+							<div class="col-sm-6 my-auto">
+								<input type="text" name="to2" value="{{ old('to2', @$variable->to2) }}" id="to3" class="form-control form-control-sm @error('to2') is-invalid @enderror" placeholder="To">
+								@error('to2')
+								<div class="invalid-feedback">
+									{{ $message }}
+								</div>
+								@enderror
+							</div>
+						</div>
+
+						<div class="form-group row m-1 @error('user2.*') has-error @enderror">
+							<label for="seller2" class="col-form-label col-sm-2">Merchandiser : </label>
+							<div class="col-sm-6 my-auto">
+								<select name="user2[]" id="seller2" class="form-select form-select-sm col-sm-12 @error('user2') is-invalid @enderror" multiple></select>
+								@error('user2.*')
+								<div class="invalid-feedback">
+									{{ $message }}
+								</div>
+								@enderror
+							</div>
 						</div>
 
 					</div>
+					<div class="card-footer d-flex justify-content-end">
+						<button type="submit" class="btn btn-sm btn-outline-primary me-1"><i class="fa fa-save"></i> Submit</button>
+						<a href="{{-- route('banks.index') --}}" class="btn btn-sm btn-outline-secondary me-1">Cancel</a>
+					</div>
 				</div>
-			</div>
+			</form>
+
+
+
+
 		</div>
 	</div>
+</div>
 
 @endsection
 
@@ -176,40 +174,97 @@
 @section('jquery')
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	$('select').select2();
+$(`#seller,#seller1,#seller2`).select2({
+	theme: 'bootstrap-5',
+	placeholder: 'Please choose',
+	allowClear: true,
+	closeOnSelect: true,
+	width: '100%',
+	ajax: {
+		url: '{{ route('getUser') }}',
+		type: 'GET',
+		dataType: 'json',
+		delay: 250,											// Delay to reduce server requests
+		data: function (params) {
+			return {
+				_token: '{!! csrf_token() !!}',
+				search: params.term,				// Search query
+				idIn: [],
+				id: `{{ old('id_user', @$sales->id_user) }}`,
+			}
+		},
+		processResults: function (data) {
+			return {
+				results: data.map(function (category) {
+					return {
+						// id: category.id,
+						text: category.group,
+						disabled: true,
+						children: category.users.map(function (users) {
+							return {
+								id: users.id,
+								text: users.name,
+							};
+						})
+
+					}
+				})
+			};
+		}
+
+	},
+});
+@if(old('user', @$sales->id_user))
+$.ajax({
+	url: `{{ route('getUser') }}`,
+	data: {
+		id: `{{ old('user', @$sales->id_user) }}`
+	},
+	dataType: 'json'
+}).then(data => {
+	if (!Array.isArray(data)) return;
+
+	data.forEach(group => {
+		if (!Array.isArray(group.users)) return;
+
+		group.users.forEach(user => {
+			const option = new Option(user.name, user.id, true, true);
+			$('#seller,#seller1,#seller2').append(option);
+		});
+	});
+
+	$('#seller,#seller1,#seller2').trigger('change'); // trigger once
+});
+@endif
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Date Input Helper
-	$('#from1').datepicker({
-		autoclose:true,
-		format:'yyyy-mm-dd',
-		todayHighlight : false,
-	})
-	.on('changeDate show', function(e) {
-		$('#salesform').bootstrapValidator('revalidateField', 'from');
-			var minDate = $('#from1').val();
-			$('#to1').datepicker('setStartDate', minDate);
-	});
+$('#from1').datepicker({
+	dateFormat: 'yy-mm-dd',
+	changeMonth: true,   // month dropdown
+	changeYear: true,    // year dropdown
+	showButtonPanel: true
+}).on('change', function () {
+	$('#salesform').bootstrapValidator('revalidateField', 'from');
+	var minDate = $(this).datepicker('getDate');
+	$('#to1').datepicker('option', 'minDate', minDate);
+});
 
-	$('#to1').datepicker({
-		autoclose:true,
-		format:'yyyy-mm-dd',
-		todayHighlight : false,
-	})
-	.on('changeDate show', function(e) {
-		$('#salesform').bootstrapValidator('revalidateField', 'to');
-			var maxDate = $('#to1').val();
-			$('#from1').datepicker('setEndDate', maxDate);
-	});
+$('#to1').datepicker({
+	dateFormat: 'yy-mm-dd',
+	changeMonth: true,   // month dropdown
+	changeYear: true,    // year dropdown
+	showButtonPanel: true
+})
+.on('changeDate show', function(e) {
+	$('#salesform').bootstrapValidator('revalidateField', 'to');
+	var maxDate = $(this).datepicker('getDate');
+	$('#from1').datepicker('option', 'maxDate', maxDate);
+});
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // validator
 $('#salesform').bootstrapValidator({
-	feedbackIcons: {
-		valid: 'glyphicon glyphicon-ok',
-		invalid: 'glyphicon glyphicon-remove',
-		validating: 'glyphicon glyphicon-refresh'
-	},
 	fields: {
 		from: {
 			validators: {
@@ -245,36 +300,33 @@ $('#salesform').bootstrapValidator({
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Date Input Helper
-	$('#from2').datepicker({
-		autoclose:true,
-		format:'yyyy-mm-dd',
-		todayHighlight : false,
-	})
-	.on('changeDate show', function(e) {
-		$('#auditsales').bootstrapValidator('revalidateField', 'from1');
-			var minDate = $('#from2').val();
-			$('#to2').datepicker('setStartDate', minDate);
-	});
+$('#from2').datepicker({
+	dateFormat: 'yy-mm-dd',
+	changeMonth: true,   // month dropdown
+	changeYear: true,    // year dropdown
+	showButtonPanel: true
+})
+.on('changeDate show', function(e) {
+	$('#auditsales').bootstrapValidator('revalidateField', 'from1');
+	var minDate = $(this).datepicker('getDate');
+	$('#to2').datepicker('option', 'minDate', minDate);
+});
 
-	$('#to2').datepicker({
-		autoclose:true,
-		format:'yyyy-mm-dd',
-		todayHighlight : false,
-	})
-	.on('changeDate show', function(e) {
-		$('#auditsales').bootstrapValidator('revalidateField', 'to1');
-			var maxDate = $('#to2').val();
-			$('#from2').datepicker('setEndDate', maxDate);
-	});
+$('#to2').datepicker({
+	dateFormat: 'yy-mm-dd',
+	changeMonth: true,   // month dropdown
+	changeYear: true,    // year dropdown
+	showButtonPanel: true
+})
+.on('changeDate show', function(e) {
+	$('#auditsales').bootstrapValidator('revalidateField', 'to1');
+	var maxDate = $(this).datepicker('getDate');
+	$('#from2').datepicker('option', 'maxDate', maxDate);
+});
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // validator
 $('#auditsales').bootstrapValidator({
-	feedbackIcons: {
-		valid: 'glyphicon glyphicon-ok',
-		invalid: 'glyphicon glyphicon-remove',
-		validating: 'glyphicon glyphicon-refresh'
-	},
 	fields: {
 		from1: {
 			validators: {
@@ -310,36 +362,33 @@ $('#auditsales').bootstrapValidator({
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Date Input Helper
-	$('#from3').datepicker({
-		autoclose:true,
-		format:'yyyy-mm-dd',
-		todayHighlight : false,
-	})
-	.on('changeDate show', function(e) {
-		$('#incomesales').bootstrapValidator('revalidateField', 'from2');
-			var minDate = $('#from3').val();
-			$('#to3').datepicker('setStartDate', minDate);
-	});
+$('#from3').datepicker({
+	dateFormat: 'yy-mm-dd',
+	changeMonth: true,   // month dropdown
+	changeYear: true,    // year dropdown
+	showButtonPanel: true
+})
+.on('changeDate show', function(e) {
+	$('#incomesales').bootstrapValidator('revalidateField', 'from2');
+	var minDate = $(this).datepicker('getDate');
+	$('#to3').datepicker('option', 'minDate', minDate);
+});
 
-	$('#to3').datepicker({
-		autoclose:true,
-		format:'yyyy-mm-dd',
-		todayHighlight : false,
-	})
-	.on('changeDate show', function(e) {
-		$('#incomesales').bootstrapValidator('revalidateField', 'to2');
-			var maxDate = $('#to3').val();
-			$('#from3').datepicker('setEndDate', maxDate);
-	});
+$('#to3').datepicker({
+	dateFormat: 'yy-mm-dd',
+	changeMonth: true,   // month dropdown
+	changeYear: true,    // year dropdown
+	showButtonPanel: true
+})
+.on('changeDate show', function(e) {
+	$('#incomesales').bootstrapValidator('revalidateField', 'to2');
+	var maxDate = $(this).datepicker('getDate');
+	$('#from3').datepicker('option', 'maxDate', maxDate);
+});
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // validator
 $('#incomesales').bootstrapValidator({
-	feedbackIcons: {
-		valid: 'glyphicon glyphicon-ok',
-		invalid: 'glyphicon glyphicon-remove',
-		validating: 'glyphicon glyphicon-refresh'
-	},
 	fields: {
 		from2: {
 			validators: {

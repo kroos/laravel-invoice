@@ -1,0 +1,67 @@
+/* bootstrap */
+@import '../../node_modules/bootstrap/dist/css/bootstrap.css';
+
+/* bootstrap-icon */
+@import '../../node_modules/bootstrap-icons/font/bootstrap-icons.css';
+
+/* fontawesome */
+@import '../../node_modules/@fortawesome/fontawesome-free/css/all.css';
+
+/*minicolors*/
+@import "../../node_modules/@claviska/jquery-minicolors/jquery.minicolors.css";
+
+/*mdi icons*/
+@import "../../node_modules/@mdi/font/css/materialdesignicons.css";
+
+/* select2 */
+@import '../../node_modules/select2/dist/css/select2.css';
+
+/*select2 bootstrap5 themes*/
+@import "../../node_modules/select2-bootstrap-5-theme/dist/select2-bootstrap-5-theme.css";
+
+/* datatable-bs5 */
+@import '../../node_modules/datatables.net-bs5/css/dataTables.bootstrap5.css';
+@import '../../node_modules/datatables.net-responsive-bs5/css/responsive.bootstrap5.css';
+@import '../../node_modules/datatables.net-fixedheader-bs5/css/fixedHeader.bootstrap5.css';
+@import '../../node_modules/datatables.net-colreorder-bs5/css/colReorder.bootstrap5.css';
+@import '../../node_modules/datatables.net-buttons-bs5/css/buttons.bootstrap5.css';
+
+/* jquery-ui */
+@import '../../node_modules/jquery-ui/dist/themes/cupertino/jquery-ui.css';
+@import '../../node_modules/jquery-ui/dist/themes/cupertino/theme.css';
+
+/* animate.css */
+@import '../../node_modules/animate.css/animate.css';
+
+/*Fonts*/
+@import url('https://fonts.googleapis.com/css2?family=Cactus+Classical+Serif&display=swap');
+
+/*bootstarpValidator5*/
+@import './bootstrapValidator5.css';
+
+/* ////////////////////////////////////////////////////////////////////////////////////////////////// */
+/*conflict between bootstrap and tailwindcss*/
+/*@tailwind base;*/
+/*@tailwind components;*/
+/*@tailwind utilities;*/
+
+/* ////////////////////////////////////////////////////////////////////////////////////////////////// */
+/*Style*/
+body {
+	font-family: 'Cactus Classical Serif', serif !important;
+/*	font-size: 12px;*/
+	font-weight: 400;
+	font-style: normal;
+}
+
+.cactus-classical-serif-regular {
+	font-family: "Cactus Classical Serif", serif;
+	font-weight: 400;
+	font-style: normal;
+}
+
+/*jquery ui - override default font from jquery ui*/
+.ui-widget {
+	font-family: inherit;
+	font-size: 1.1em;
+}

@@ -14,18 +14,18 @@ class CreateSalesItemsTable extends Migration
     public function up()
     {
         Schema::create('sales_items', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->id();
             // $table->integer('id_sales');
-            $table->unsignedBigInteger('id_sales');
-            $table->foreign('id_sales')->references('id')->on('sales');
+$table->foreignId('id_sales')->constrained('sales')->cascadeOnDelete();
+
             // $table->integer('id_product');
-            $table->unsignedBigInteger('id_product');
-            $table->foreign('id_product')->references('id')->on('products');
+            // $table->unsignedBigInteger('id_product');
+$table->foreignId('id_product')->constrained('products')->cascadeOnDelete();
             $table->float('commission', 8, 2);
             $table->float('retail', 8, 2);
             $table->integer('quantity');
-            $table->softDeletes();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

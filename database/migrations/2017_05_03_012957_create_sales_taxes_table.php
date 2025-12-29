@@ -14,15 +14,18 @@ class CreateSalesTaxesTable extends Migration
     public function up()
     {
         Schema::create('sales_taxes', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->id();
             // $table->integer('id_sales');
-            $table->unsignedBigInteger('id_sales');
-            $table->foreign('id_sales')->references('id')->on('sales');
+            // $table->unsignedBigInteger('id_sales');
+$table->foreignId('id_sales')->constrained('sales')->cascadeOnDelete();
+
             // $table->integer('id_tax');
-            $table->unsignedBigInteger('id_tax');
-            $table->foreign('id_tax')->references('id')->on('taxes');
-            $table->softDeletes();
+            // $table->unsignedBigInteger('id_tax');
+            // $table->foreign('id_tax')->references('id')->on('taxes');
+$table->foreignId('id_tax')->constrained('taxes')->cascadeOnDelete();
+
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

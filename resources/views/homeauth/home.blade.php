@@ -6,62 +6,56 @@
 
 @section('content')
 
-<div class="row">
-	<div class="col-md-12">
-		<div class="panel panel-default">
-			<div class="panel-heading">Statistic</div>
-			<div class="panel-body">
+		<div class="card">
+			<div class="card-header">Statistic</div>
+			<div class="card-body">
 
-<p>&nbsp;</p>
-<div class="row">
-	<div class="col-sm-12">
-		<label for="myChart">Officer vs Sales Invoices</label>
-		<canvas id="myChart" width="100%" height="35"></canvas>
-	</div>
-</div>
+				<p>&nbsp;</p>
+				<div class="row">
+					<div class="col-sm-12">
+						<label for="myChart">Officer vs Sales Invoices</label>
+						<canvas id="myChart" width="100%" height="35"></canvas>
+					</div>
+				</div>
 
-<p>&nbsp;</p>
-<div class="row">
-	<div class="col-sm-12">
-	<label for="myChartpayment">Officer vs Payments</label>
-		<canvas id="myChartpayment" width="100%" height="35"></canvas>
-	</div>
-</div>
+				<p>&nbsp;</p>
+				<div class="row">
+					<div class="col-sm-12">
+						<label for="myChartpayment">Officer vs Payments</label>
+						<canvas id="myChartpayment" width="100%" height="35"></canvas>
+					</div>
+				</div>
 
-<p>&nbsp;</p>
-<div class="row">
-	<div class="col-sm-12">
-	<label for="myChartcommission">Officer vs Commission</label>
-		<canvas id="myChartcommission" width="100%" height="35"></canvas>
-	</div>
-</div>
+				<p>&nbsp;</p>
+				<div class="row">
+					<div class="col-sm-12">
+						<label for="myChartcommission">Officer vs Commission</label>
+						<canvas id="myChartcommission" width="100%" height="35"></canvas>
+					</div>
+				</div>
 
-<p>&nbsp;</p>
-<div class="row">
-	<div class="col-sm-12">
-	<label for="ProsoldPermonth">Products Sold Per Month</label>
-		<canvas id="ProsoldPermonth" width="100%" height="35"></canvas>
-	</div>
-</div>
+				<p>&nbsp;</p>
+				<div class="row">
+					<div class="col-sm-12">
+						<label for="ProsoldPermonth">Products Sold Per Month</label>
+						<canvas id="ProsoldPermonth" width="100%" height="35"></canvas>
+					</div>
+				</div>
 
-<p>&nbsp;</p>
-<div class="row">
-	<div class="col-sm-12">
-	<label for="myChartproduct">Products Sold</label>
-		<canvas id="myChartproduct" width="100%" height="50"></canvas>
-	</div>
-</div>
+				<p>&nbsp;</p>
+				<div class="row">
+					<div class="col-sm-12">
+						<label for="myChartproduct">Products Sold</label>
+						<canvas id="myChartproduct" width="100%" height="50"></canvas>
+					</div>
+				</div>
 
 			</div>
 		</div>
-	</div>
-</div>
-
 @endsection
 
 
 @section('jquery')
-
 <?php
 if ( auth()->user()->id_group == 2 ) {
 	$user = DB::table(
@@ -106,10 +100,11 @@ if ( auth()->user()->id_group == 2 ) {
 						')
 				)
 				->selectRaw('name, color')
-				->whereYear('date_sale', '=', Date('Y'))
+				->whereYear('date_sale', '<=', Date('Y'))
 				->where(['name' => auth()->user()->name])
-				->groupBy('name')
+				->groupBy('name', 'color')
 				->get();
+				// ->ddRawSQL();
 } else {
 	$user = DB::table(
 					DB::Raw('
@@ -153,9 +148,10 @@ if ( auth()->user()->id_group == 2 ) {
 						')
 				)
 				->selectRaw('name, color')
-				->whereYear('date_sale', '=', Date('Y'))
-				->groupBy('name')
+				->whereYear('date_sale', '<=', Date('Y'))
+				->groupBy('name', 'color')
 				->get();
+				// ->ddRawSQL();
 }
 
 $month = DB::table(
@@ -200,14 +196,16 @@ $month = DB::table(
 						')
 			)
 			->select(DB::raw('
-				YEAR(date_sale),
+				YEAR(date_sale) tahun,
 				MONTHNAME(date_sale) bulan,
 				MONTH(date_sale) nomon
 				'))
-			->whereYear('date_sale', '=', Date('Y'))
+			->whereYear('date_sale', '<=', Date('Y'))
 			->groupBy('bulan')
 			->orderBy('date_sale')
 			->get();
+			// ->ddRawSQL();
+			// ->dd();
 
 $product = DB::table(
 					DB::Raw('
@@ -258,35 +256,33 @@ $product = DB::table(
 								product,
 								quantity
 							')
-				->whereYear('date_sale', '=', Date('Y'))
+				->whereYear('date_sale', '<=', Date('Y'))
 				->get();
 ?>
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // bar chart
-var ctx = document.getElementById("myChart").getContext('2d');
-var myChart = new Chart
-	(
-		ctx,
+var ctx1 = document.getElementById("myChart").getContext('2d');
+var myChart = new Chart(ctx1,
 			{
 				type: 'line',
-				data: 
+				data:
 					{
 						labels: [
-										<?php 
+										<?php
 											foreach ($month as $key) {
-												echo '"'.$key->bulan.'",';
+												echo '"'.$key->bulan.' '.$key->tahun.'",';
 											}
 										?>
 						],
-						datasets: 
+						datasets:
 							[
 								@foreach($user as $us)
 								{
 									label: '{!! $us->name !!}',
 									data: [
 												@foreach($month as $mo)
-													
+
 <?php
 $tinv = DB::table(
 					DB::Raw('
@@ -336,8 +332,8 @@ $tinv = DB::table(
 						MONTHNAME(date_sale)bulan,
 						SUM(GrandTotal) AS GrandTotal
 					')
-				->whereYear('date_sale', '=', Date('Y'))
-				->where('name', '=', $us->name)
+				->whereYear('date_sale', '<=', Date('Y'))
+				->where('name', $us->name)
 				->whereMonth('date_sale', '=', $mo->nomon)
 				->first();
 	echo (($tinv->GrandTotal == NULL)? 0 : $tinv->GrandTotal) .',';
@@ -346,7 +342,8 @@ $tinv = DB::table(
 												@endforeach
 									],
 									borderColor: "{!! $us->color !!}",
-									backgroundColor : "rgba(0,0,0,0.0)"
+									backgroundColor : "rgba(0,0,0,0.0)",
+									tension: 0.4, // Makes the line slightly curved
 								},
 								@endforeach
 							]
@@ -367,18 +364,17 @@ $tinv = DB::table(
 
 
 // line chart
-var ctx = document.getElementById('myChartpayment').getContext('2d');
-var myChartline = new Chart
-	(
-		ctx,
+var ctx2 = document.getElementById('myChartpayment').getContext('2d');
+var myChartline = new Chart(ctx2,
 		{
 			type: 'line',
-			data: 
+			data:
 			{
 				labels: [
-								<?php 
+								<?php
 									foreach ($month as $key) {
-										echo '"'.$key->bulan.'",';
+										echo '"'.$key->bulan.' '.$key->tahun.'",';
+
 									}
 								?>
 				],
@@ -418,7 +414,7 @@ var myChartline = new Chart
 													MONTHNAME(date_sale)bulan,
 													SUM(amount) payment
 												')
-											->whereYear('date_sale', '=', Date('Y'))
+											->whereYear('date_sale', '<=', Date('Y'))
 											->where('name', '=', $us->name)
 											->whereMonth('date_sale', '=', $mo->nomon)
 											->first();
@@ -427,7 +423,8 @@ var myChartline = new Chart
 								@endforeach
 							],
 									borderColor: "{!! $us->color !!}",
-									backgroundColor : "rgba(0,0,0,0.0)"
+									backgroundColor : "rgba(0,0,0,0.0)",
+									tension: 0.4, // Makes the line slightly curved
 						},
 						@endforeach
 				]
@@ -445,18 +442,16 @@ var myChartline = new Chart
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // line chart
-var ctx = document.getElementById('myChartcommission').getContext('2d');
-var myChartline = new Chart
-	(
-		ctx,
+var ctx3 = document.getElementById('myChartcommission').getContext('2d');
+var myChartline = new Chart(ctx3,
 			{
 				type: 'line',
-				data: 
+				data:
 					{
 						labels: [
-										<?php 
+										<?php
 											foreach ($month as $key) {
-												echo '"'.$key->bulan.'",';
+												echo '"'.$key->bulan.' '.$key->tahun.'",';
 											}
 										?>
 						],
@@ -516,7 +511,7 @@ $tinvc = DB::table(
 						MONTHNAME(date_sale)bulan,
 						SUM(TotalCommission) AS TotalCommission
 					')
-				->whereYear('date_sale', '=', Date('Y'))
+				->whereYear('date_sale', '<=', Date('Y'))
 				->where('name', '=', $us->name)
 				->whereMonth('date_sale', '=', $mo->nomon)
 				->first();
@@ -525,7 +520,8 @@ echo (($tinvc->TotalCommission == NULL)? 0 : $tinvc->TotalCommission) .',';
 									@endforeach
 									],
 									borderColor: "{!! $us->color !!}",
-									backgroundColor : "rgba(0,0,0,0.0)"
+									backgroundColor : "rgba(0,0,0,0.0)",
+									tension: 0.4, // Makes the line slightly curved
 								},
 							@endforeach
 						]
@@ -560,22 +556,20 @@ echo (($tinvc->TotalCommission == NULL)? 0 : $tinvc->TotalCommission) .',';
 						LEFT JOIN products ON sales_items.id_product = products.id) AS hot_product'
 					))
 				->selectRaw('YEAR(date_sale) tahun, MONTHNAME(date_sale) bulan, name, color, product, quantity, SUM(quantity) total_quantity')
-				->whereYear('date_sale', '=', Date('Y'))
+				->whereYear('date_sale', '<=', Date('Y'))
 				->groupBy('product')
 				->orderBy('date_sale')
 				->get();
 ?>
-var ctx = document.getElementById('ProsoldPermonth').getContext('2d');
-var myChartline = new Chart
-	(
-		ctx,
+var ctx4 = document.getElementById('ProsoldPermonth').getContext('2d');
+var myChartline = new Chart(ctx4,
 		{
 			type: 'bar',
-			data: 
+			data:
 			{
 				labels: [
 							@foreach ($month as $key)
-								'{!! $key->bulan !!}', 
+								'{!! $key->bulan.' '.$key->tahun !!}',
 							@endforeach
 						],
 				datasets:
@@ -605,7 +599,7 @@ if(auth()->user()->id_group == 1) {
 						AND
 						product = "'.$pro->product.'"
 						AND
-						YEAR(date_sale) = "'.date('Y').'"
+						YEAR(date_sale) <= "'.date('Y').'"
 						) AS hot_product'
 					))
 				->selectRaw('YEAR(date_sale) tahun, MONTHNAME(date_sale) AS bulan, name, color, product, quantity')
@@ -628,7 +622,7 @@ if(auth()->user()->id_group == 1) {
 						AND
 						product = "'.$pro->product.'"
 						AND
-						YEAR(date_sale) = "'.date('Y').'"
+						YEAR(date_sale) <= "'.date('Y').'"
 						AND
 						name = "'.auth()->user()->name.'"
 						) AS hot_product'
@@ -651,7 +645,8 @@ if(auth()->user()->id_group == 1) {
 							@endforeach
 						],
 						borderColor: '{!! $pro->color !!}',
-						backgroundColor : '{!! $pro->color !!}'
+						backgroundColor : '{!! $pro->color !!}',
+						tension: 0.4, // Makes the line slightly curved
 					},
 					@endforeach
 				]
@@ -720,7 +715,7 @@ if(auth()->user()->id_group == 1) {
 																quantity,
 																SUM(quantity) sum_quantity
 															')
-												->whereYear('date_sale', '=', Date('Y'))
+												->whereYear('date_sale', '<=', Date('Y'))
 												->where('product', '<>', 'Postage')
 												->groupBy('product')
 												->orderBy('sum_quantity')
@@ -729,16 +724,14 @@ if(auth()->user()->id_group == 1) {
 									// echo (($key->quantity == NULL)? 0 : $key->quantity) .',';
 ?>
 
-var ctx = document.getElementById('myChartproduct').getContext('2d');
-var myChartline = new Chart
-	(
-		ctx,
+var ctx5 = document.getElementById('myChartproduct').getContext('2d');
+var myChartline = new Chart(ctx5,
 		{
 			// type: 'horizontalBar',
 			type: 'bar',
-			data: 
+			data:
 			{
-				labels: 
+				labels:
 				[
 					@foreach ($product as $key)
 						'{!! $key->product !!}',
@@ -759,7 +752,8 @@ var myChartline = new Chart
 							],
 									borderColor: "rgba(255, 255, 255, 1)",
 									backgroundColor : "rgba(255, 159, 64, 0.6)",
-									borderWidth:2
+									borderWidth:2,
+									tension: 0.4, // Makes the line slightly curved
 						},
 				]
 			},
@@ -783,7 +777,7 @@ var myChartline = new Chart
 // 		ctx,
 // 		{
 // 			type: 'line',
-// 			data: 
+// 			data:
 // 			{
 // 				labels: ['Ahad', 'Isnin', 'Selasa', 'Rabu', 'Khamis', 'Jumaat', 'Sabtu'],
 // 				datasets:

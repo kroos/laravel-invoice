@@ -1,87 +1,60 @@
 @extends('layout.master')
 
 @section('content')
+<form method="POST" action="{{ route('auth.store') }}" accept-charset="UTF-8" id="form" autocomplete="off" class="" enctype="multipart/form-data">
+	@csrf
 
-	@include('layout.errorform')
-	@include('layout.info')
-{!! Form::open(['route' => 'auth.store', 'class' => 'form-horizontal', 'id' => 'form', 'autocomplete' => 'off']) !!}
 
-<div class="col-lg-12">
-	<div class="panel panel-default">
-		<div class="panel-heading">Login</div>
-		<div class="panel-body">
+	<div class="card">
+		<div class="card-header">Login</div>
+		<div class="card-body">
 
-			<div class="row">
-				<div class="col-lg-12">
-					<div class="form-group {!! ( count($errors->get('email')) ) > 0 ? 'has-error' : '' !!}">
-						{!! Form::label('na', 'Username :', ['class' => 'control-label col-lg-2']) !!}
-						<div class="col-lg-10">
-							{!! Form::text('username', @$value, ['class' => 'form-control', 'id' => 'na', 'placeholder' => 'Username', 'autocomplete' => 'off']) !!}
+			<div class="form-group row m-1 @error('username') has-error @enderror">
+				<label for="usnm" class="col-form-label col-sm-2">Username : </label>
+				<div class="col-sm-6 my-auto">
+					<input type="text" name="username" value="{{ old('username', @$variable->username) }}" id="usnm" class="form-control form-control-sm @error('username') is-invalid @enderror" placeholder="Username">
+					@error('username')
+						<div class="invalid-feedback">
+							{{ $message }}
 						</div>
-					</div>
+					@enderror
 				</div>
 			</div>
 
-			<div class="row">
-				<div class="col-lg-12">
-					<div class="form-group {!! ( count($errors->get('password')) ) > 0 ? 'has-error' : '' !!}">
-						{!! Form::label('pas', 'Password :', ['class' => 'control-label col-lg-2']) !!}
-						<div class="col-lg-10">
-							{!! Form::input('password', 'password', @$value, ['class' => 'form-control', 'id' => 'pas', 'placeholder' => 'Password']) !!}
+			<div class="form-group row m-1 @error('password') has-error @enderror">
+				<label for="passw" class="col-form-label col-sm-2">Password : </label>
+				<div class="col-sm-6 my-auto">
+					<input type="password" name="password" value="{{ old('password', @$variable->password) }}" id="passw" class="form-control form-control-sm @error('password') is-invalid @enderror" placeholder="Password">
+					@error('password')
+						<div class="invalid-feedback">
+							{{ $message }}
 						</div>
-					</div>
+					@enderror
 				</div>
 			</div>
 
-			<div class="row">
-				<div class="col-lg-12">
-					<div class="form-group">
-						<div class="col-sm-offset-2 col-sm-10">
-							<div class="checkbox">
-								<label>
-									{!! Form::input('checkbox', 'remember', TRUE, @$value) !!}&nbsp;Remember me
-								</label>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-
-			<div class="row">
-				<div class="col-lg-12">
-					<div class="form-group">
-						<div class="col-sm-offset-2 col-sm-10">
-							{!! Form::submit('Login', ['class' => 'btn btn-primary btn-lg btn-block']) !!}
-						</div>
-					</div>
-				</div>
-			</div>
-
-			<div class="row">
-				<div class="col-lg-12">
-					<div class="form-group">
-						<div class="col-sm-offset-2 col-sm-10">
-							<p><a class="btn btn-link" href="{!! route('forgotpassword.create') !!}">Forgot Your Password?</a></p>
-						</div>
-					</div>
+			<div class="form-group row m-1">
+				<label for="id" class="col-form-label col-sm-2"></label>
+				<div class="col-sm-6 my-auto">
+					<label for="remember" class="form-check-label">
+						<input type="checkbox" name="remember" value="1" id="remember" class="form-check-input me-2">&nbsp;Remember me
+					</label>
 				</div>
 			</div>
 
 		</div>
+		<div class="card-footer d-flex justify-content-end">
+				<button type="submit" class="btn btn-sm btn-outline-secondary my-auto me-1">Submit</button>
+				<a class="btn btn-sm btn-outline-secondary my-auto me-1" href="{!! route('forgotpassword.create') !!}">Forgot Your Password?</a>
+		</div>
 	</div>
-</div>
 
-{!! Form::close() !!}
+</form>
 
 @endsection
 
 
 @section('jquery')
-
-$("#na").keyup(function() {
-	lch(this);
-});
-
 ////////////////////////////////////////////////////////////////////////////////////
 // bootstrap validator
 $("#form").bootstrapValidator({

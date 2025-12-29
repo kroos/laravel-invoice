@@ -1,0 +1,39 @@
+<?php
+
+namespace {{ namespace }};
+
+// use Illuminate\Database\Eloquent\Model;
+use App\Models\Model;
+
+use Illuminate\Database\Eloquent\SoftDeletes;
+// use Illuminate\Database\Eloquent\Relations\HasOne;
+// use Illuminate\Database\Eloquent\Relations\HasOneThrough;
+// use Illuminate\Database\Eloquent\Relations\HasOneOrMany;
+// use Illuminate\Database\Eloquent\Relations\HasMany;
+// use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+// use Illuminate\Database\Eloquent\Relations\BelongsTo;
+// use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\Pivot;
+
+class {{ class }} extends Pivot
+{
+    // use SoftDeletes;
+    // protected $connection = '';
+    // protected $table = '';
+    // protected $primaryKey = '';
+    // public $incrementing = true;
+    // protected $keyType = '';
+    // const CREATED_AT = '';
+    // const UPDATED_AT = '';
+    // protected $rememberTokenName = '';
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////
+    // set column attribute
+    // public function setNameAttribute($value)
+    // {
+    //     $this->attributes['name'] = ucwords(Str::lower($value));
+    // }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////
+    // relationship
+}

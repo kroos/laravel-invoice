@@ -50,7 +50,7 @@ class SalesController extends Controller
 	{
 		return view('sales.create');
 	}
-	
+
 	public function store(SalesFormRequest $request)
 	{
 		// dd($request->all());
@@ -65,7 +65,7 @@ class SalesController extends Controller
 
 		####################################################
 		// slip serial number
-		if ($request->serial != NULL) {
+		if ($request->has('serial')) {
 			foreach ($request->serial as $key => $val) {
 				$serialtrack = SlipNumbers::create([
 						'id_sales' => $inv->id,
@@ -81,14 +81,14 @@ class SalesController extends Controller
 				$mime = $file->getMimeType();
 				$filename = $file->store('images');
 				$imag = Image::make(storage_path().'/uploads/'.$filename);
-	
+
 				// resize the image to a height of 400 and constrain aspect ratio (auto width)
 				$imag->resize(null, 400, function ($constraint) {
 					$constraint->aspectRatio();
 				});
 				$imag->save();
 				$imh = SlipPostage::where('image', base64_encode( file_get_contents( storage_path().'/uploads/'.$filename ) ));
-	
+
 				// if image already existed in the database
 				if($imh->count() < 1) {
 					$img = SlipPostage::create([
@@ -135,7 +135,7 @@ class SalesController extends Controller
 					]);
 			}
 		}
-		
+
 		###################################################
 		// invoice part
 
@@ -180,25 +180,24 @@ class SalesController extends Controller
 
 		return redirect()->back();      // redirect back to original route
 	}
-	
+
 	public function show(Sales $sales)
 	{
 		//
 	}
-	
+
 	public function edit(Sales $sales)
 	{
 		return view('sales.edit', compact(['sales']));
 	}
-	
+
 	public function update(SalesFormRequest $request, Sales $sales)
 	{
 		// dd($request->tax);
 		// dd($request->all());
 		####################################################
 		// invoice part
-		$inv = Sales::where(['id' => $sales->id, 'deleted_at' => null]) 
-					->update(request([
+		$inv = $sales->update(request([
 							'id_user', 'date_sale',
 						]));
 
@@ -206,7 +205,7 @@ class SalesController extends Controller
 		// slip serial number
 		if ($request->serial != NULL) {
 			foreach ($request->serial as $key => $val) {
-				$serialtrack = SlipNumbers::updateOrCreate(['id' => $val['id'], 'deleted_at' => null],
+				$serialtrack = SlipNumbers::updateOrCreate(['id' => $val['id']],
 					[
 						'id_sales' => $sales->id,
 						'tracking_number' => $val['tracking_number'],
@@ -231,7 +230,7 @@ class SalesController extends Controller
 
 				// if image already existed in the database
 				if($imh->count() < 1) {
-					$img = SlipPostage::updateOrCreate(['id_sales' => $sales->id, 'deleted_at' => null],
+					$img = SlipPostage::updateOrCreate(['id_sales' => $sales->id],
 							[
 								'id_sales' => $sales->id,
 								'image' => base64_encode( file_get_contents( storage_path().'/uploads/'.$filename ) ),
@@ -267,10 +266,9 @@ class SalesController extends Controller
 
 		// // customers part
 		if ( $request->repeatcust != NULL ) {
-			$sacu = SalesCustomers::updateOrCreate(['id' => $request->repeatcust_id, 'deleted_at' => null],
-				[
-					'id_customer' => $request->repeatcust,
-				]);
+			$sacu = SalesCustomers::updateOrCreate(
+				['id' => $request->repeatcust_id],
+				['id_customer' => $request->repeatcust]);
 		}
 		 // else {
 		// 	if ( $request->repeatcust == NULL ) {
@@ -340,11 +338,9 @@ class SalesController extends Controller
 
 		return redirect(route('sales.index'));      // redirect back to original route
 	}
-	
+
 	public function destroy(Sales $sales)
 	{
-		$sale = Sales::find($sales->id);
-		// Sales::destroy($sales->id);
 		$sale->slippostageimage()->delete();
 		$sale->customer()->delete();
 		$sale->invitems()->delete();

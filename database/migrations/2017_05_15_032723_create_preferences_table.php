@@ -6,11 +6,11 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreatePreferencesTable extends Migration
 {
-	
+
 	public function up()
 	{
 		Schema::create('preferences', function (Blueprint $table) {
-			$table->bigIncrements('id');
+			$table->id();
 			$table->text('company_name');
 			$table->text('company_registration');
 			$table->longText('company_logo_image');
@@ -21,12 +21,12 @@ class CreatePreferencesTable extends Migration
 			$table->string('company_fixed_line');
 			$table->string('company_mobile');
 			$table->string('company_email');
-			$table->integer('company_owner');
-			$table->integer('company_person_in-charge');
+			$table->unsignedBigInteger('company_owner');
+			$table->unsignedBigInteger('company_person_in_charge');
 			$table->timestamps();
 		});
 	}
-	
+
 	public function down()
 	{
 		Schema::dropIfExists('preferences');

@@ -1,62 +1,22 @@
 @extends('layout.master')
 
 @section('content')
-	@include('layout.errorform')
-	@include('layout.info')
 
-	{!! Form::open(['route' => 'banks.store', 'class' => 'form-horizontal']) !!}
-<div class="row">
-	<div class="col-lg-12">
-		<div class="panel panel-default">
-			<div class="panel-heading">Add Bank</div>
-			<div class="panel-body">
-				<div class="col-lg-12">
-					<div class="form-group {!! ( count($errors->get('category')) ) >0 ? 'has-error' : '' !!}">
-						{!! Form::label('cate', 'Name :', ['class' => 'col-sm-2 control-label']) !!}
-						<div class="col-sm-10">
-							{!! Form::input('text', 'bank', @$value, ['class' => 'form-control', 'placeholder' => 'Name', 'id' => 'cate']) !!}
-						</div>
-					</div>
-					<div class="form-group {!! ( count($errors->get('category')) ) >0 ? 'has-error' : '' !!}">
-						{!! Form::label('cit', 'City :', ['class' => 'col-sm-2 control-label']) !!}
-						<div class="col-sm-10">
-							{!! Form::input('text', 'city', @$value, ['class' => 'form-control', 'placeholder' => 'City', 'id' => 'cit']) !!}
-						</div>
-					</div>
-					<div class="form-group {!! ( count($errors->get('category')) ) >0 ? 'has-error' : '' !!}">
-						{!! Form::label('scode', 'Swift Code :', ['class' => 'col-sm-2 control-label']) !!}
-						<div class="col-sm-10">
-							{!! Form::input('text', 'swift_code', @$value, ['class' => 'form-control', 'placeholder' => 'Swift Code', 'id' => 'scode']) !!}
-						</div>
-					</div>
-					<div class="form-group {!! ( count($errors->get('category')) ) >0 ? 'has-error' : '' !!}">
-						{!! Form::label('acc', 'Account :', ['class' => 'col-sm-2 control-label']) !!}
-						<div class="col-sm-10">
-							{!! Form::input('text', 'account', @$value, ['class' => 'form-control', 'placeholder' => 'Account', 'id' => 'acc']) !!}
-						</div>
-					</div>
-
-					<div class="form-group">
-						<div class="col-sm-offset-2 col-sm-10">
-							<div class="checkbox">
-								<label>
-									{!! Form::input('checkbox', 'active', TRUE, @$value) !!}&nbsp;Aktif
-								</label>
-							</div>
-						</div>
-					</div>
-					<div class="form-group">
-						<div class="col-sm-offset-2 col-sm-10">
-							{!! Form::submit('Save', ['class' => 'btn btn-primary btn-lg btn-block']) !!}
-						</div>
-					</div>
-				</div>
-				{!! Form::close() !!}
-
-			</div>
+<form method="POST" action="{{ route('banks.store') }}" accept-charset="UTF-8" id="form" autocomplete="off" class="" enctype="multipart/form-data">
+	@csrf
+	<div class="card">
+		<div class="card-header">Add Bank</div>
+		<div class="card-body">
+			@include('banks._form')
+		</div>
+		<div class="card-footer d-flex justify-content-end">
+			<button type="submit" class="btn btn-sm btn-outline-primary me-1">
+				<i class="fa fa-save"></i> Submit
+			</button>
+			<a href="{{ route('banks.index') }}" class="btn btn-sm btn-outline-secondary me-1">Cancel</a>
 		</div>
 	</div>
-</div>
+</form>
 @endsection
 
 

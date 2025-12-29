@@ -14,13 +14,12 @@ class CreateSlipNumbersTable extends Migration
     public function up()
     {
         Schema::create('slip_numbers', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->id();
             // $table->integer('id_sales');
-            $table->unsignedBigInteger('id_sales');
-            $table->foreign('id_sales')->references('id')->on('sales');
+$table->foreignId('id_sales')->constrained('sales')->cascadeOnDelete();
             $table->text('tracking_number');
-            $table->softDeletes();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

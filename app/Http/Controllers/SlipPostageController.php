@@ -80,23 +80,16 @@ class SlipPostageController extends Controller
      * @param  \App\SlipPostage  $slipPostage
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request)
+    public function destroy(Request $request, SlipPostage $slipPostage)
     {
-        $result = SlipPostage::destroy($request->id);
+        $slipPostage->delete();
         // info when update success
         // Session::flash('flash_message', 'Data successfully deleted!');
-    
+
         // return redirect()->back();      // redirect back to original route
-        if ($result) {
-            return response()->json([
+        return response()->json([
                                     'message' => 'Data deleted',
                                     'status' => 'success'
                                 ]);
-        } else {
-            return response()->json([
-                                    'message' => 'Data cant be deleted, Please try again later.',
-                                    'status' => 'error'
-                                ]);
-        }
     }
 }

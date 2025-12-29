@@ -1,0 +1,11 @@
+/*resolve conflict between bootstrap and tailwindcss*/
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Scope Tailwind inside `.tw` */
+:where(.tw) {
+    @tailwind base;
+    @tailwind components;
+    @tailwind utilities;
+}

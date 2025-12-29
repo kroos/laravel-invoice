@@ -29,7 +29,7 @@ class ProductCategoryController extends Controller
 	{
 		//
 	}
-	
+
 	/**
 	 * Show the form for creating a new resource.
 	 *
@@ -37,13 +37,9 @@ class ProductCategoryController extends Controller
 	 */
 	public function create()
 	{
-		// show the form to store the data
-		$cate = ProductCategory::all();
-	
-		// return view('tasks.index')->withTasks($tasks);
-		return view('category.create', compact('cate'));
+		return view('category.create');
 	}
-	
+
 	/**
 	 * Store a newly created resource in storage.
 	 *
@@ -54,17 +50,17 @@ class ProductCategoryController extends Controller
 	{
 		// storing the data into database Categories
 		ProductCategory::create([
-			'product_category' => title_case(request('category')),
+			'product_category' => request('category'),
 			'active' => request('active'),
 			// 'id_user' => auth()->user()->id,	or u can make it shortcut like below
 			'id_user' => auth()->id(),
 		]);
-	
+
 		Session::flash('flash_message', 'Data successfully added!');
 
 		return redirect()->back();		// redirect back to original route
 	}
-	
+
 	/**
 	 * Display the specified resource.
 	 *
@@ -75,7 +71,7 @@ class ProductCategoryController extends Controller
 	{
 	    //
 	}
-	
+
 	/**
 	 * Show the form for editing the specified resource.
 	 *
@@ -84,9 +80,9 @@ class ProductCategoryController extends Controller
 	 */
 	public function edit(ProductCategory $productCategory)
 	{
-		return view('category.edit', compact('productCategory'));
+		return view('category.edit');
 	}
-	
+
 	/**
 	 * Update the specified resource in storage.
 	 *
@@ -100,18 +96,17 @@ class ProductCategoryController extends Controller
 		// form process for id - update database
 		ProductCategory::where('id', $productCategory->id)
 					-> update([
-						'product_category' => title_case(request('category')),
+						'product_category' => (request('category'),
 						'active' => request('active'),
 						'id_user' => auth()->user()->id,
-						'updated_at' => request('updated_at')
 					]);
 		// $productCategory->touch();
 		// info when update success
 		Session::flash('flash_message', 'Data successfully edited!');
-	
-		return redirect(route('category.create'));      // redirect back to original route
+
+		return redirect(route('category.index'));      // redirect back to original route
 	}
-	
+
 	/**
 	 * Remove the specified resource from storage.
 	 *
@@ -123,7 +118,7 @@ class ProductCategoryController extends Controller
 		ProductCategory::destroy($productCategory->id);
 		// info when update success
 		// Session::flash('flash_message', 'Data successfully deleted!');
-	
+
 		// return redirect(route('category.create'));		// redirect back to original route
 		return response()->json([
 									'message' => 'Data deleted',

@@ -15,23 +15,30 @@ class ForgotPasswordRequest extends FormRequest
 	{
 	    return true;
 	}
-	
+
 	/**
 	 * Get the validation rules that apply to the request.
 	 *
 	 * @return array
 	 */
-	public function rules()
+	public function rules(): array
 	{
 		return [
 			'email' => 'required|email',
 		];
 	}
 
-	public function messages()
+	public function messages(): array
 	{
 		return [
-			'email.required' => 'your email please',
+			'email.required' => 'Your email please',
+		];
+	}
+
+	public function attributes(): array
+	{
+		return [
+			'email' => 'Email',
 		];
 	}
 

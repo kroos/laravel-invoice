@@ -44,24 +44,12 @@ class SalesItemsController extends Controller
         //
     }
 
-    public function destroy(Request $request)
+    public function destroy(Request $request, SalesItems $salesItems)
     {
-        $si = SalesItems::destroy($request->id);
-
-        // info when update success
-        // Session::flash('flash_message', 'Data successfully deleted!');
-    
-        // return redirect()->back();      // redirect back to original route
-        if ($si) {
-            return response()->json([
+        $salesItems->();
+        return response()->json([
                                     'message' => 'Data deleted',
                                     'status' => 'success'
                                 ]);
-        } else {
-            return response()->json([
-                                    'message' => 'Data cant be deleted, Please try again later.',
-                                    'status' => 'error'
-                                ]);
-        }
     }
 }

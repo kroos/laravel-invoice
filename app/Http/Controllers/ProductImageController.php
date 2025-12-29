@@ -11,7 +11,7 @@ use App\Http\Requests\ProductImageFormRequest;
 // for manipulating image
 // http://image.intervention.io/
 // use Intervention\Image\Facades\Image as Image;		<-- ajaran sesat depa... hareeyyyyy!!
-use Intervention\Image\ImageManagerStatic as Image;						
+use Intervention\Image\ImageManagerStatic as Image;
 
 // load session
 use Session;
@@ -36,12 +36,12 @@ class ProductImageController extends Controller
 	{
 		//
 	}
-	
+
 	public function store(ProductImageFormRequest $request)
 	{
 		//
 	}
-	
+
 
 	public function show(ProductImage $productImage)
 	{
@@ -79,7 +79,6 @@ echo 'test';
 					'image' => base64_encode( file_get_contents( storage_path().'/uploads/'.$filename ) ),
 					'mime' => $mime,
 				]);
-				$productImage->touch();
 			}
 
 		// clean up
@@ -94,14 +93,14 @@ echo 'test';
 		Session::flash('flash_message', 'Image successfully updated!');
 		return redirect(route('product.edit', $productImage->id_product));		// redirect back to original route
 	}
-	
-	public function destroy(Request $request)
+
+	public function destroy(Request $request, ProductImage $productImage)
 	{
 		$prod = ProductImage::destroy($request->id);
 
 		// info when update success
 		// Session::flash('flash_message', 'Image successfully deleted!');
-	
+
 		// return redirect()->back();		// redirect back to original route
 		return response()->json([
 									'message' => 'Data deleted',

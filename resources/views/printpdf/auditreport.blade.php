@@ -1,32 +1,24 @@
 <?php
 
 // load model
-use App\Sales;
-use App\SalesItems;
-use App\SlipPostage;
-use App\Customers;
-use App\Product;
-use App\ProductCategory;
-use App\ProductImage;
-use App\Payments;
-use App\SlipNumbers;
-use App\SalesTax;
-use App\SalesCustomers;
-use App\Preferences;
-use App\Taxes;
-use App\Banks;
+use \App\Sales;
+use \App\SalesItems;
+use \App\SlipPostage;
+use \App\Customers;
+use \App\Product;
+use \App\ProductCategory;
+use \App\ProductImage;
+use \App\Payments;
+use \App\SlipNumbers;
+use \App\SalesTax;
+use \App\SalesCustomers;
+use \App\Preferences;
+use \App\Taxes;
+use \App\Banks;
 use App\User;
 
 use Crabbly\Fpdf\Fpdf as Fpdf;
 use Carbon\Carbon;
-
-
-function my($string)
-{
-	$rt = Carbon::createFromFormat('Y-m-d', $string);
-	return date('d F Y', mktime(0, 0, 0, $rt->month, $rt->day, $rt->year));
-}
-
 
 // load image
 function base64ToImage($base64_string, $output_file)
@@ -46,7 +38,7 @@ class PDF extends Fpdf
 	{
 		// invoice number
 		$lo1 = Preferences::find(1);
-		
+
 		// Logo
 		$this->Image(base64ToImage($lo1->company_logo_image, $lo1->company_logo_mime),50,9,30);
 		// Arial bold 15
@@ -65,7 +57,7 @@ class PDF extends Fpdf
 		// Line break
 		$this->Ln(5);
 	}
-	
+
 	// Page footer
 	function Footer()
 	{
@@ -158,7 +150,7 @@ foreach ($request->user1 as $l) {
 
 			$pdf->SetFont('Arial','',8);
 			$pdf->SetTextColor(0, 0, 0);
-			
+
 			$sn = SlipNumbers::where(['id_sales' => $in->id, 'deleted_at' => NULL])->get();
 			$st = SlipPostage::where(['id_sales' => $in->id, 'deleted_at' => NULL])-> get();
 
@@ -170,7 +162,7 @@ foreach ($request->user1 as $l) {
 
 			// date invoice
 			$pdf->SetFont('Arial','B',10);
-			$pdf->Cell(50,7, 'Date Invoice : '.my($in->date_sale), 0, 0, 'C');
+			$pdf->Cell(50,7, 'Date Invoice : '.$in->date_sale->format('d F Y'), 0, 0, 'C');
 
 			// tracking number / receipt number
 			$pdf->Cell(50, 7, 'Slip Postage :', 0, 0, 'R');
@@ -215,7 +207,7 @@ foreach ($request->user1 as $l) {
 				$pdf->Cell(30, 27, $hj->quantity, 1, 0, 'C');
 				$pdf->Cell(30, 27, number_format(($hj->retail * $hj->quantity), 2), 1, 0, 'C');
 				$gt += $hj->retail * $hj->quantity;
-			
+
 				$img = ProductImage::where(['id_product' => $hj->id_product])->get();
 				foreach ($img as $imu) {
 					$pdf->Cell(30, 27, $pdf->Image(base64ToImage($imu->image, $imu->mime), $pdf->GetX()+1, $pdf->GetY()+0, 28, 27), 1, 2, 'C');
@@ -240,7 +232,7 @@ foreach ($request->user1 as $l) {
 					$pdf->Cell(30, 7, '', 1, 1, 'C');
 				}
 			}
-			
+
 			// footer
 			$pdf->SetFont('Arial','B',10);
 			$pdf->Cell(130, 7, 'Grand Total', 1, 0, 'C');
@@ -254,24 +246,24 @@ foreach ($request->user1 as $l) {
 
 			$lipay = Payments::where(['id_sales' => $in->id])->get();
 			$py = 0;
-			
+
 			if ($lipay->count() > 0) {
-			
+
 				// header
 				$pdf->Cell(130, 7, 'Bank', 1, 0, 'C');
 				$pdf->Cell(30, 7, 'Date Payment', 1, 0, 'C');
 				$pdf->Cell(30, 7, 'Amount', 1, 1, 'C');
-				
+
 				// list of payment
 				$pdf->SetFont('Arial','',8);
 				foreach ($lipay as $k) {
 					$pdf->Cell(130, 7, Banks::findOrFail($k->id_bank)->bank, 1, 0, 'C');
-					$pdf->Cell(30, 7, my($k->date_payment), 1, 0, 'C');
+					$pdf->Cell(30, 7, $k->date_payment->format('d F Y'), 1, 0, 'C');
 					$pdf->Cell(30, 7, number_format($k->amount, 2), 1, 1, 'C');
 					$py += $k->amount;
-				
+
 				}
-				
+
 				// footer
 				$pdf->SetFont('Arial','B',10);
 				$pdf->Cell(160, 7, 'Grand Total', 1, 0, 'C');
@@ -285,22 +277,7 @@ foreach ($request->user1 as $l) {
 	}
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-$pdf->Output('I', 'Audit Report from '.my($request->from1).' to '.my($request->to1).'.pdf');		// <-- kalau nak bukak secara direct saja
+$pdf->Output('I', 'Audit Report from '.Carbon::parse($request->from1)->format('d F Y').' to '.Carbon::parse($request->to1)->format('d F Y').'.pdf');		// <-- kalau nak bukak secara direct saja
 // $pdf->Output('D');			// <-- semata mata 100% download
 // $pdf->Output('F', storage_path().'/uploads/pdf/'.$filename);			// <-- send through email
 ?>

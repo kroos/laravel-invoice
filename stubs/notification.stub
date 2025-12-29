@@ -1,0 +1,92 @@
+<?php
+
+namespace {{ namespace }};
+
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
+
+// notifications via database or mail (but mail dont have cc and bcc)
+use Illuminate\Notifications\Notification;
+
+use Illuminate\Notifications\Messages\MailMessage;
+
+
+class {{ class }} extends Notification
+{
+    use Queueable;
+
+    protected $user;
+
+    /**
+     * Create a new notification instance.
+     */
+    public function __construct($user)
+    {
+        $this->user = $user;
+    }
+
+    /**
+     * Get the notification's delivery channels.
+     *
+     * @return array<int, string>
+     */
+    public function via(object $notifiable): array
+    {
+        return ['mail', 'database'];
+    }
+
+    /**
+     * Get the mail representation of the notification.
+     */
+    public function toMail(object $notifiable): MailMessage
+    {
+        return (new MailMessage)
+                    ->subject('Your ICMS Request Has Been Submitted')
+                    // u can use markdown too
+                    // ->markdown('emails.created', [
+                    //     'user' => $notifiable,
+                    // ])
+                    // ->greeting('Hello ' . $notifiable->name . ',')
+                    ->line('The introduction to the notification.')
+                    ->action('Notification Action', url('/'))
+                    // ->attach(Storage::path("public/pdf/file.pdf"))
+                    ->line('Thank you for using our application!');
+    }
+
+    /**
+     * Get the array representation of the notification.
+     *
+     * @return array<string, mixed>
+     */
+    // public function toArray(object $notifiable): array
+    // {
+    //     return [
+    //        'data' => 'You have notifications to look into'
+    //     ];
+    // }
+
+    /**
+     * Get the array representation of the notification.
+     *
+     * @return database<string, mixed>
+     */
+    public function toDatabase(object $notifiable): array
+    {
+        return [
+            'data' => 'New ICMS Request has been submitted',
+            'link' => route('emailaccapp.show', $this->data),
+        ];
+    }
+
+    /**
+     * Get the notification's database type.
+     *
+     * @return string
+     */
+    // public function databaseType(object $notifiable): string
+    // {
+    //  return [
+    //      //
+    //  ];
+    // }
+}

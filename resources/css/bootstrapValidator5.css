@@ -1,0 +1,41 @@
+/**
+ * BootstrapValidator (http://bootstrapvalidator.com)
+ * The best jQuery plugin to validate form fields. Designed to use with Bootstrap 3
+ *
+ * @author      http://twitter.com/nghuuphuoc
+ * @copyright   (c) 2013 - 2014 Nguyen Huu Phuoc
+ * @license     Commercial: http://bootstrapvalidator.com/license/
+ *              Non-commercial: http://creativecommons.org/licenses/by-nc-nd/3.0/
+ */
+
+.bv-form .help-block {
+    margin-bottom: 0;
+}
+.bv-form .tooltip-inner {
+    text-align: left;
+}
+.nav-tabs li.bv-tab-success > a {
+    color: #3c763d;
+}
+.nav-tabs li.bv-tab-error > a {
+    color: #a94442;
+}
+
+.bv-form .bv-icon-no-label {
+	top: 0;
+}
+
+.bv-form .bv-icon-input-group {
+	top: 0;
+	z-index: 100;
+}
+
+.has-error, .has-error .form-control, .form-select .has-error, .form-select-lg .has-error, .form-select-sm .has-error, .form-check .has-error, .form-check-input .has-error, .form-switch .has-error, .form-check-label .has-error, .form-check-inline .has-error, .has-error .form-control-file, .has-error .form-control-lg, .has-error .form-control-sm, .has-error .form-control-range, .has-error .form-check-input, .has-error , .has-error label {
+	font-weight: bold;
+	color: #a94442;
+	border-color: #a94442;
+}
+.has-success, .has-success .form-control, .form-select .has-success, .form-select-lg .has-success, .form-select-sm .has-success, .form-check .has-success, .form-check-input .has-success, .form-switch .has-success, .form-check-label .has-success, .form-check-inline .has-success, .has-success .form-control-file, .has-success .form-control-lg, .has-success .form-control-sm, .has-success .form-control-range, .has-success .form-check-input, .has-success , .has-success label {
+	color: #3c763d;
+	border-color: #3c763d;
+}

@@ -1,262 +1,154 @@
 @extends('layout.master')
 
 @section('content')
-	<div class="row"><p><a href="{!! route('product.create') !!}" class="btn btn-info">Back to products</a></p></div>
-	@include('layout.errorform')
-	@include('layout.info')
-
-	{!! Form::model($product, ['route' => ['product.update', $product->slug], 'method' => 'PATCH', 'class' => 'form-horizontal', 'id' => 'form']) !!}
-
-<div class="col-lg-12">
-	<div class="row">
-		<div class="col-lg-12">
-			<div class="panel panel-default">
-				<div class="panel-heading">Edit Product</div>
-				<div class="panel-body">
-					<div class="col-lg-12">
-						<div class="form-group {!! ( count($errors->get('product')) ) >0 ? 'has-error' : '' !!}">
-							{!! Form::label('nam', 'Product :', ['class' => 'col-sm-2 control-label']) !!}
-							<div class="col-sm-10">
-								{!! Form::text('product', $product->product, ['class' => 'form-control put', 'placeholder' => 'Name', 'id' => 'nam']) !!}
-							</div>
-						</div>
-			
-						<?php
-						$lm = array();
-						$pc = App\ProductCategory::where(['active' => 1])->get();
-						foreach ($pc as $key) {
-							$lm[$key->id] = $key->product_category;
-						}
-						?>
-			
-						<div class="form-group {!! ( count($errors->get('id_category')) ) >0 ? 'has-error' : '' !!}">
-							{!! Form::label('ug', 'Product Category :', ['class' => 'col-sm-2 control-label']) !!}
-							<div class="col-sm-10">
-								{!! Form::select('id_category', $lm, $product->id_category,['class' => 'form-control', 'id' => 'ug', 'placeholder' => 'Choose Product Category']) !!}
-							</div>
-						</div>
-			
-						<div class="form-group {!! ( count($errors->get('commission')) ) >0 ? 'has-error' : '' !!}">
-							{!! Form::label('commission', 'Commission :', ['class' => 'col-sm-2 control-label']) !!}
-							<div class="col-sm-10">
-								{!! Form::input('text', 'commission', $product->commission, ['class' => 'form-control', 'placeholder' => 'Commission', 'id' => 'commission']) !!}
-							</div>
-						</div>
-			
-						<div class="form-group {!! ( count($errors->get('retail')) ) >0 ? 'has-error' : '' !!}">
-							{!! Form::label('pass', 'Retail :', ['class' => 'col-sm-2 control-label']) !!}
-							<div class="col-sm-10">
-								{!! Form::input('text', 'retail', $product->retail, ['class' => 'form-control', 'placeholder' => 'Retail', 'id' => 'pass']) !!}
-							</div>
-						</div>
-			
-						<div class="form-group">
-							<div class="col-sm-offset-2 col-sm-10">
-								<div class="checkbox">
-									<label>
-										{!! Form::hidden('active', 0) !!}
-										{!! Form::checkbox('active', 1, $product->active) !!}&nbsp;Active
-									</label>
-								</div>
-							</div>
-						</div>
-						<div class="form-group">
-							<div class="col-sm-offset-2 col-sm-10">
-								{!! Form::submit('Update', ['class' => 'btn btn-primary btn-lg btn-block']) !!}
-							</div>
-						</div>
-					</div>
-					{!! Form::close() !!}
-				</div>
-			</div>
+<form method="POST" action="{{ route('product.update', $product) }}" accept-charset="UTF-8" id="form" autocomplete="off" class="needs-validation" enctype="multipart/form-data">
+	@csrf
+	@method('PATCH')
+	<div class="card mb-2">
+		<div class="card-header">Edit Product</div>
+		<div class="card-body">
+			@include('product._form')
+		</div>
+		<div class="card-footer d-flex justify-content-end">
+			<button type="submit" class="btn btn-sm btn-outline-primary me-1"><i class="fa fa-save"></i> Submit</button>
+			<a href="{{ route('product.index') }}" class="btn btn-sm btn-outline-secondary me-1">Cancel</a>
 		</div>
 	</div>
-	
-	
-	<div class="row ">
-		<div class="col-lg-12">
-			<div class="panel panel-default">
-				<div class="panel-heading">Product Image List</div>
-				<div class="panel-body">
-					<div class="col-lg-12">
-						<div class="col-lg-10 table-responsive col-centered">
-							
-							<?php
-							$pro = App\ProductImage::where(['id_product' => $product->id])->get();
-							?>
-							
-							@if( count($pro) > 0 )
-							<table id="example" class="table table-border table-hover ">
-								<thead>
-									<th>id</th>
-									<th>image</th>
-									<th>delete</th>
-								</thead>
-								<tbody>
-									@foreach ($pro as $k)
-									<tr>
-										<td>{!! $k->id !!}</td>
-										<td>
-											<?php
-											echo '<a href="'.route('productimage.edit' ,$k->id).'"><img src="data:'.$k->mime.';base64, '.$k->image.'" class="img-responsive img-rounded"></a>';
-											
-											?>
-										</td>
-										<td>
-											<button href="{!! route('productimage.destroy', $k->id) !!}" id="remove_image_{{ $k->id }}" data-id="{{ $k->id }}" class="btn btn-danger remove">
-												<i class="fa fa-trash fa-lg" aria-hidden="true"></i>
-											</button>
-										</td>
-									</tr>
-									@endforeach
-								</tbody>
-							</table>
-							@else
-							@endif
-						</div>
-					</div>
-				</div>
+</form>
+
+
+
+<div class="card">
+	<div class="card-header">Product Image List</div>
+	<div class="card-body">
+		<div class="col-sm-12 table-responsive">
+			<table id="at" class="table table-border table-hover "></table>
 			</div>
 		</div>
-	</div>
 </div>
-
-
 @endsection
 
 
 @section('jquery')
 ////////////////////////////////////////////////////////////////////////////////////
-// select2
-$('#ug').select2({
-	placeholder: 'Please Choose'
+@include('product._js')
+
+////////////////////////////////////////////////////////////////////////////////////
+var table = $('#at').DataTable({
+	"lengthMenu": [ [10, 25, 50, 100, -1], [10, 25, 50, 100, "All"] ],
+	// columnDefs: [
+	// 	{ type: 'date', 'targets': [4,5,6] },
+	// 	// { type: 'time', 'targets': [6] },
+	// ],
+	order: [[0, 'asc'], [1, 'asc']],
+	responsive: true,
+	autoWidth: true,
+	fixedHeader: true,
+	// dom: 'Bfrtip',
+	ajax: {
+		type: 'GET',
+		url: '{{ route('getProductsdT') }}',
+		dataSrc: '',
+		data: function(da){
+			da._token = '{{ csrf_token() }}',
+			da.id = '{{ $product->id }}'
+		},
+	},
+	columns: [
+		{
+			data: null,
+			title: 'ID',
+			defaultContent: '-',
+			render: function (data, type, row) {
+				return row.productimage[0].id;
+			}
+		},
+		{
+			data: null,
+			title: 'Image',
+			defaultContent: '-',
+			render: function (data, type, row) {
+				return `
+					<img src="data:${row.productimage[0].mime};base64, ${row.productimage[0].image}" class="img-responsive img-rounded">
+				`;
+			}
+		},
+		{
+			data: 'productimage[0].id',
+			title: '#',
+			orderable: false,
+			searchable:false,
+			render: function(data){
+				return `
+					<div class="btn-group btn-group-sm" role="group">
+						<a href="{{ url('productimage') }}/edit/${data}" class="btn btn-sm btn-outline-info" title="Edit">
+							<i class="fa-regular fa-pen-to-square"></i>
+						</a>
+
+						<button type="button" data-id="${data}" title="Delete" class="remove btn btn-sm btn-danger">
+							<i class="fas fa-trash fa-lg"></i>
+						</button>
+					</div>
+				`;
+			}
+		}
+	],
+	initComplete: function(settings, response) {
+		console.log(response); // This runs after successful loading
+	}
 });
 
-////////////////////////////////////////////////////////////////////////////////////
-	$("input").keyup(function() {
-		tch(this);
-	});
-
-////////////////////////////////////////////////////////////////////////////////////
-// bootstrap validator
-
-$("#form").bootstrapValidator({
-	feedbackIcons: {
-		valid: 'glyphicon glyphicon-ok',
-		invalid: 'glyphicon glyphicon-remove',
-		validating: 'glyphicon glyphicon-refresh'
-	},
-	fields: {
-		product: {
-			validators: {
-				notEmpty: {
-					message: 'Please insert product name. '
-				},
-			}
-		},
-		retail: {
-			validators: {
-				notEmpty: {
-					message: 'Please insert retail price. '
-				},
-				greaterThan: {
-					value: 0,
-					message: 'The retail price should be greater than 0. '
-				}
-			}
-		},
-@if(auth()->user()->id_group == 1)
-		commission: {
-			validators: {
-				notEmpty: {
-					message: 'Please insert commission. '
-				},
-				greaterThan: {
-					value: 0,
-					message: 'The commssion should be greater than 0. '
-				}
-			}
-		},
-@endif
-		'image[]': {
-			validators: {
-				notEmpty: {
-					message: 'Please select an image'
-				},
-				file: {
-					extension: 'jpeg,jpg,png,bmp',
-					type: 'image/jpeg,image/png,image/bmp',
-					maxSize: 7990272,   // 3264 * 2448
-					message: 'The selected file is not valid. It should be 3264X2448 max dimension. '
-				}
-			}
-		},
-		id_category: {
-			validators: {
-				notEmpty: {
-					message: 'Please choose an category for the product. '
-				}
-			}
-		},
-	}
-})
 
 ////////////////////////////////////////////////////////////////////////////////////
 // ajax post delete row
-	// readProducts(); /* it will load products when document loads */
+$(document).on('click', '.remove', function(e){
+	var productId = $(this).data('id');
+	SwalDelete(productId);
+	e.preventDefault();
+});
 
-	$('.remove').click(function(e){
-		var productId = $(this).data('id');
-		SwalDelete(productId);
-		e.preventDefault();
-	});
-	
-	// function readProducts(){
-	// 	$('#load-products').load('read.php');
-	// }
+function SwalDelete(productId){
+	swal.fire({
+		title: 'Are you sure?',
+		text: "It will be deleted permanently!",
+		type: 'warning',
+		showCancelButton: true,
+		confirmButtonColor: '#3085d6',
+		cancelButtonColor: '#d33',
+		confirmButtonText: '<i class="fa fa-trash-o" aria-hidden="true"></i>	Yes, delete it!',
+		showLoaderOnConfirm: true,
+		allowOutsideClick: false,
 
-	function SwalDelete(productId){
-		swal.fire({
-			title: 'Are you sure?',
-			text: "It will be deleted permanently!",
-			type: 'warning',
-			showCancelButton: true,
-			confirmButtonColor: '#3085d6',
-			cancelButtonColor: '#d33',
-			confirmButtonText: '<i class="fa fa-trash-o" aria-hidden="true"></i>	Yes, delete it!',
-			showLoaderOnConfirm: true,
-			allowOutsideClick: false,
-
-			preConfirm: function()                {
-				return new Promise(function(resolve) {
-					$.ajax({
-						headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-						url: '<?=route('productimage.destroy')?>',
-						type: 'delete',
-						data:	{
-									id: productId,
-									_token : $('meta[name=csrf-token]').attr('content')
-								},
-						dataType: 'json'
-					})
-					.done(function(response){
-						swal.fire('Deleted!', response.message, response.status);
-						// readProducts();
-						// $('#remove_image_' + productId).text('imhere').css({"color": "red"});
-						$('#remove_image_' + productId).parent().parent().remove();
-					})
-					.fail(function(){
-						swal.fire('Oops...', 'Something went wrong with ajax !', 'error');
-					});
+		preConfirm: function()                {
+			return new Promise(function(resolve) {
+				$.ajax({
+					headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+					url: '<?=route('productimage.destroy')?>',
+					type: 'delete',
+					data:	{
+								id: productId,
+								_token : $('meta[name=csrf-token]').attr('content')
+							},
+					dataType: 'json'
+				})
+				.done(function(response){
+					swal.fire('Deleted!', response.message, response.status);
+					// readProducts();
+					// $('#remove_image_' + productId).text('imhere').css({"color": "red"});
+					$('#remove_image_' + productId).parent().parent().remove();
+				})
+				.fail(function(){
+					swal.fire('Oops...', 'Something went wrong with ajax !', 'error');
 				});
-			},
-		})
-		.then((result) => {
-			if (result.dismiss === swal.DismissReason.cancel) {
-				swal.fire('Cancelled','Your data is safe.','info')
-			}
-		});
-	};
+			});
+		},
+	})
+	.then((result) => {
+		if (result.dismiss === swal.DismissReason.cancel) {
+			swal.fire('Cancelled','Your data is safe.','info')
+		}
+	});
+};
 
 /////////////////////////////////////////////////////////////////////////////////////////
 

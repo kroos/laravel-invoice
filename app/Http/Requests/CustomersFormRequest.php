@@ -11,7 +11,7 @@ class CustomersFormRequest extends FormRequest
 		return true;
 	}
 
-	 public function rules()
+	public function rules(): array
 	{
 		return [
 			'client' => 'required_without:repeatcust|unique:customers,client,'.$this->customers['id'],
@@ -21,4 +21,21 @@ class CustomersFormRequest extends FormRequest
 			'client_email' => 'required_without:repeatcust|nullable|email|unique:customers,client_email,'.$this->customers['id'],
 		];
 	}
+
+	public function messages(): array
+	{
+		return [];
+	}
+
+	public function attributes(): array
+	{
+		return [
+			'client' => 'Customer',
+			'client_address' => 'Customer Address',
+			'client_poskod' => 'Customer Poskod',
+			'client_phone' => 'Customer Phone',
+			'client_email' => 'Customer Email',
+		];
+	}
+
 }

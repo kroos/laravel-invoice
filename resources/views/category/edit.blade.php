@@ -1,47 +1,23 @@
 @extends('layout.master')
 
 @section('content')
-	@include('layout.errorform')
-	@include('layout.info')
-
-	<div class="row">
-		<p>
-			<a href="{!! route('category.create') !!}" class="btn btn-info">Back to category</a>
-		</p>
-	</div>
-
-	{!! Form::model($productCategory, [ 'route' => ['category.update', $productCategory->id], 'method' => 'PATCH', 'class' => 'form-horizontal' ]) !!}
-
-<div class="col-lg-12">
-	<div class="panel panel-default">
-		<div class="panel-heading">Edit Product Category</div>
-		<div class="panel-body">
-			<div class="col-lg-12">
-				<div class="form-group {!! ( count($errors->get('category')) ) >0 ? 'has-error' : '' !!}">
-					{!! Form::label('cate', 'Category :', ['class' => 'col-sm-2 control-label']) !!}
-					<div class="col-sm-10">
-						{!! Form::text('category', $productCategory->product_category, ['class' => 'form-control', 'placeholder' => 'Category', 'id' => 'cate']) !!}
-					</div>
-				</div>
-				<div class="form-group">
-					<div class="col-sm-offset-2 col-sm-10">
-						<div class="checkbox">
-							<label>
-								{!! Form::checkbox('active', 1, $productCategory->active) !!}&nbsp;Aktif
-							</label>
-						</div>
-					</div>
-				</div>
-				<div class="form-group">
-					<div class="col-sm-offset-2 col-sm-10">
-						{!! Form::submit('Update', ['class' => 'btn btn-primary btn-lg btn-block']) !!}
-					</div>
-				</div>
-			{!! Form::close() !!}
-			</div>
+<form method="POST" action="{{ route('category.update', $productCategory) }}" accept-charset="UTF-8" id="form" autocomplete="off" class="needs-validation" enctype="multipart/form-data">
+	@csrf
+	@method('PATCH')
+	<div class="card">
+		<div class="card-header">Edit Product Category</div>
+		<div class="card-body">
+			@include('category._form')
 		</div>
+		<div class="card-footer d-flex justify-content-end">
+			<button type="submit" class="btn btn-sm btn-outline-primary me-1">
+				<i class="fa fa-save"></i> Submit
+			</button>
+			<a href="{{ route('category.create') }}" class="btn btn-sm btn-outline-secondary me-1">Cancel</a>
+		</div>
+
 	</div>
-</div>
+</form>
 
 @endsection
 

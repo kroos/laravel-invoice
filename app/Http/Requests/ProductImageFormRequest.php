@@ -11,12 +11,25 @@ class ProductImageFormRequest extends FormRequest
 	{
 		return true;
 	}
-	
-	public function rules()
+
+	public function rules(): array
 	{
 		// dd(request('image'));
 		return [
 			'image' => 'required|image',		// multiple file validation
 		];
 	}
+
+	public function messages(): array
+	{
+		return [];
+	}
+
+	public function attributes(): array
+	{
+		return [
+			'image' => 'Image',
+		];
+	}
+
 }

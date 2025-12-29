@@ -1,37 +1,28 @@
 @extends('layout.master')
 
 @section('content')
-
-	@include('layout.errorform')
-	@include('layout.info')
-	
-	@if (session('status'))
-		<div class="alert alert-success">
-			{{ session('status') }}
-		</div>
-	@endif
-
-<div class="panel panel-default">
-	<div class="panel-heading">Forgot Password</div>
-<div class="panel-body">
-	{!! Form::open(['route' => 'password.email', 'class' => 'form-horizontal', 'id' => 'form']) !!}
-		<div class="form-group {!! ( count($errors->get('email')) ) >0 ? 'has-error' : '' !!}">
-			{!! Form::label('na', 'Email :', ['class' => 'col-sm-2  control-label']) !!}
-			<div class="col-sm-10">
-				{!! Form::text('email', @$value, ['class' => 'form-control', 'id' => 'na', 'placeholder' => 'Email']) !!}
+<form method="POST" action="{{ route('password.email') }}" accept-charset="UTF-8" id="form" autocomplete="off" class="needs-validation" enctype="multipart/form-data">
+	@csrf
+	<div class="card">
+		<div class="card-header">Forgot Password</div>
+		<div class="form-group row m-1 @error('email') has-error @enderror">
+			<label for="email" class="col-form-label col-sm-2">Email : </label>
+			<div class="col-sm-6 my-auto">
+				<input type="text" name="email" value="{{ old('email') }}" id="email" class="form-control form-control-sm @error('email') is-invalid @enderror" placeholder="Email">
+				@error('email')
+				<div class="invalid-feedback">
+					{{ $message }}
+				</div>
+				@enderror
 			</div>
 		</div>
-
-		<div class="col-sm-offset-2 col-sm-10">
-			{!! Form::submit('Send Password Reset Link', ['class' => 'btn btn-primary btn-lg btn-block']) !!}
+		<div class="card-footer d-flex justify-content-end">
+			<button type="submit" class="btn btn-sm btn-outline-primary me-1 my-auto">Send Password Reset Link</button>
 		</div>
-
-	{!! Form::close() !!}
-</div></div>
-
-
+	</div>
+</div>
+</form>
 @endsection
-
 
 @section('jquery')
 
@@ -55,7 +46,7 @@ $("#form").bootstrapValidator({
 				},
 				regexp: {
 					regexp: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-					message: ' Please insert your valid email address'
+					message: ' Please insert a valid email address'
 				},
 			}
 		},

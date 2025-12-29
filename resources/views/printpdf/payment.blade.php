@@ -20,14 +20,6 @@ use App\User;
 use Crabbly\Fpdf\Fpdf as Fpdf;
 use Carbon\Carbon;
 
-
-function my($string)
-{
-	$rt = Carbon::createFromFormat('Y-m-d', $string);
-	return date('d F Y', mktime(0, 0, 0, $rt->month, $rt->day, $rt->year));
-}
-
-
 // // load image
 function base64ToImage($base64_string, $output_file)
 {
@@ -46,7 +38,7 @@ class PDF extends Fpdf
 	{
 		// invoice number
 		$lo1 = Preferences::find(1);
-		
+
 		// Logo
 		$this->Image(base64ToImage($lo1->company_logo_image, $lo1->company_logo_mime),50,9,30);
 		// Arial bold 15
@@ -65,7 +57,7 @@ class PDF extends Fpdf
 		// Line break
 		$this->Ln(5);
 	}
-	
+
 	// Page footer
 	function Footer()
 	{
@@ -165,7 +157,7 @@ foreach ($request->user2 as $l) {
 				$pdf->SetFont('Arial','',8);
 				foreach ($lipay as $k) {
 					$pdf->Cell(130, 7, Banks::findOrFail($k->id_bank)->bank, 1, 0, 'C');
-					$pdf->Cell(30, 7, my($k->date_payment), 1, 0, 'C');
+					$pdf->Cell(30, 7, $k->date_payment->format('d F Y'), 1, 0, 'C');
 					$pdf->Cell(30, 7, number_format($k->amount, 2), 1, 1, 'C');
 					$py += $k->amount;
 				}
@@ -180,35 +172,6 @@ foreach ($request->user2 as $l) {
 	}
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-$pdf->Output('I', 'Audit Report from '.my($request->from2).' to '.my($request->to2).'.pdf');		// <-- kalau nak bukak secara direct saja
+$pdf->Output('I', 'Audit Report from '.Carbon::parse($request->from2)->format('d F Y').' to '.Carbon::parse($request->to2)->format('d F Y').'.pdf');		// <-- kalau nak bukak secara direct saja
 // $pdf->Output('D');			// <-- semata mata 100% download
 // $pdf->Output('F', storage_path().'/uploads/pdf/'.$filename);			// <-- send through email

@@ -15,13 +15,13 @@ class ProductCategoryFormRequest extends FormRequest
 	{
 		return true;
 	}
-	
+
 	/**
 	 * Get the validation rules that apply to the request.
 	 *
 	 * @return array
 	 */
-	public function rules()
+	public function rules(): array
 	{
 		// dd($this->productCategory['id']);
 		return [
@@ -29,4 +29,18 @@ class ProductCategoryFormRequest extends FormRequest
 			'active' => 'integer',
 		];
 	}
+
+	public function messages(): array
+	{
+		return [];
+	}
+
+	public function attributes(): array
+	{
+		return [
+			'category' => 'Product Category',
+			'active' => 'Active',
+		];
+	}
+
 }

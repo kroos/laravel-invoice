@@ -12,12 +12,12 @@ class CreateBanksTable extends Migration
     public function up()
     {
         Schema::create('banks', function (Blueprint $table) {
-            $table->bigIncrements('id');
+            $table->id();
             $table->string('bank');
             $table->string('city');
             $table->string('swift_code');
             $table->string('account')->nullable();
-            $table->boolean('active');
+            $table->boolean('active')->nullable();
             $table->timestamps();
         });
     }

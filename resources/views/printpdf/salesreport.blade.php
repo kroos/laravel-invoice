@@ -20,14 +20,6 @@ use App\User;
 use Crabbly\Fpdf\Fpdf as Fpdf;
 use Carbon\Carbon;
 
-
-function my($string)
-{
-	$rt = Carbon::createFromFormat('Y-m-d', $string);
-	return date('d F Y', mktime(0, 0, 0, $rt->month, $rt->day, $rt->year));
-}
-
-
 // load image
 function base64ToImage($base64_string, $output_file)
 {
@@ -44,7 +36,7 @@ class PDF extends Fpdf
 	{
 		// invoice number
 		$lo1 = Preferences::find(1);
-		
+
 		// Logo
 		$this->Image(base64ToImage($lo1->company_logo_image, $lo1->company_logo_mime),50,9,30);
 		// Arial bold 15
@@ -63,7 +55,7 @@ class PDF extends Fpdf
 		// Line break
 		$this->Ln(5);
 	}
-	
+
 	// Page footer
 	function Footer()
 	{
@@ -182,7 +174,7 @@ foreach ($request->user as $l) {
 			$pdf->SetTextColor(0, 0, 0);
 
 			$pdf->Cell(30, 7, $in->id, 1, 0, 'C');
-			$pdf->Cell(40, 7, my($in->date_sale), 1, 0, 'C');
+			$pdf->Cell(40, 7, $in->date_sale->format('d F Y'), 1, 0, 'C');
 			$pdf->Cell(40, 7, number_format($tcomm, 2), 1, 0, 'C');
 			$gcomm += $tcomm;
 			$pdf->Cell(40, 7, number_format($tamo, 2), 1, 0, 'C');
@@ -205,24 +197,7 @@ foreach ($request->user as $l) {
 	}
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-$pdf->Output('I', 'Sales Report from '.my($request->from).' to '.my($request->to).'.pdf');		// <-- kalau nak bukak secara direct saja
+$pdf->Output('I', 'Sales Report from '.Carbon::parse($request->from)->format('d F Y').' to '.Carbon::parse($request->to)->format('d F Y').'.pdf');		// <-- kalau nak bukak secara direct saja
 // $pdf->Output('D');			// <-- semata mata 100% download
 // $pdf->Output('F', storage_path().'/uploads/pdf/'.$filename);			// <-- send through email
 ?>

@@ -11,8 +11,8 @@ class ProductFormRequest extends FormRequest
 	{
 		return true;
 	}
-	
-	public function rules()
+
+	public function rules(): array
 	{
 		// dd($this->product['id']);
 		return [
@@ -22,8 +22,27 @@ class ProductFormRequest extends FormRequest
 			'commission' => 'required|numeric',
 			'id_category' => 'required|integer',
 			// 'image' => 'required',      // multiple file validation
+			'image' => ['required', 'array', 'min:1'],	// multiple file validation
 			'image.*' => 'image|max:5000',       // multiple file validation
 			'active' => 'integer',
 		];
 	}
+
+	public function messages(): array
+	{
+		return [];
+	}
+
+	public function attributes(): array
+	{
+		return [
+			'product' => 'Product',
+			'retail' => 'Retail',
+			'commission' => 'Commission',
+			'id_category' => 'Product Category',
+			'image' => 'Image',
+			'active' => 'Active',
+		];
+	}
+
 }

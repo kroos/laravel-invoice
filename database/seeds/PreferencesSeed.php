@@ -24,7 +24,7 @@ class PreferencesSeed extends Seeder
                 'company_mobile' => '0124872679',
                 'company_email' => 'ayusline@gmail.com',
 				'company_owner' => 1,
-				'company_person_in-charge' => 2,
+				'company_person_in_charge' => 1,
 				'created_at' => null,
 				'updated_at' => '2017-05-15 08:01:18'
             ]);

@@ -9,39 +9,40 @@
 	<meta name=description content="Content">
 	<meta name=author content="Author">
 	<title>{{ config('app.name') }}</title>
-	<link href="favicon.ico" type="image/x-icon" rel="icon" />
+	<link href="{{ asset('favicon.ico') }}" type="image/x-icon" rel="icon" />
 	<meta name="keywords" content="" />
 	<meta name="csrf-token" content="{{ csrf_token() }}">
 
-	<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-<!--[if lt IE 9]>
-<script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-<![endif]-->
+	@vite(['resources/scss/app.scss', 'resources/css/app.css', 'resources/js/app.js'])
 
-<link href="/css/app.css" rel="stylesheet">
-<script src="/js/ucwords.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.bundle.min.js"></script>
-<script src="https://cdn.ckeditor.com/4.7.0/standard/ckeditor.js"></script>
-
+	<!-- Bootswatch Cerulean CSS -->
+	<link href="{{ URL::asset('css/bootstrap.css') }}" rel="stylesheet">
+	<!-- Livewire CSS -->
 </head>
-<body>
-
-@include('layout.gnav')
-
-<div class="container">
-	<div class="row">
-		<div class="col-lg-12">
-			@section('content')
-			@show
+<body class="bg-secondary bg-opacity-75">
+	<div class="container-fluid mx-auto min-vh-100 row align-items-center justify-content-center">
+		<div class="container-fluid mb-auto">
+			@include('layout.gnav')
 		</div>
-		<div class="footer">
+
+		<div class="col-sm-4 my-2">
+	    @include('layout.errorform')
+	    @include('layout.info')
+	    @include('layout.success')
+		</div>
+
+		<div class="container my-0 d-flex align-items-center justify-content-center">
+			<div class="col-sm-8">
+				@section('content')
+				@show
+			</div>
+		</div>
+
+		<div class="container py-0 align-self-end text-center fs-6 text-secondary fw-lighter m-0">
 			<p class="text-center">copyright : terajutara resources (m) sdn bhd {!! date('Y') !!}</p>
+			Laravel v{{ Illuminate\Foundation\Application::VERSION }} (PHP v{{ PHP_VERSION }})
 		</div>
 	</div>
-</div>
-<script src="/js/app.js" type="text/javascript" ></script>
-@include('layout.jscript')
 </body>
+@include('layout.jscript')
 </html>

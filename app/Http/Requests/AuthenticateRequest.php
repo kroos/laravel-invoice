@@ -21,7 +21,7 @@ class AuthenticateRequest extends FormRequest
 	 *
 	 * @return array
 	 */
-	public function rules()
+	public function rules(): array
 	{
 		return [
  			'username' => 'required|string',
@@ -30,11 +30,20 @@ class AuthenticateRequest extends FormRequest
 		];
 	}
 
-	public function messages()
+	public function messages(): array
 	{
 		return [
-			'email.required' => 'your email please',
-			'password.required' => 'your password please',
+			'username.required' => 'Your username please',
+			'password.required' => 'Your password please',
+		];
+	}
+
+	public function attributes(): array
+	{
+		return [
+ 			'username' => 'Username',
+ 			'password' => 'Password',
+ 			'remember' => 'Remember',
 		];
 	}
 

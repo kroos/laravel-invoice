@@ -33,16 +33,14 @@ class ProductController extends Controller
 
 	public function index()
 	{
-		//
+		return view('product.index');
 	}
-	
+
 	public function create()
 	{
-		$pro = Product::all();
-		$cate = ProductCategory::where(['active' => 1])->get();
-		return view('product.create', compact(['pro', 'cate']));
+		return view('product.create');
 	}
-	
+
 	public function store(ProductFormRequest $request)
 	{
 		// dd($request->all());
@@ -93,21 +91,20 @@ class ProductController extends Controller
 		Session::flash('flash_message', 'Data successfully added!');
 		return redirect()->back();		// redirect back to original route
 	}
-	
+
 	public function show(Product $product)
 	{
 		//
 	}
-	
+
 	public function edit(Product $product)
 	{
-		return view('product.edit', compact(['product']));
+		return view('product.edit');
 	}
-	
+
 	public function update(ProductFormRequest $request, Product $product)
 	{
-		Product::where('id', $product->id)
-					-> update([
+		$product->update([
 						'id_user' => auth()->user()->id,
 						'product' => request('product'),
 						'id_category' => request('id_category'),
@@ -119,20 +116,18 @@ class ProductController extends Controller
 
 		// info when update success
 		Session::flash('flash_message', 'Data successfully edited!');
-	
+
 		return redirect(route('product.edit', $product->slug));      // redirect back to original route
 	}
-	
+
 	public function destroy(Product $product)
 	{
-		$prod = Product::find($product->id);
-		// delete related model
-		$prod->productimage()->delete();
-		$prod->delete();
+		$product->productimage()->delete();
+		$product->delete();
 
 		// info when update success
 		// Session::flash('flash_message', 'Data successfully deleted!');
-	
+
 		// return redirect()->back();		// redirect back to original route
 		return response()->json([
 									'message' => 'Data deleted',

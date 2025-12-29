@@ -1,57 +1,24 @@
 @extends('layout.master')
 
 @section('content')
-	@include('layout.errorform')
-	@include('layout.info')
-
-<div class="col-lg-12">
-	<div class="panel panel-default">
-		<div class="panel-heading">Banks and Financial Institutions</div>
-		<div class="panel-body">
-			<div class="col-lg-12">
-
-			{!! Form::model($banks, ['route' => ['banks.update', $banks->id], 'method' => 'PATCH', 'class' => 'form-horizontal', 'autocomplete' => 'off']) !!}
-
-				<div class="form-group {!! ( count($errors->get('bank')) ) >0 ? 'has-error' : '' !!}">
-					{!! Form::label('commission', 'Bank :', ['class' => 'col-sm-2 control-label']) !!}
-					<div class="col-sm-10">
-						{!! Form::input('text', 'bank', $banks->bank, ['class' => 'form-control', 'placeholder' => 'Bank', 'id' => 'commission']) !!}
-					</div>
-				</div>
-
-				<div class="form-group {!! ( count($errors->get('city')) ) >0 ? 'has-error' : '' !!}">
-					{!! Form::label('city', 'City :', ['class' => 'col-sm-2 control-label']) !!}
-					<div class="col-sm-10">
-						{!! Form::input('text', 'city', $banks->city, ['class' => 'form-control', 'placeholder' => 'City', 'id' => 'city']) !!}
-					</div>
-				</div>
-
-				<div class="form-group {!! ( count($errors->get('swift_code')) ) >0 ? 'has-error' : '' !!}">
-					{!! Form::label('swift_code', 'Swift Code :', ['class' => 'col-sm-2 control-label']) !!}
-					<div class="col-sm-10">
-						{!! Form::input('text', 'swift_code', $banks->swift_code, ['class' => 'form-control', 'placeholder' => 'Swift Code', 'id' => 'swift_code']) !!}
-					</div>
-				</div>
-
-				<div class="form-group {!! ( count($errors->get('account')) ) >0 ? 'has-error' : '' !!}">
-					{!! Form::label('account', 'Account Number :', ['class' => 'col-sm-2 control-label']) !!}
-					<div class="col-sm-10">
-						{!! Form::input('text', 'account', $banks->account, ['class' => 'form-control', 'placeholder' => 'No. Account', 'id' => 'account']) !!}
-					</div>
-				</div>
-
-				<div class="form-group col-lg-12">
-					<div class="col-sm-offset-2 col-sm-10">
-						<p>{!! Form::submit('Save', ['class' => 'btn btn-primary btn-lg btn-block']) !!}</p>
-					</div>
-				</div>
-			{!! Form::close() !!}
-
-			</div>
+<form method="POST" action="{{ route('banks.update', $banks) }}" accept-charset="UTF-8" id="form" autocomplete="off" class="" enctype="multipart/form-data">
+	@csrf
+	@method('PATCH')
+	<div class="card">
+		<div class="card-header">
+			Banks and Financial Institutions
+		</div>
+		<div class="card-body">
+			@include('banks._form')
+		</div>
+		<div class="card-footer d-flex justify-content-end">
+			<button type="submit" class="btn btn-sm btn-outline-primary me-1">
+				<i class="fa fa-save"></i> Submit
+			</button>
+			<a href="{{ route('banks.index') }}" class="btn btn-sm btn-outline-secondary me-1">Cancel</a>
 		</div>
 	</div>
-</div>
-
+</form>
 @endsection
 
 

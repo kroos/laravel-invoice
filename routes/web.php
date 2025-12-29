@@ -1,4 +1,9 @@
 <?php
+use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
+
+use App\Http\Controllers\API\ModelAjaxSupportController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -16,519 +21,225 @@ Auth::routes();
 ####################################################################
 // AuthenticateController
 
-Route::get('/', [
-		'as' => 'auth.index',
-		'uses' => 'AuthenticateController@index',
-	]);
+Route::middleware('guest')->group(function () {
 
-Route::get('/login', [
-		'as' => 'auth.create',
-		'uses' => 'AuthenticateController@create',
-	]);
-
-Route::get('/login', [
-		'as' => 'login',
-		'uses' => 'AuthenticateController@create',
-	]);
-
-Route::post('/login', [
-		'as' => 'auth.store',
-		'uses' => 'AuthenticateController@store',
-	]);
-
-Route::get('/logout', [
-		'as' => 'auth.destroy',
-		'uses' => 'AuthenticateController@destroy',
-	]);
+	Route::get('/', [\App\Http\Controllers\AuthenticateController::class, 'index',	])->name('auth.index');
+	Route::get('/login', [\App\Http\Controllers\AuthenticateController::class, 'create',	])->name('auth.create');
+	Route::get('/login', [\App\Http\Controllers\AuthenticateController::class, 'create',	])->name('login');
+	Route::post('/login', [\App\Http\Controllers\AuthenticateController::class, 'store',	])->name('auth.store');
 ####################################################################
 // ForgotPasswordController
-
-Route::get('/forgot', [
-		'as' => 'forgotpassword.create',
-		'uses' => 'ForgotPasswordController@create',
-	]);
-
-Route::post('/forgot', [
-		'as' => 'forgotpassword.store',
-		'uses' => 'ForgotPasswordController@store',
-	]);
-
-####################################################################
-// homeauth controller
-
-Route::get('/home', [
-		'as' => 'homeauth.home',
-		'uses' => 'HomeAuthController@home',
-	]);
+	Route::get('/forgot', [\App\Http\Controllers\ForgotPasswordController::class, 'create',])->name('forgotpassword.create');
+	Route::post('/forgot', [\App\Http\Controllers\ForgotPasswordController::class, 'store',])->name('forgotpassword.store');
 
 ####################################################################
 // remote controller
-Route::get('/remoteusers', [
-		'as' => 'remote.user',
-		'uses' => 'RemoteController@remoteusername',
-	]);
+	Route::get('/remoteusers', [\App\Http\Controllers\RemoteController::class, 'remoteusername',])->name('remote.user');
+});
+
+Route::middleware('auth')->group(function () {
+	Route::get('/logout', [\App\Http\Controllers\AuthenticateController::class, 'destroy',])->name('auth.destroy');
+
+####################################################################
+ // controller
+	Route::get('/home', [\App\Http\Controllers\HomeAuthController::class, 'home',])->name('homeauth.home');
+
 ####################################################################
 // user controller
+ 	Route::get('user/index', [\App\Http\Controllers\UserController::class, 'index'])->name('user.index');
 
-// Route::get('/index', [
-// 		'as' => 'user.index',
-// 		'uses' => 'UserController@index',
-// 	]);
+	Route::get('user/create', [\App\Http\Controllers\UserController::class, 'create',])->name('user.create');
 
-Route::get('user/create', [
-		'as' => 'user.create',
-		'uses' => 'UserController@create',
-	]);
+	Route::post('user/store', [\App\Http\Controllers\UserController::class, 'store'])->name('user.store');
+//
+	Route::get('user/edit/{user}', [\App\Http\Controllers\UserController::class, 'edit'])->name('user.edit');
 
-Route::post('user/store', [
-		'as' => 'user.store',
-		'uses' => 'UserController@store'
-	]);
+	Route::patch('user/update/{user}', [\App\Http\Controllers\UserController::class, 'update'])->name('user.update');
 
-Route::get('user/edit/{user}', [
-		'as' => 'user.edit',
-		'uses' => 'UserController@edit'
-	]);
-
-Route::patch('user/update/{user}', [
-		'as' => 'user.update',
-		'uses' => 'UserController@update'
-	]);
-
-Route::delete('user/destroy/{user}', [
-		'as' => 'user.destroy',
-		'uses' => 'UserController@destroy'
-	]);
+	Route::delete('user/destroy/{user}', [\App\Http\Controllers\UserController::class, 'destroy'])->name('user.destroy');
 
 ####################################################################
+	Route::get('usergroup/create', [\App\Http\Controllers\UserGroupController::class, 'create'])->name('usergroup.create');
 // usergroup controller
-
-Route::get('usergroup/create', [
-		'as' => 'usergroup.create',
-		'uses' => 'UserGroupController@create'
-	]);
-
-Route::post('usergroup/store', [
-		'as' => 'usergroup.store',
-		'uses' => 'UserGroupController@store'
-	]);
+	Route::post('usergroup/store', [\App\Http\Controllers\UserGroupController::class, 'store'])->name('usergroup.store');
 
 ####################################################################
+	Route::get('category/create', [\App\Http\Controllers\ProductCategoryController::class, 'create'])->name('category.create');
 // product category controller
+	Route::post('category/store', [\App\Http\Controllers\ProductCategoryController::class, 'store'])->name('category.store');
 
-Route::get('category/create', [
-		'as' => 'category.create',
-		'uses' => 'ProductCategoryController@create'
-	]);
+	Route::get('category/edit/{productCategory}', [\App\Http\Controllers\ProductCategoryController::class, 'edit'])->name('category.edit');
 
-Route::post('category/store', [
-		'as' => 'category.store',
-		'uses' => 'ProductCategoryController@store'
-	]);
+	Route::patch('category/update/{productCategory}', [\App\Http\Controllers\ProductCategoryController::class, 'update'])->name('category.update');
 
-Route::get('category/edit/{productCategory}', [
-		'as' => 'category.edit',
-		'uses' => 'ProductCategoryController@edit'
-	]);
-
-Route::patch('category/update/{productCategory}', [
-		'as' => 'category.update',
-		'uses' => 'ProductCategoryController@update'
-	]);
-
-Route::delete('category/destroy/{productCategory}', [
-		'as' => 'category.destroy',
-		'uses' => 'ProductCategoryController@destroy'
-	]);
+	Route::delete('category/destroy/{productCategory}', [\App\Http\Controllers\ProductCategoryController::class, 'destroy'])->name('category.destroy');
 
 ####################################################################
+	Route::get('product/index', [\App\Http\Controllers\ProductController::class, 'index'])->name('product.index');
+
+	Route::get('product/create', [\App\Http\Controllers\ProductController::class, 'create'])->name('product.create');
 // product controller
+	Route::post('product/store', [\App\Http\Controllers\ProductController::class, 'store'])->name('product.store');
 
-Route::get('product/create', [
-		'as' => 'product.create',
-		'uses' => 'ProductController@create'
-	]);
+	Route::get('product/edit/{product}', [\App\Http\Controllers\ProductController::class, 'edit'])->name('product.edit');
 
-Route::post('product/store', [
-		'as' => 'product.store',
-		'uses' => 'ProductController@store'
-	]);
+	Route::patch('product/update/{product}', [\App\Http\Controllers\ProductController::class, 'update'])->name('product.update');
 
-Route::get('product/edit/{product}', [
-		'as' => 'product.edit',
-		'uses' => 'ProductController@edit'
-	]);
-
-Route::patch('product/update/{product}', [
-		'as' => 'product.update',
-		'uses' => 'ProductController@update'
-	]);
-
-Route::delete('product/destroy/{product}', [
-		'as' => 'product.destroy',
-		'uses' => 'ProductController@destroy'
-	]);
+	Route::delete('product/destroy/{product}', [\App\Http\Controllers\ProductController::class, 'destroy'])->name('product.destroy');
 
 ####################################################################
+	Route::get('productimage/create', [\App\Http\Controllers\ProductImageController::class, 'create'])->name('productimage.create');
 // productImage controller
+	Route::post('productimage/store', [\App\Http\Controllers\ProductImageController::class, 'store'])->name('productimage.store');
 
-Route::get('productimage/create', [
-		'as' => 'productimage.create',
-		'uses' => 'ProductImageController@create'
-	]);
+	Route::get('productimage/edit/{productImage}', [\App\Http\Controllers\ProductImageController::class, 'edit'])->name('productimage.edit');
 
-Route::post('productimage/store', [
-		'as' => 'productimage.store',
-		'uses' => 'ProductImageController@store'
-	]);
+	Route::patch('productimage/update/{productImage}', [\App\Http\Controllers\ProductImageController::class, 'update'])->name('productimage.update');
 
-Route::get('productimage/edit/{productImage}', [
-		'as' => 'productimage.edit',
-		'uses' => 'ProductImageController@edit'
-	]);
-
-Route::patch('productimage/update/{productImage}', [
-		'as' => 'productimage.update',
-		'uses' => 'ProductImageController@update'
-	]);
-
-Route::delete('productimage/destroy', [
-		'as' => 'productimage.destroy',
-		'uses' => 'ProductImageController@destroy'
-	]);
+	Route::delete('productimage/destroy', [\App\Http\Controllers\ProductImageController::class, 'destroy'])->name('productimage.destroy');
 
 ####################################################################
+	Route::get('banks/index', [\App\Http\Controllers\BanksController::class, 'index'])->name('banks.index');
 // bank controller
+	Route::get('banks/create', [\App\Http\Controllers\BanksController::class, 'create'])->name('banks.create');
 
-Route::get('banks/index', [
-		'as' => 'banks.index',
-		'uses' => 'BanksController@index'
-	]);
+	Route::post('banks/store', [\App\Http\Controllers\BanksController::class, 'store'])->name('banks.store');
 
-Route::get('banks/create', [
-		'as' => 'banks.create',
-		'uses' => 'BanksController@create'
-	]);
+	Route::get('banks/edit/{banks}', [\App\Http\Controllers\BanksController::class, 'edit'])->name('banks.edit');
 
-Route::post('banks/store', [
-		'as' => 'banks.store',
-		'uses' => 'BanksController@store'
-	]);
+	Route::patch('banks/update/{banks}', [\App\Http\Controllers\BanksController::class, 'update'])->name('banks.update');
 
-Route::get('banks/edit/{banks}', [
-		'as' => 'banks.edit',
-		'uses' => 'BanksController@edit'
-	]);
-
-Route::patch('banks/update/{banks}', [
-		'as' => 'banks.update',
-		'uses' => 'BanksController@update'
-	]);
-
-Route::get('banks/active/{banks}', [
-		'as' => 'banks.active',
-		'uses' => 'BanksController@active'
-	]);
+	Route::get('banks/active/{banks}', [\App\Http\Controllers\BanksController::class, 'active'])->name('banks.active');
 
 ####################################################################
+	Route::get('sales/index', [\App\Http\Controllers\SalesController::class, 'index'])->name('sales.index');
 // sales controller
+	Route::get('sales/create', [\App\Http\Controllers\SalesController::class, 'create'])->name('sales.create');
 
-Route::get('sales/index', [
-		'as' => 'sales.index',
-		'uses' => 'SalesController@index'
-	]);
+	Route::post('sales/store', [\App\Http\Controllers\SalesController::class, 'store'])->name('sales.store');
 
-Route::get('sales/create', [
-		'as' => 'sales.create',
-		'uses' => 'SalesController@create'
-	]);
+	Route::get('sales/edit/{sales}', [\App\Http\Controllers\SalesController::class, 'edit'])->name('sales.edit');
 
-Route::post('sales/store', [
-		'as' => 'sales.store',
-		'uses' => 'SalesController@store'
-	]);
+	Route::patch('sales/update/{sales}', [\App\Http\Controllers\SalesController::class, 'update'])->name('sales.update');
 
-Route::get('sales/edit/{sales}', [
-		'as' => 'sales.edit',
-		'uses' => 'SalesController@edit'
-	]);
+	Route::delete('sales/destroy/{sales}', [\App\Http\Controllers\SalesController::class, 'destroy'])->name('sales.destroy');
 
-Route::patch('sales/update/{sales}', [
-		'as' => 'sales.update',
-		'uses' => 'SalesController@update'
-	]);
-
-Route::delete('sales/destroy/{sales}', [
-		'as' => 'sales.destroy',
-		'uses' => 'SalesController@destroy'
-	]);
 ####################################################################
+	Route::get('slippostage/index', [\App\Http\Controllers\SlipPostageController::class, 'index'])->name('slippostage.index');
 // slipPostage controller
+	Route::get('slippostage/create', [\App\Http\Controllers\SlipPostageController::class, 'create'])->name('slippostage.create');
 
-Route::get('slippostage/index', [
-		'as' => 'slippostage.index',
-		'uses' => 'SlipPostageController@index'
-	]);
+	Route::post('slippostage/store', [\App\Http\Controllers\SlipPostageController::class, 'store'])->name('slippostage.store');
 
-Route::get('slippostage/create', [
-		'as' => 'slippostage.create',
-		'uses' => 'SlipPostageController@create'
-	]);
+	Route::get('slippostage/edit/{slipPostage}', [\App\Http\Controllers\SlipPostageController::class, 'edit'])->name('slippostage.edit');
 
-Route::post('slippostage/store', [
-		'as' => 'slippostage.store',
-		'uses' => 'SlipPostageController@store'
-	]);
+	Route::patch('slippostage/update/{slipPostage}', [\App\Http\Controllers\SlipPostageController::class, 'update'])->name('slippostage.update');
 
-Route::get('slippostage/edit/{slipPostage}', [
-		'as' => 'slippostage.edit',
-		'uses' => 'SlipPostageController@edit'
-	]);
-
-Route::patch('slippostage/update/{slipPostage}', [
-		'as' => 'slippostage.update',
-		'uses' => 'SlipPostageController@update'
-	]);
-
-Route::delete('slippostage/destroy', [
-		'as' => 'slippostage.destroy',
-		'uses' => 'SlipPostageController@destroy'
-	]);
+	Route::delete('slippostage/destroy', [\App\Http\Controllers\SlipPostageController::class, 'destroy'])->name('slippostage.destroy');
 
 ####################################################################
+	Route::get('salesitems/index', [\App\Http\Controllers\SalesItemsController::class, 'index'])->name('salesitems.index');
 // salesItems controller
+	Route::get('salesitems/create', [\App\Http\Controllers\SalesItemsController::class, 'create'])->name('salesitems.create');
 
-Route::get('salesitems/index', [
-		'as' => 'salesitems.index',
-		'uses' => 'SalesItemsController@index'
-	]);
+	Route::post('salesitems/store', [\App\Http\Controllers\SalesItemsController::class, 'store'])->name('salesitems.store');
 
-Route::get('salesitems/create', [
-		'as' => 'salesitems.create',
-		'uses' => 'SalesItemsController@create'
-	]);
+	Route::get('salesitems/edit/{salesItems}', [\App\Http\Controllers\SalesItemsController::class, 'edit'])->name('salesitems.edit');
 
-Route::post('salesitems/store', [
-		'as' => 'salesitems.store',
-		'uses' => 'SalesItemsController@store'
-	]);
+	Route::patch('salesitems/update/{salesItems}', [\App\Http\Controllers\SalesItemsController::class, 'update'])->name('salesitems.update');
 
-Route::get('salesitems/edit/{salesItems}', [
-		'as' => 'salesitems.edit',
-		'uses' => 'SalesItemsController@edit'
-	]);
-
-Route::patch('salesitems/update/{salesItems}', [
-		'as' => 'salesitems.update',
-		'uses' => 'SalesItemsController@update'
-	]);
-
-Route::delete('salesitems/destroy', [
-		'as' => 'salesitems.destroy',
-		'uses' => 'SalesItemsController@destroy'
-	]);
+	Route::delete('salesitems/destroy', [\App\Http\Controllers\SalesItemsController::class, 'destroy'])->name('salesitems.destroy');
 
 ####################################################################
+	Route::get('payments/index', [\App\Http\Controllers\PaymentsController::class, 'index'])->name('payments.index');
 // payments controller
+	Route::get('payments/create', [\App\Http\Controllers\PaymentsController::class, 'create'])->name('payments.create');
 
-Route::get('payments/index', [
-		'as' => 'payments.index',
-		'uses' => 'PaymentsController@index'
-	]);
+	Route::post('payments/store', [\App\Http\Controllers\PaymentsController::class, 'store'])->name('payments.store');
 
-Route::get('payments/create', [
-		'as' => 'payments.create',
-		'uses' => 'PaymentsController@create'
-	]);
+	Route::get('payments/edit/{payments}', [\App\Http\Controllers\PaymentsController::class, 'edit'])->name('payments.edit');
 
-Route::post('payments/store', [
-		'as' => 'payments.store',
-		'uses' => 'PaymentsController@store'
-	]);
+	Route::patch('payments/update/{payments}', [\App\Http\Controllers\PaymentsController::class, 'update'])->name('payments.update');
 
-Route::get('payments/edit/{payments}', [
-		'as' => 'payments.edit',
-		'uses' => 'PaymentsController@edit'
-	]);
-
-Route::patch('payments/update/{payments}', [
-		'as' => 'payments.update',
-		'uses' => 'PaymentsController@update'
-	]);
-
-Route::delete('payments/destroy', [
-		'as' => 'payments.destroy',
-		'uses' => 'PaymentsController@destroy'
-	]);
+	Route::delete('payments/destroy', [\App\Http\Controllers\PaymentsController::class, 'destroy'])->name('payments.destroy');
 
 ####################################################################
+	Route::delete('slipnumbers/destroy', [\App\Http\Controllers\SlipNumbersController::class, 'destroy'])->name('slipnumbers.destroy');
 // slipNumbers controller
-
-Route::delete('slipnumbers/destroy', [
-		'as' => 'slipnumbers.destroy',
-		'uses' => 'SlipNumbersController@destroy'
-	]);
-
-Route::post('slipnumbers/search', [
-		'as' => 'slipnumbers.search',
-		'uses' => 'SlipNumbersController@search'
-	]);
-
+	Route::post('slipnumbers/search', [\App\Http\Controllers\SlipNumbersController::class, 'search'])->name('slipnumbers.search');
 
 ####################################################################
+	Route::get('taxes/index', [\App\Http\Controllers\TaxesController::class, 'index'])->name('taxes.index');
 // taxes controller
+	Route::get('taxes/create', [\App\Http\Controllers\TaxesController::class, 'create'])->name('taxes.create');
 
-Route::get('taxes/index', [
-		'as' => 'taxes.index',
-		'uses' => 'TaxesController@index'
-	]);
+	Route::post('taxes/store', [\App\Http\Controllers\TaxesController::class, 'store'])->name('taxes.store');
 
-Route::get('taxes/create', [
-		'as' => 'taxes.create',
-		'uses' => 'TaxesController@create'
-	]);
+	Route::get('taxes/edit/{taxes}', [\App\Http\Controllers\TaxesController::class, 'edit'])->name('taxes.edit');
 
-Route::post('taxes/store', [
-		'as' => 'taxes.store',
-		'uses' => 'TaxesController@store'
-	]);
+	Route::patch('taxes/update/{taxes}', [\App\Http\Controllers\TaxesController::class, 'update'])->name('taxes.update');
 
-Route::get('taxes/edit/{taxes}', [
-		'as' => 'taxes.edit',
-		'uses' => 'TaxesController@edit'
-	]);
-
-Route::patch('taxes/update/{taxes}', [
-		'as' => 'taxes.update',
-		'uses' => 'TaxesController@update'
-	]);
-
-Route::get('taxes/destroy/{taxes}', [
-		'as' => 'taxes.destroy',
-		'uses' => 'TaxesController@destroy'
-	]);
+	Route::get('taxes/destroy/{taxes}', [\App\Http\Controllers\TaxesController::class, 'destroy'])->name('taxes.destroy');
 
 ####################################################################
+	Route::get('customers/index', [\App\Http\Controllers\CustomersController::class, 'index'])->name('customers.index');
 // customers controller
+	Route::get('customers/create', [\App\Http\Controllers\CustomersController::class, 'create'])->name('customers.create');
 
-Route::get('customers/index', [
-		'as' => 'customers.index',
-		'uses' => 'CustomersController@index'
-	]);
+	Route::post('customers/store', [\App\Http\Controllers\CustomersController::class, 'store'])->name('customers.store');
 
-Route::get('customers/create', [
-		'as' => 'customers.create',
-		'uses' => 'CustomersController@create'
-	]);
+	Route::get('customers/edit/{customers}', [\App\Http\Controllers\CustomersController::class, 'edit'])->name('customers.edit');
 
-Route::post('customers/store', [
-		'as' => 'customers.store',
-		'uses' => 'CustomersController@store'
-	]);
+	Route::patch('customers/update/{customers}', [\App\Http\Controllers\CustomersController::class, 'update'])->name('customers.update');
 
-Route::get('customers/edit/{customers}', [
-		'as' => 'customers.edit',
-		'uses' => 'CustomersController@edit'
-	]);
+	Route::delete('customers/destroy/{customers}', [\App\Http\Controllers\CustomersController::class, 'destroy'])->name('customers.destroy');
 
-Route::patch('customers/update/{customers}', [
-		'as' => 'customers.update',
-		'uses' => 'CustomersController@update'
-	]);
-
-Route::delete('customers/destroy/{customers}', [
-		'as' => 'customers.destroy',
-		'uses' => 'CustomersController@destroy'
-	]);
-
-Route::post('customers/search', [
-		'as' => 'customers.search',
-		'uses' => 'CustomersController@search'
-	]);
+	Route::post('customers/search', [\App\Http\Controllers\CustomersController::class, 'search'])->name('customers.search');
 
 ####################################################################
+	Route::get('preferences/index', [\App\Http\Controllers\PreferencesController::class, 'index'])->name('preferences.index');
 // preferences controller
+	Route::get('preferences/create', [\App\Http\Controllers\PreferencesController::class, 'create'])->name('preferences.create');
 
-Route::get('preferences/index', [
-		'as' => 'preferences.index',
-		'uses' => 'PreferencesController@index'
-	]);
+	Route::post('preferences/store', [\App\Http\Controllers\PreferencesController::class, 'store'])->name('preferences.store');
 
-Route::get('preferences/create', [
-		'as' => 'preferences.create',
-		'uses' => 'PreferencesController@create'
-	]);
+	Route::get('preferences/edit/{preferences}', [\App\Http\Controllers\PreferencesController::class, 'edit'])->name('preferences.edit');
 
-Route::post('preferences/store', [
-		'as' => 'preferences.store',
-		'uses' => 'PreferencesController@store'
-	]);
+	Route::patch('preferences/update/{preferences}', [\App\Http\Controllers\PreferencesController::class, 'update'])->name('preferences.update');
 
-Route::get('preferences/edit/{preferences}', [
-		'as' => 'preferences.edit',
-		'uses' => 'PreferencesController@edit'
-	]);
-
-Route::patch('preferences/update/{preferences}', [
-		'as' => 'preferences.update',
-		'uses' => 'PreferencesController@update'
-	]);
-
-Route::delete('preferences/destroy/{preferences}', [
-		'as' => 'preferences.destroy',
-		'uses' => 'PreferencesController@destroy'
-	]);
+	Route::delete('preferences/destroy/{preferences}', [\App\Http\Controllers\PreferencesController::class, 'destroy'])->name('preferences.destroy');
 
 ####################################################################
+	Route::get('printpdf/{sales}', [\App\Http\Controllers\PrintPDFController::class, 'print'])->name('printpdf.print');
 // PrintPDF controller
+	Route::get('emailpdf/{sales}', [\App\Http\Controllers\PrintPDFController::class, 'email_invoice'])->name('emailpdf.send');
 
-Route::get('printpdf/{sales}', [
-		'as' => 'printpdf.print',
-		'uses' => 'PrintPDFController@print'
-	]);
-
-Route::get('emailpdf/{sales}', [
-		'as' => 'emailpdf.send',
-		'uses' => 'PrintPDFController@email_invoice'
-	]);
-
-
+	// Route::post('contactus', [\App\Http\Controllers\ContactUsController::class, 'email'])->name('contactus');
 ####################################################################
 // contact us controller
-Route::post('contactus', [
-		'as' => 'contactus',
-		'uses' => 'ContactUsController@email'
-	]);
+
+	Route::get('printreport', [\App\Http\Controllers\PrintReportController::class, 'index'])->name('printreport.index');
+####################################################################
+	Route::post('printreport/store', [\App\Http\Controllers\PrintReportController::class, 'store'])->name('printreport.store');
+// printreport controller
+	Route::post('printreport/audit', [\App\Http\Controllers\PrintReportController::class, 'audit'])->name('printreport.audit');
+
+	Route::post('printreport/payment', [\App\Http\Controllers\PrintReportController::class, 'payment'])->name('printreport.payment');
+
+});
 
 ####################################################################
-// printreport controller
-Route::get('printreport', [
-		'as' => 'printreport.index',
-		'uses' => 'PrintReportController@index'
-	]);
-
-Route::post('printreport/store', [
-		'as' => 'printreport.store',
-		'uses' => 'PrintReportController@store'
-	]);
-
-Route::post('printreport/audit', [
-		'as' => 'printreport.audit',
-		'uses' => 'PrintReportController@audit'
-	]);
-
-Route::post('printreport/payment', [
-		'as' => 'printreport.payment',
-		'uses' => 'PrintReportController@payment'
-	]);
-
-
-
-
-
-
-
-
-
-
+// API
+Route::middleware(['auth'])->group(function () {
+	Route::controller(ModelAjaxSupportController::class)->group(function () {
+		Route::get('/getProducts', 'getProducts')->name('getProducts');
+		Route::get('/getProductsdT', 'getProductsdT')->name('getProductsdT');
+		Route::get('/getUser', 'getUser')->name('getUser');
+		Route::get('/getCustomers', 'getCustomers')->name('getCustomers');
+		Route::get('/getBanks', 'getBanks')->name('getBanks');
+		Route::get('/getBanksT', 'getBanksT')->name('getBanksT');
+		Route::get('/geSales', 'geSales')->name('geSales');
+		Route::get('/getTaxes', 'getTaxes')->name('getTaxes');
+	});
+});
 

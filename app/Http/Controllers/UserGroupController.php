@@ -29,7 +29,7 @@ class UserGroupController extends Controller
 	{
 		//
 	}
-	
+
 	 /**
 	 * Show the form for creating a new resource.
 	 *
@@ -37,13 +37,10 @@ class UserGroupController extends Controller
 	 */
 	public function create()
 	{
-		// pass database data to view
-		$ug = UserGroup::all();
-		
 		// display form for storing data
-		return view('usergroup.create', compact('ug'));
+		return view('usergroup.create');
 	}
-	
+
 	 /**
 	 * Store a newly created resource in storage.
 	 *
@@ -54,14 +51,14 @@ class UserGroupController extends Controller
 	{
 		// storing the data into database Categories
 		UserGroup::create([
-			'group' => title_case(request('group')),
+			'group' => request('group'),
 			]);
-	
+
 		Session::flash('flash_message', 'Data successfully added!');
-	
+
 		return redirect()->back();      // redirect back to original route
 	}
-	
+
 	 /**
 	 * Display the specified resource.
 	 *
@@ -72,7 +69,7 @@ class UserGroupController extends Controller
 	{
 		//
 	}
-	
+
 	 /**
 	 * Show the form for editing the specified resource.
 	 *
@@ -83,7 +80,7 @@ class UserGroupController extends Controller
 	{
 		//
 	}
-	
+
 	 /**
 	 * Update the specified resource in storage.
 	 *
@@ -95,7 +92,7 @@ class UserGroupController extends Controller
 	{
 		//
 	}
-	
+
 	 /**
 	 * Remove the specified resource from storage.
 	 *

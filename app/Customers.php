@@ -1,16 +1,47 @@
 <?php
-
 namespace App;
 
 // use Illuminate\Database\Eloquent\Model;
+use App\Model;
+
 use Illuminate\Database\Eloquent\SoftDeletes;
+// use Illuminate\Database\Eloquent\Relations\HasOne;
+// use Illuminate\Database\Eloquent\Relations\HasOneThrough;
+// use Illuminate\Database\Eloquent\Relations\HasOneOrMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+// use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+// use Illuminate\Database\Eloquent\Relations\BelongsTo;
+// use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+
+// load helper
+use Illuminate\Support\Str;
 
 class Customers extends Model
 {
 	use SoftDeletes;
-	protected $dates = ['deleted_at'];
+	protected $casts = [
+		'client' => 'string',
+		'client_address' => 'string',
+	];
 
-	public function custsale() {
-		return $this->hasMany('App\SalesCustomers', 'id_customer');
+	public function setclientAttribute($value)
+	{
+	    $this->attributes['client'] = Str::title($value);
+	}
+
+	public function setclient_addressAttribute($value)
+	{
+	    $this->attributes['client_address'] = Str::title($value);
+	}
+
+	public function setclient_emailAttribute($value)
+	{
+	    $this->attributes['client_email'] = Str::lower($value);
+	}
+
+
+	public function custsale(): HasMany
+	{
+		return $this->hasMany(\App\SalesCustomers::class, 'id_customer');
 	}
 }

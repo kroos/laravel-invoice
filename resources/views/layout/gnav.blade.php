@@ -1,73 +1,99 @@
-<!-- Navigation -->
-<nav class="navbar navbar-default navbar-fixed-top topnav" role="navigation">
-	<div class="container topnav">
-		<!-- Brand and toggle get grouped for better mobile display -->
-		<div class="navbar-header">
-			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-				<span class="sr-only">Toggle navigation</span>
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-			</button>
-		</div>
-		<!-- Collect the nav links, forms, and other content for toggling -->
-		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+<!-- 2nd nav -->
+<nav class="navbar navbar-expand-lg bg-primary mb-auto" data-bs-theme="dark">
+	<div class="container-fluid">
+		<?php $logo = App\Preferences::find(1) ?>
+		<img src=" data:{!! $logo->company_logo_mime !!};base64,{!! $logo->company_logo_image !!}" alt="Home" title="Home" width="7%" class="mx-2 my-auto img-responsive img-rounded">
+		<a
+			class="navbar-brand"
+			@auth
+				href="{{ route('auth.index') }}"
+			@else
+				href="{{ url('/') }}"
+			@endauth
+		>
+			{!! config('app.name') !!}
+		</a>
 
-				<ul class="nav navbar-nav navbar-right">
-					<li>
-						<?php $logo = App\Preferences::find(1) ?>
-						<a href="{!! route('auth.index') !!}"><!-- <img src=" data:{!! $logo->company_logo_mime !!};base64,{!! $logo->company_logo_image !!}" alt="Home" title="Home" width="5%" class="img-responsive img-rounded"> -->Home</a>
-					</li>
-                        @if (Auth::guest())
-                            <li><a href="{!! route('login') !!}">Login</a></li>
-                        @endif
-			@if(Auth::check())
-					<li><a href="{!! route('user.edit', auth()->user()->slug) !!}">Welcome {!! auth()->user()->name !!}</a></li>
-					<li>
-						<a href="{!! route('sales.index') !!}">Invoice</a>
-					</li>
-					<li>
-						<a href="{!! route('printreport.index') !!}">Print Report</a>
-					</li>
-					<li>
-						<div class="dropdown">
-							<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-								Invoice Management<span class="caret"></span>
-							</button>
-							<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-								<li role="separator" class="divider"></li>
-								<li><a href="{!! route('product.create') !!}">Adding Product</a></li>
-								<li><a href="{!! route('category.create') !!}">Adding Category</a></li>
-								<li role="separator" class="divider"></li>
-								<li><a href="{!! route('customers.index') !!}">Customers List</a></li>
-								<li role="separator" class="divider"></li>
-							</ul>
-						</div>
-					</li>
-					@if((auth()->user()->id_group) == 1)
-					<li>
-						<div class="dropdown">
-							<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-								Setting<span class="caret"></span>
-							</button>
-							<ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
-								<li role="separator" class="divider"></li>
-								<li><a href="{!! route('user.create') !!}">Add User</a></li>
-								<li><a href="{!! route('usergroup.create') !!}">Add User Group</a></li>
-								<li role="separator" class="divider"></li>
-								<li><a href="{!! route('banks.index') !!}">Bank Activation</a></li>
-								<li role="separator" class="divider"></li>
-								<li><a href="{!! route('preferences.edit', 1) !!}">Preferences</a></li>
-								<li role="separator" class="divider"></li>
-							</ul>
-						</div>
-					</li>
+		<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navbarColor01">
+			<ul class="navbar-nav mx-auto">
+			@auth
+				<li class="nav-item">
+					<span class="nav-link">Welcome {!! auth()->user()->name !!}</span>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="{!! route('sales.index') !!}">Invoice</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="{!! route('printreport.index') !!}">Print Report</a>
+				</li>
+				<li class="nav-item dropdown">
+					<a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Product & Customer</a>
+					<div class="dropdown-menu">
+						<a class="dropdown-item" href="{!! route('product.index') !!}">Product</a>
+						<a class="dropdown-item" href="{!! route('category.create') !!}">Category</a>
+						<a class="dropdown-item" href="{!! route('taxes.index') !!}">Taxes</a>
+						<div class="dropdown-divider"></div>
+						<a class="dropdown-item" href="{!! route('customers.index') !!}">Customers List</a>
+					</div>
+				</li>
+				@if((auth()->user()->id_group) == 1)
+				<li class="nav-item dropdown">
+					<a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Setting</a>
+					<div class="dropdown-menu">
+						<a class="dropdown-item" href="{!! route('user.index') !!}">Add User</a>
+						<a class="dropdown-item" href="{!! route('usergroup.create') !!}">Add User Group</a>
+						<div class="dropdown-divider"></div>
+						<a class="dropdown-item" href="{!! route('banks.index') !!}">Bank Activation</a>
+						<div class="dropdown-divider"></div>
+						<a class="dropdown-item" href="{!! route('preferences.edit', 1) !!}">Preferences</a>
+					</div>
+				</li>
+				@endif
+			@else
+				<!-- nav for guest -->
+			@endauth
+			</ul>
+
+
+			@if (Route::has('login'))
+				@auth
+					<div class="dropdown me-5">
+						<a href="#" class="btn btn-sm btn-outline-secondary dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+							@if(\Auth::user()->unreadNotifications?->count())
+								<span class="badge text-bg-warning">
+									{{ \Auth::user()->unreadNotifications->count() }}
+								</span>
+							@endif
+			  {{ Auth::user()->name }}
+			</a>
+						<ul class="dropdown-menu">
+							<li>
+								<a class="dropdown-item" href="{!! route('user.edit', auth()->user()->slug) !!}"><i class="fa-regular fa-user"></i> Profile</a>
+							</li>
+							<li>
+								<!-- notification -->
+							</li>
+							<li>
+								<form method="POST" action="{{ route('logout') }}">
+									@csrf
+									<a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault(); this.closest('form').submit();"><i class="fas fa-light fa-right-from-bracket"></i> Log Out</a>
+								</form>
+							</li>
+						</ul>
+					</div>
+
+				@else
+					<a class="btn btn-sm btn-secondary {{ (Route::has('register'))?'me-1':'me-5' }}" href="{{ route('login') }}">Sign in</a>
+					@if (Route::has('register'))
+						<a href="{{ route('register') }}" class="btn btn-sm btn-secondary me-5">Sign up</a>
 					@endif
-					<li><a href="{!! route('auth.destroy') !!}">Logout</a></li>
+				@endauth
 			@endif
-				</ul>
+
 		</div>
-		<!-- /.navbar-collapse -->
 	</div>
-	<!-- /.container -->
 </nav>
+<!-- 2nd nav end -->

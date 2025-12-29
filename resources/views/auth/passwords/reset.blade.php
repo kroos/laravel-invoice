@@ -1,58 +1,57 @@
 @extends('layout.master')
 
 @section('content')
-
-	@include('layout.errorform')
-	@include('layout.info')
-	
-	@if (session('status'))
-	    <div class="alert alert-success">
-	        {{ session('status') }}
-	    </div>
-	@endif
-
-<div class="panel panel-default">
-	<div class="panel-heading">Reset Password</div>
-<div class="panel-body">
-	{!! Form::open(['route' => 'password.request', 'id' => 'form', 'class' => 'form-horizontal']) !!}
-	{!! Form::hidden('token', $token) !!}
-		<div class="form-group {!! ( count($errors->get('email')) ) >0 ? 'has-error' : '' !!}">
-			{!! Form::label('na', 'Email :', ['class' => 'col-sm-2  control-label']) !!}
-			<div class="col-sm-10">
-				{!! Form::text('email', @$value, ['class' => 'form-control', 'id' => 'na', 'placeholder' => 'Email', 'autocomplete' => 'off']) !!}
+<div class="card">
+	<div class="card-header">Reset Password</div>
+	<div class="card-body">
+		<form method="POST" action="{{ route('password.request') }}" accept-charset="UTF-8" id="form" autocomplete="off" class="" enctype="multipart/form-data">
+			@csrf
+			<div class="form-group row m-1 @error('email') has-error @enderror">
+				<label for="email" class="col-form-label col-sm-2">Wmail : </label>
+				<div class="col-sm-6 my-auto">
+					<input type="text" name="email" value="{{ old('email') }}" id="email" class="form-control form-control-sm @error('email') is-invalid @enderror" placeholder="Wmail">
+					@error('email')
+						<div class="invalid-feedback">
+							{{ $message }}
+						</div>
+					@enderror
+				</div>
 			</div>
-		</div>
 
-		<div class="form-group {!! ( count($errors->get('password')) ) >0 ? 'has-error' : '' !!}">
-			{!! Form::label('nap', 'Password :', ['class' => 'col-sm-2  control-label']) !!}
-			<div class="col-sm-10">
-				{!! Form::input('password', 'password', @$value, ['class' => 'form-control', 'id' => 'nap', 'placeholder' => 'Password']) !!}
+			<div class="form-group row m-1 @error('password') has-error @enderror">
+				<label for="pass" class="col-form-label col-sm-2">Password : </label>
+				<div class="col-sm-6 my-auto">
+					<input type="password" name="password" value="{{ old('password') }}" id="pass" class="form-control form-control-sm @error('password') is-invalid @enderror" placeholder="Password">
+					@error('password')
+						<div class="invalid-feedback">
+							{{ $message }}
+						</div>
+					@enderror
+				</div>
 			</div>
-		</div>
 
-		<div class="form-group {!! ( count($errors->get('password_confirmation')) ) >0 ? 'has-error' : '' !!}">
-			{!! Form::label('napq', 'Password Confirmation :', ['class' => 'col-sm-2  control-label']) !!}
-			<div class="col-sm-10">
-				{!! Form::input('password', 'password_confirmation', @$value, ['class' => 'form-control', 'id' => 'napq', 'placeholder' => 'Password Confirmation']) !!}
+			<div class="form-group row m-1 @error('password_confirmation') has-error @enderror">
+				<label for="passc" class="col-form-label col-sm-2">Password Confirmation : </label>
+				<div class="col-sm-6 my-auto">
+					<input type="password" name="password_confirmation" value="{{ old('password_confirmation', @$variable->password_confirmation) }}" id="passc" class="form-control form-control-sm @error('password_confirmation') is-invalid @enderror" placeholder="Password Confirmation">
+					@error('password_confirmation')
+						<div class="invalid-feedback">
+							{{ $message }}
+						</div>
+					@enderror
+				</div>
 			</div>
-		</div>
 
 		<div class="col-sm-offset-2 col-sm-10">
-			{!! Form::submit('Reset', ['class' => 'btn btn-primary btn-lg btn-block']) !!}
+			<button type="submit" class="btn btn-sm btn-outline-secondary">Submit</button>
 		</div>
 
-	{!! Form::close() !!}
-</div></div>
-
-
+	</form>
+</div>
 @endsection
 
 
 @section('jquery')
-
-
-
-
 ////////////////////////////////////////////////////////////////////////////////////
 // bootstrap validator
 $("#form").bootstrapValidator({

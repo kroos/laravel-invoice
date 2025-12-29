@@ -6,7 +6,7 @@ namespace App\Http\Controllers;
 use App\User;
 
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\AuthenticateRequest;
 
 // load session
@@ -31,16 +31,16 @@ class AuthenticateController extends Controller
 
 	public function store(AuthenticateRequest $request)
 	{
-		$remember_me = $request->has('remember') ? true : false;
-		// attempt to authenticate the user
-		if( !auth()->attempt(request(['username', 'password']), $remember_me) ) {
-			Session::flash('flash_message', 'Please check your credential');
-			return back();
+		$remember = $request->boolean('remember');
+
+		if (!auth('web')->attempt($request->only('username', 'password'), $remember)) {
+			return back()->with('flash_message', 'Please check your credential');
 		}
-		$users = \App\User::find(auth()->user()->id);
-		$users->touch();
-		return redirect(route('homeauth.home'));      // redirect back to original route
-	}
+
+    $user = auth()->user(); // should NOT be null
+    $user->touch();
+    return redirect()->route('homeauth.home');
+  }
 
 	public function destroy()
 	{

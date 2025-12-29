@@ -5,15 +5,16 @@
     "license": "MIT",
     "type": "project",
     "require": {
-        "php": ">=7.0.0",
+        "php": ">=8.3.0",
+        "laravel/framework": "^12.0",
+        "laravel/sanctum": "^4.0",
+        "laravel/tinker": "^2.10",
+        "laravel/ui": "^4.0"
+    },
+    "require-dev": {
         "crabbly/fpdf-laravel": "^1.0",
-        "cviebrock/eloquent-sluggable": "^8.0",
-        "fideloper/proxy": "^4.4",
-        "intervention/image": "^2.6",
-        "laravel/framework": "^8.0",
-        "laravel/tinker": "^2.0",
-        "laravel/ui": "^3.3",
-        "laravelcollective/html": "^6.2"
+        "cviebrock/eloquent-sluggable": "^12.0",
+        "intervention/image": "^3.11"
     },
     "autoload": {
         "classmap": [
@@ -45,7 +46,7 @@
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
             "@php artisan package:discover"
         ]
- 
+
     },
     "config": {
         "preferred-install": "dist",

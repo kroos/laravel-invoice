@@ -29,11 +29,8 @@ class TaxesController extends Controller
 
     public function store(TaxesFormRequest $request)
     {
-        Taxes::create(request([
-                    'tax', 'amount',
-            ]));
+        Taxes::create(request(['tax', 'amount']));
         Session::flash('flash_message', 'Data successfully added!');
-
         return redirect(route('taxes.index'));      // redirect back to original route
     }
 
@@ -44,15 +41,12 @@ class TaxesController extends Controller
 
     public function edit(Taxes $taxes)
     {
-        return view('taxes.edit', compact('taxes'));
+        return view('taxes.edit');
     }
 
     public function update(TaxesFormRequest $request, Taxes $taxes)
     {
-        Taxes::find($taxes->id)
-                -> update(request([
-                                'tax', 'amount'
-                        ]));
+        $taxes->update(request(['tax', 'amount']));
         Session::flash('flash_message', 'Data successfully update!');
 
         return redirect(route('taxes.index'));      // redirect back to original route
@@ -60,9 +54,11 @@ class TaxesController extends Controller
 
     public function destroy(Taxes $taxes)
     {
-        Taxes::destroy($taxes->id);
+        $taxes->delete();
         Session::flash('flash_message', 'Data successfully delete!');
-
-        return redirect(route('taxes.index'));      // redirect back to original route
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Success Delete',
+        ]);
     }
 }

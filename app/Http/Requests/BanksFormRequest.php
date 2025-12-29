@@ -10,8 +10,8 @@ class BanksFormRequest extends FormRequest
 	{
 		return true;
 	}
-	
-	public function rules()
+
+	public function rules(): array
 	{
 		// dd($this->banks['id']);
 		return [
@@ -22,4 +22,21 @@ class BanksFormRequest extends FormRequest
 			'active' => 'nullable'
 		];
 	}
+
+	public function messages(): array
+	{
+		return [];
+	}
+
+	public function attributes(): array
+	{
+		return [
+			'bank' => 'Bank',
+			'city' => 'City',
+			'swift_code' => 'Swift Code',
+			'account' => 'Account',
+			'active' => 'Active'
+		];
+	}
+
 }

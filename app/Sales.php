@@ -1,42 +1,69 @@
 <?php
-
 namespace App;
 
 // use Illuminate\Database\Eloquent\Model;
+use App\Model;
 
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+// use Illuminate\Database\Eloquent\Relations\HasOneThrough;
+// use Illuminate\Database\Eloquent\Relations\HasOneOrMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+// use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+// use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+
+// load helper
+use Illuminate\Support\Str;
 
 class Sales extends Model
 {
 	use SoftDeletes;
-	protected $dates = ['deleted_at'];
+	protected $casts = [
+		'date_sale' => 'date',
+	];
 
-	public function slippostageimage() {
-		return $this->hasOne('App\SlipPostage', 'id_sales');
+#####################################################################################
+	// public function setproduct_categoryAttribute($value)
+	// {
+	// 	$this->attributes['product_category'] = Str::title($value);
+	// }
+
+#####################################################################################
+
+	public function slippostageimage(): HasOne
+	{
+		return $this->hasOne(\App\SlipPostage::class, 'id_sales');
 	}
 
-	public function customer() {
-		return $this->hasOne('App\SalesCustomers', 'id_sales');
+	public function customer(): HasOne
+	{
+		return $this->hasOne(\App\SalesCustomers::class, 'id_sales');
 	}
 
-	public function invitems() {
-		return $this->hasMany('App\SalesItems', 'id_sales');
+	public function invitems(): HasMany
+	{
+		return $this->hasMany(\App\SalesItems::class, 'id_sales');
 	}
 
-	public function slipnumber() {
-		return $this->hasMany('App\SlipNumbers', 'id_sales');
+	public function slipnumber(): HasMany
+	{
+		return $this->hasMany(\App\SlipNumbers::class, 'id_sales');
 	}
 
-	public function salestaxes() {
-		return $this->hasMany('App\SalesTax', 'id_sales');
+	public function salestaxes(): HasMany
+	{
+		return $this->hasMany(\App\SalesTax::class, 'id_sales');
 	}
 
-	public function salespayment() {
-		return $this->hasMany('App\Payments', 'id_sales');
+	public function salespayment(): HasMany
+	{
+		return $this->hasMany(\App\Payments::class, 'id_sales');
 	}
 
-	public function invuser() {
-		return $this->belongsTo('App\User');
+	public function invuser(): BelongsTo
+	{
+		return $this->belongsTo(\App\User::class, 'id_user');
 	}
 
 	public static function graph()

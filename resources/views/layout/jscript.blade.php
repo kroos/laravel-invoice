@@ -1,16 +1,11 @@
-<script type="text/javascript">
+<script type="module">
 	jQuery.noConflict ();
 	(function($){
 		$(document).ready(function(){
-
-			$('#example').DataTable({
-				// paging: false,
-				"lengthMenu": [ [50, -1], [50, "All"] ],
-				// responsive: true
-			});
-
-			@section('jquery')
-			@show
+//			$.get('/sanctum/csrf-cookie').done(function(){
+				@section('jquery')
+				@show
+//			});
 		});
 	})(jQuery);
 </script>
