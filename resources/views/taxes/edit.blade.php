@@ -1,7 +1,7 @@
 @extends('layout.master')
 
 @section('content')
-<form method="POST" action="{{ route('taxes.update', $taxes) }}" accept-charset="UTF-8" id="form" autocomplete="off" class="needs-validation" enctype="multipart/form-data">
+<form method="POST" action="{{ route('taxes.update', $taxes->slug) }}" accept-charset="UTF-8" id="form" autocomplete="off" class="needs-validation" enctype="multipart/form-data">
 	@csrf
 	@method('PATCH')
 	<div class="card">
@@ -11,7 +11,7 @@
 			@include('taxes._form')
 		</div>
 		<div class="card-footer d-flex justify-content-end">
-			<button type="submit" class="btn btn-sm btn-outline-primary me-1 my-auto"><i class="fa fa-save"></i> Submit</button>
+			<button type="submit" class="btn btn-sm btn-outline-primary me-1 my-auto"><i class="fa-regular fa-floppy-disk"></i> Submit</button>
 			<a href="{{ route('taxes.index') }}" class="btn btn-sm btn-outline-secondary me-1 my-auto">Cancel</a>
 		</div>
 	</div>

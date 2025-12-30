@@ -145,7 +145,7 @@
 		</div>
 		<div class="card-footer d-flex justify-content-end">
 			<button type="submit" class="btn btn-sm btn-outline-primary mx-1">
-				<i class="fa fa-save"></i> Submit
+				<i class="fa-regular fa-floppy-disk"></i> Submit
 			</button>
 		</div>
 	</div>

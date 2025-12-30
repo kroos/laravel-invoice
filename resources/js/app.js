@@ -1,62 +1,46 @@
-// Default Laravel bootstrapper, installs axios, jQuery
-import './jquery';
+try {
+	require('./jquery');
+	require('bootstrap/dist/js/bootstrap.bundle');
 
-// jquery-ui
-import './jquery-ui-prefix';
+	require('@fortawesome/fontawesome-free');
 
-// careful between these 2 (bootstrap and jquery-ui), cause it conflicts on "tooltips". this way, we override all components from jquery-ui which results we always use the bootstrap components.
-// Added: Actual Bootstrap JavaScript dependency
-import * as bootstrap from '../../node_modules/bootstrap/dist/js/bootstrap.bundle';
+	require('datatables.net');
+	require('datatables.net-bs5');
+	require('datatables.net-autofill-bs5');
+	require('datatables.net-colreorder-bs5');
+	require('datatables.net-fixedheader-bs5');
+	require('datatables.net-responsive-bs5');
+	require('datatables.net-buttons-bs5');
+	require('datatables.net-buttons/js/buttons.html5');
+	require('datatables.net-buttons/js/buttons.print');
+	require('datatables.net-buttons/js/buttons.colVis');
+	require('jszip');
+	require('pdfmake');
+	require( 'pdfmake/build/vfs_fonts');
 
-// Then load Alpine
-import Alpine from 'alpinejs';
-document.addEventListener("DOMContentLoaded", () => {
-	window.Alpine = Alpine;
-	Alpine.start();
-});
+	require('select2');
 
-// select2
-import select2 from 'select2';
-select2();
+	window.moment = require('moment');
+	moment().format();
 
-// sweetalert2
-import swal from 'sweetalert2';
-window.swal = swal;
+	window.swal = require ('sweetalert2');
 
-// moment
-import moment from 'moment';
-window.moment = moment;
+	require('./jquery-ui-prefix');
 
-// datatables
-// import DataTable from 'datatables.net';
-import DataTable from 'datatables.net-bs5';
-import 'datatables.net-responsive-bs5';
-import 'datatables.net-fixedheader-bs5';
-import 'datatables.net-colreorder-bs5';
-import 'datatables.net-autofill-bs5';
-import jszip from 'jszip';
-import pdfmake from 'pdfmake';
-import 'pdfmake/build/vfs_fonts';
-import 'datatables.net-buttons-bs5';
-import 'datatables.net-buttons/js/buttons.html5.mjs';
-import 'datatables.net-buttons/js/buttons.print.mjs';
-DataTable.use(bootstrap);
-DataTable.Buttons.jszip(jszip);
-DataTable.Buttons.pdfMake(pdfmake);
-window.DataTable = DataTable;
+	require('./fullcalendar');
 
-// minicolors
-import '@claviska/jquery-minicolors';
+	require('./chart');
 
-// Chart.js
-import  './chart';
+	// require('@claviska/jquery-minicolors');
+	require('./minicolors');
 
-// fullcalendar
-import './fullcalendar';
+	require('./dataTable-any-number');
+	require('./datetime-moment');
 
-// addRemoveRow
-import	'./addRemoveRowjQueryPlugins';
+	require('./bootstrapValidator5');
 
+	require('./addRemoveRowjQueryPlugins');
 
-// bootstrap validator 5
-import	'./bootstrapValidator5';
+	require('./bootstrap');
+
+} catch (e) {}

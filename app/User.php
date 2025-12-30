@@ -33,11 +33,6 @@ class User extends Authenticatable
 		'email' => 'string',
 	];
 
-	protected $hidden = [
-		'password',
-		'remember_token',
-	];
-
 	public function sluggable(): array
 	{
 		return [

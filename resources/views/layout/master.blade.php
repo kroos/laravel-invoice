@@ -13,7 +13,8 @@
 	<meta name="keywords" content="" />
 	<meta name="csrf-token" content="{{ csrf_token() }}">
 
-	@vite(['resources/scss/app.scss', 'resources/css/app.css', 'resources/js/app.js'])
+	<link href="{{ mix('css/app.css') }}" rel="stylesheet">
+	<link href="{{ mix('css/tailwind.css') }}" rel="stylesheet">
 
 	<!-- Bootswatch Cerulean CSS -->
 	<link href="{{ URL::asset('css/bootstrap.css') }}" rel="stylesheet">
@@ -44,5 +45,6 @@
 		</div>
 	</div>
 </body>
+<script src="{{ mix('js/app.js') }}"></script>
 @include('layout.jscript')
 </html>

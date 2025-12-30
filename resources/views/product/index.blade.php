@@ -46,8 +46,8 @@ var table = $('#at').DataTable({
 			data: 'retail',
 			title: 'Retail',
 			defaultContent: '-',
-			 render: function (data, type, row) {
-			 	return data.toFixed(2);
+			render: function (data, type, row) {
+			 	return data;
 			}
 		},
 		{
@@ -55,7 +55,7 @@ var table = $('#at').DataTable({
 			title: 'Commission',
 			defaultContent: '-',
 			 render: function (data, type, row) {
-			 	return data.toFixed(2);
+			 	return data;
 			}
 		},
 		{

@@ -4,6 +4,8 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+use Illuminate\Validation\Rule;
+
 class TaxesFormRequest extends FormRequest
 {
 	/**
@@ -24,8 +26,8 @@ class TaxesFormRequest extends FormRequest
 	public function rules(): array
 	{
 		return [
-			'tax' => 'alpha|unique:taxes,tax,'.$this->taxes['id'],
-			'amount' => 'numeric',
+			'tax' => ['required', 'alpha', Rule::unique('taxes', 'tax')->ignore($this->route('taxes'), 'slug')],
+			'amount' => 'required|numeric',
 		];
 	}
 

@@ -41,7 +41,7 @@ class TaxesController extends Controller
 
     public function edit(Taxes $taxes)
     {
-        return view('taxes.edit');
+        return view('taxes.edit', ['taxes' => $taxes]);
     }
 
     public function update(TaxesFormRequest $request, Taxes $taxes)

@@ -46,7 +46,7 @@ class SalesItemsController extends Controller
 
     public function destroy(Request $request, SalesItems $salesItems)
     {
-        $salesItems->();
+        $salesItems->delete();
         return response()->json([
                                     'message' => 'Data deleted',
                                     'status' => 'success'

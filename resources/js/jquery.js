@@ -1,7 +1,6 @@
 // jquery
-import jQuery from 'jquery/dist/jquery';
-window.$ = window.jQuery = jQuery;
+// window.$ = window.jQuery = require('jquery/dist/jquery');
 
-import axios from 'axios';
-window.axios = axios;
-window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+import $ from 'jquery';
+window.$ = window.jQuery = $;
+export default $;

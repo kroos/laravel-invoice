@@ -1,4 +1,4 @@
-<script type="module">
+<script>
 	jQuery.noConflict ();
 	(function($){
 		$(document).ready(function(){

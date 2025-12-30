@@ -1,4 +1,4 @@
-import '../../node_modules/jquery-ui/dist/jquery-ui';
+require('../../node_modules/jquery-ui/dist/jquery-ui');
 (function ($) {
 	// Iterate over all methods in jQuery UI's namespace
 	$.each($.ui, function (name) {
@@ -8,6 +8,3 @@ import '../../node_modules/jquery-ui/dist/jquery-ui';
 			}
 	});
 })(jQuery);
-
-// Export the modified jQuery
-export default $;

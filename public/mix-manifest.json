@@ -1,14 +1,15 @@
 {
     "/js/app.js": "/js/app.js",
     "/css/app.css": "/css/app.css",
+    "/images/vendor/@claviska/jquery-minicolors/jquery.minicolors.png?0e61411589c771c12035fd14eaae2a01": "/images/vendor/@claviska/jquery-minicolors/jquery.minicolors.png?0e61411589c771c12035fd14eaae2a01",
     "/fonts/vendor/bootstrap-icons/bootstrap-icons.woff2?92ea18a81d737146ff044ddb52010366": "/fonts/vendor/bootstrap-icons/bootstrap-icons.woff2?92ea18a81d737146ff044ddb52010366",
     "/fonts/vendor/bootstrap-icons/bootstrap-icons.woff?1295669cd4e305c97f2cfc16d56614b8": "/fonts/vendor/bootstrap-icons/bootstrap-icons.woff?1295669cd4e305c97f2cfc16d56614b8",
-    "/fonts/vendor/@fortawesome/fontawesome-free/webfa-solid-900.woff2?2463b90d9a316e4e5294e6706b6a7a72": "/fonts/vendor/@fortawesome/fontawesome-free/webfa-solid-900.woff2?2463b90d9a316e4e5294e6706b6a7a72",
-    "/fonts/vendor/@fortawesome/fontawesome-free/webfa-solid-900.ttf?2582b0e4bcf85eceead0de3fd9035c90": "/fonts/vendor/@fortawesome/fontawesome-free/webfa-solid-900.ttf?2582b0e4bcf85eceead0de3fd9035c90",
     "/fonts/vendor/@fortawesome/fontawesome-free/webfa-brands-400.woff2?c210719e60948b211a1260f79812efe5": "/fonts/vendor/@fortawesome/fontawesome-free/webfa-brands-400.woff2?c210719e60948b211a1260f79812efe5",
     "/fonts/vendor/@fortawesome/fontawesome-free/webfa-brands-400.ttf?1815e00441357e01619e5793e1caa78a": "/fonts/vendor/@fortawesome/fontawesome-free/webfa-brands-400.ttf?1815e00441357e01619e5793e1caa78a",
     "/fonts/vendor/@fortawesome/fontawesome-free/webfa-regular-400.woff2?89999bdf5d835c0120257222e5568fec": "/fonts/vendor/@fortawesome/fontawesome-free/webfa-regular-400.woff2?89999bdf5d835c0120257222e5568fec",
     "/fonts/vendor/@fortawesome/fontawesome-free/webfa-regular-400.ttf?914997e1bdfc990d0897cdaba877a0b3": "/fonts/vendor/@fortawesome/fontawesome-free/webfa-regular-400.ttf?914997e1bdfc990d0897cdaba877a0b3",
+    "/fonts/vendor/@fortawesome/fontawesome-free/webfa-solid-900.woff2?2463b90d9a316e4e5294e6706b6a7a72": "/fonts/vendor/@fortawesome/fontawesome-free/webfa-solid-900.woff2?2463b90d9a316e4e5294e6706b6a7a72",
+    "/fonts/vendor/@fortawesome/fontawesome-free/webfa-solid-900.ttf?2582b0e4bcf85eceead0de3fd9035c90": "/fonts/vendor/@fortawesome/fontawesome-free/webfa-solid-900.ttf?2582b0e4bcf85eceead0de3fd9035c90",
     "/fonts/vendor/@fortawesome/fontawesome-free/webfa-v4compatibility.woff2?ea8f94e1d22e0d35ccd46ea889dbf038": "/fonts/vendor/@fortawesome/fontawesome-free/webfa-v4compatibility.woff2?ea8f94e1d22e0d35ccd46ea889dbf038",
     "/fonts/vendor/@fortawesome/fontawesome-free/webfa-v4compatibility.ttf?da94ef451f4969af06e6f5b36393459d": "/fonts/vendor/@fortawesome/fontawesome-free/webfa-v4compatibility.ttf?da94ef451f4969af06e6f5b36393459d",
     "/fonts/vendor/@mdi/materialdesignicons-webfont.eot?2146c3c82b553977abc7c824eb453634": "/fonts/vendor/@mdi/materialdesignicons-webfont.eot?2146c3c82b553977abc7c824eb453634",
@@ -26,5 +27,6 @@
     "/images/vendor/jquery-ui/dist/themes/cupertino/ui-icons_ffffff_256x240.png?072c0996f8317638c094eee2e6c10f8f": "/images/vendor/jquery-ui/dist/themes/cupertino/ui-icons_ffffff_256x240.png?072c0996f8317638c094eee2e6c10f8f",
     "/images/vendor/jquery-ui/dist/themes/cupertino/ui-icons_2e83ff_256x240.png?3c4f6caa0976259e1dab20f3b3cf6431": "/images/vendor/jquery-ui/dist/themes/cupertino/ui-icons_2e83ff_256x240.png?3c4f6caa0976259e1dab20f3b3cf6431",
     "/images/vendor/jquery-ui/dist/themes/cupertino/ui-icons_3d80b3_256x240.png?8c13e3ef147d5b47c75b63e5871d3f92": "/images/vendor/jquery-ui/dist/themes/cupertino/ui-icons_3d80b3_256x240.png?8c13e3ef147d5b47c75b63e5871d3f92",
-    "/images/vendor/jquery-ui/dist/themes/cupertino/ui-bg_diagonals-thick_90_eeeeee_40x40.png?1b798b7422b824b77a8cb84514c17074": "/images/vendor/jquery-ui/dist/themes/cupertino/ui-bg_diagonals-thick_90_eeeeee_40x40.png?1b798b7422b824b77a8cb84514c17074"
+    "/images/vendor/jquery-ui/dist/themes/cupertino/ui-bg_diagonals-thick_90_eeeeee_40x40.png?1b798b7422b824b77a8cb84514c17074": "/images/vendor/jquery-ui/dist/themes/cupertino/ui-bg_diagonals-thick_90_eeeeee_40x40.png?1b798b7422b824b77a8cb84514c17074",
+    "/css/tailwind.css": "/css/tailwind.css"
 }

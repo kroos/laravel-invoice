@@ -4,6 +4,8 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+use Illuminate\Validation\Rule;
+
 class CustomersFormRequest extends FormRequest
 {
 	public function authorize()
@@ -14,11 +16,11 @@ class CustomersFormRequest extends FormRequest
 	public function rules(): array
 	{
 		return [
-			'client' => 'required_without:repeatcust|unique:customers,client,'.$this->customers['id'],
-			'client_address' => 'required_with:client_poskod',
-			'client_poskod' => 'required_with:client_address',
-			'client_phone' => 'required_without:repeatcust|nullable|numeric|min:10|unique:customers,client_phone,'.$this->customers['id'],
-			'client_email' => 'required_without:repeatcust|nullable|email|unique:customers,client_email,'.$this->customers['id'],
+			'client' => ['required', Rule::unique('customers', 'client')->ignore($this->route('customers'))],
+			'client_address' => ['required_with:client_poskod'],
+			'client_poskod' => ['required_with:client_address'],
+			'client_phone' => ['required_without:client', 'nullable', 'numeric', 'min:10', 'unique:customers,client_phone,'.$this->customers['id']],
+			'client_email' => ['required_without:client', 'nullable', 'email', Rule::unique('customers', 'client_email')->ignore($this->route('customers'))],
 		];
 	}
 

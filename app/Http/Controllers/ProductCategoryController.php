@@ -96,7 +96,7 @@ class ProductCategoryController extends Controller
 		// form process for id - update database
 		ProductCategory::where('id', $productCategory->id)
 					-> update([
-						'product_category' => (request('category'),
+						'product_category' => request('category'),
 						'active' => request('active'),
 						'id_user' => auth()->user()->id,
 					]);

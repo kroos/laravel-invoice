@@ -44,7 +44,9 @@
 
 		</div>
 		<div class="card-footer d-flex justify-content-end">
-				<button type="submit" class="btn btn-sm btn-outline-secondary my-auto me-1">Submit</button>
+			<button type="submit" class="btn btn-sm btn-outline-secondary my-auto me-1">
+				<i class="fa-regular fa-floppy-disk"></i> Submit
+			</button>
 				<a class="btn btn-sm btn-outline-secondary my-auto me-1" href="{!! route('forgotpassword.create') !!}">Forgot Your Password?</a>
 		</div>
 	</div>
