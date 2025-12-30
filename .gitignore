@@ -10,3 +10,6 @@ Homestead.yaml
 .env
 /storage/framework/sessions/*
 /public/build
+/public/css/app.css
+/public/css/tailwind.css
+/public/js/app.js
