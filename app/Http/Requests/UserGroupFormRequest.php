@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
+
 
 class UserGroupFormRequest extends FormRequest
 {
@@ -27,7 +29,11 @@ class UserGroupFormRequest extends FormRequest
 	{
 		// dd($this->user_groups['id']);
 		return [
-			'group' => ['required|unique:user_groups,group,'.$this->user_groups['id'].'|alpha'],
+			'group' => [
+									'required',
+									Rule::unique('user_groups', 'group')->ignore($this->route('usergroups')),
+									'alpha'
+								]
 		];
 	}
 

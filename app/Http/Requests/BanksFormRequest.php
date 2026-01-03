@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class BanksFormRequest extends FormRequest
 {
@@ -17,12 +18,15 @@ class BanksFormRequest extends FormRequest
 		return [
 			'bank' => 'required',
 			'city' => 'required',
-			'swift_code' => 'required|alpha|unique:banks,swift_code,'.$this->banks['id'],
+			'swift_code' => [
+												'required',
+												'alpha',
+												Rule::unique('banks', 'swift_code')->ignore($this->route('banks'))
+											],
 			'account' => 'nullable|alpha_dash',
 			'active' => 'nullable'
 		];
 	}
-
 	public function messages(): array
 	{
 		return [];

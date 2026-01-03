@@ -1,6 +1,6 @@
-@extends('layout.master')
+@extends('layouts.app')
 @section('content')
-<form method="POST" action="{{ route('customers.update', $customers) }}" accept-charset="UTF-8" id="form" autocomplete="off" class="needs-validation" enctype="multipart/form-data">
+<form method="POST" action="{{ route('customers.update', $customer) }}" accept-charset="UTF-8" id="form" autocomplete="off" class="needs-validation" enctype="multipart/form-data">
 	@csrf
 	@method('PATCH')
 	<div class="card">
@@ -18,5 +18,5 @@
 </form>
 @endsection
 
-@section('jquery')
+@section('js')
 @endsection

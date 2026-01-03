@@ -1,17 +1,15 @@
-@extends('layout.master')
+@extends('layouts.app')
 
 @section('content')
-
-	<div class="col-sm-8 text-center tw">
+	<div class="tw col-sm-8 text-center">
 		<h2 class="font-semibold text-xl text-gray-800 leading-tight">
-			{{ __('Error 403 : This action is unauthorized.') }}
+			{{ __('Error 403 : '.$exception->getMessage() ?: 'Forbidden') }}
 		</h2>
 	</div>
-
 	<div class="col-sm-8 flex justify-content-center" >
 		<a href="{{ url('/dashboard') }}" class="">
-			<img src="{{ asset('images/errors/404-error.jpg') }}" class="img-fluid rounded " alt="">
+			<img src="{{ asset('images/errors/403-error.jpg') }}" class="img-fluid rounded " alt="">
 		</a>
 	</div>
-
 @endsection
+

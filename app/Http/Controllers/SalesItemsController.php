@@ -2,18 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\SalesItems;
+use App\Models\SalesItems;
 use Illuminate\Http\Request;
 
 use Session;
 
 class SalesItemsController extends Controller
 {
-    function __construct()
-    {
-        $this->middleware('auth');
-    }
-
     public function index()
     {
         //

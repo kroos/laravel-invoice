@@ -3,17 +3,17 @@
 namespace App\Http\Controllers;
 
 // load model
-use App\Sales;
-use App\SalesItems;
-use App\SlipPostage;
-use App\Customers;
-use App\Product;
-use App\ProductCategory;
-use App\Payments;
-use App\SlipNumbers;
-use App\SalesTax;
-use App\SalesCustomers;
-use App\User;
+use App\Models\Sales;
+use App\Models\SalesItems;
+use App\Models\SlipPostage;
+use App\Models\Customers;
+use App\Models\Product;
+use App\Models\ProductCategory;
+use App\Models\Payments;
+use App\Models\SlipNumbers;
+use App\Models\SalesTax;
+use App\Models\SalesCustomers;
+use App\Models\User;
 
 use File;
 
@@ -21,12 +21,6 @@ use Illuminate\Http\Request;
 
 class PrintReportController extends Controller
 {
-	function __construct()
-	{
-		$this->middleware('auth');
-		// $this->middleware('admin', ['except' => ['create', 'store']]);
-	}
-
     public function index()
     {
     	return view('printreport.index');
@@ -34,7 +28,7 @@ class PrintReportController extends Controller
 
     public function store(Request $request)
     {
-    	$this->validate($request, [
+    	$request->validate([
     			'from' => 'required|date_format:Y-m-d|before_or_equal:to',
     			'to' => 'required|date_format:Y-m-d|after_or_equal:from',
     			'user' => 'required',

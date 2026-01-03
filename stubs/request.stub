@@ -22,7 +22,21 @@ class {{ class }} extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'ColumnName' => ['required'],
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'ColumnName' => 'Required :attribute',
+        ];
+    }
+
+    public function attributes(): array
+    {
+        return [
+            'ColumnName' => 'ColumnName',
         ];
     }
 }

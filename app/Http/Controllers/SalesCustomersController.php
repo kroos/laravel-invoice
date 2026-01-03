@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\SalesCustomers;
+use App\Models\SalesCustomers;
 use Illuminate\Http\Request;
 
 class SalesCustomersController extends Controller

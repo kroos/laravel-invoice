@@ -660,8 +660,7 @@ $(`#us`).select2({
 			return {
 				_token: '{!! csrf_token() !!}',
 				search: params.term,				// Search query
-				idIn: [],
-				id: `{{ old('id_user', @$sales->id_user) }}`,
+				id: `{{ (\Auth::user()->id_group == 2)?\Auth::user()->id:NULL }}`,
 			}
 		},
 		processResults: function (data) {
@@ -685,14 +684,15 @@ $(`#us`).select2({
 
 	},
 });
-@if(old('id_user', @$sales->id_user))
+@if(old('id_user', @$sale->id_user))
 $.ajax({
 	url: `{{ route('getUser') }}`,
 	data: {
-		id: `{{ old('id_user', @$sales->id_user) }}`
+		id: `{{ old('id_user', @$sale->id_user) }}`
 	},
 	dataType: 'json'
 }).then(data => {
+	console.log(data);
 	if (!Array.isArray(data)) return;
 
 	data.forEach(group => {
@@ -703,7 +703,6 @@ $.ajax({
 			$('#us').append(option);
 		});
 	});
-
 	$('#us').trigger('change'); // trigger once
 });
 @endif
@@ -745,11 +744,11 @@ $(`#custsel`).select2({
 
 	},
 });
-@if(old('repeatcust', @$sales?->customer()?->first()?->id_customer))
+@if(old('repeatcust', @$sale?->customer()?->first()?->id_customer))
 $.ajax({
 	url: `{{ route('getCustomers') }}`,
 	data: {
-		id: `{{ old('repeatcust', @$sales?->customer()?->first()?->id_customer) }}`
+		id: `{{ old('repeatcust', @$sale?->customer()?->first()?->id_customer) }}`
 	},
 	dataType: 'json'
 }).then(data => {
@@ -764,7 +763,7 @@ $.ajax({
 ////////////////////////////////////////////////////////////////////////////////////
 // restore old data tracking_number
 @php
-	$slipnumber = @$sales?->slipnumber()?->get(['id', 'tracking_number']);
+	$slipnumber = @$sale?->slipnumber()?->get(['id', 'tracking_number']);
 	$itemsArray = $slipnumber?->toArray()??[];
 	$oldItemsValue = old('serial', $itemsArray);
 	// dd($oldItemsValue);
@@ -785,7 +784,7 @@ if (tracking_number.length > 0) {
 ////////////////////////////////////////////////////////////////////////////////////
 // restore old data invoice items
 @php
-	$invoiceItems = @$sales?->invitems()?->with('product')?->get(['id', 'id_product', 'commission', 'retail', 'quantity']);
+	$invoiceItems = @$sale?->invitems()?->with('product')?->get(['id', 'id_product', 'commission', 'retail', 'quantity']);
 	$invoiceItemsArray = $invoiceItems?->toArray()??[];
 	$oldinvoiceItemsValue = old('serial', $invoiceItemsArray);
 	// dd($oldinvoiceItemsValue);
@@ -812,7 +811,7 @@ if (inItems.length > 0) {
 ////////////////////////////////////////////////////////////////////////////////////
 // restore old data salespayment items
 @php
-	$salespaymentItems = @$sales?->salespayment()?->with('bank')?->get(['id', 'id_bank', 'date_payment', 'amount']);
+	$salespaymentItems = @$sale?->salespayment()?->with('bank')?->get(['id', 'id_bank', 'date_payment', 'amount']);
 	$salespaymentItemsArray = $salespaymentItems?->toArray()??[];
 	$oldsalespaymentItemsValue = old('pay', $salespaymentItemsArray);
 	// dd($oldsalespaymentItemsValue);
@@ -907,7 +906,7 @@ $ys1 = 0;
 			}
 		},
 <?php
-// $ty1 = App\SalesItems::where(['id_sales' => $sales->id, 'deleted_at' => null])->get();
+// $ty1 = \App\Models\SalesItems::where(['id_sales' => $sales->id, 'deleted_at' => null])->get();
 // $v1 = 9990;
 // $y1 = 0;
 // if($ty1->count() > 0):
@@ -959,7 +958,7 @@ $ys1 = 0;
 // endif;
 
 
-// $nm1 = App\Payments::where('id_sales', $sales->id)->get();
+// $nm1 = \App\Models\Payments::where('id_sales', $sales->id)->get();
 // $z1 = 9990;
 // $m1 = 0;
 // if($nm1->count() > 0):

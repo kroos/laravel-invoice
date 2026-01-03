@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
+
 
 class ProductCategoryFormRequest extends FormRequest
 {
@@ -25,7 +27,11 @@ class ProductCategoryFormRequest extends FormRequest
 	{
 		// dd($this->productCategory['id']);
 		return [
-			'category' => 'required|unique:product_categories,product_category,'.$this->productCategory['id'].'|alpha',  // '.$this->categories['id']' to ignore for the update process
+			'category' => [
+											'required',
+											Rule::unique('product_categories', 'product_category')->ignore($this->route('product_categories')),
+											'alpha'
+										],  // '.$this->categories['id']' to ignore for the update process
 			'active' => 'integer',
 		];
 	}

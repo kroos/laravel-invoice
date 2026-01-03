@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\SlipNumbers;
+use App\Models\SlipNumbers;
 use Illuminate\Http\Request;
 
 use Session;
@@ -80,7 +80,7 @@ class SlipNumbersController extends Controller
      * @param  \App\SlipNumbers  $slipNumbers
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request, SlipNumbers $slipNumbers)
+    public function destroy(SlipNumbers $slipNumbers)
     {
         $slipNumbers->delete();
         return response()->json([
@@ -89,18 +89,4 @@ class SlipNumbersController extends Controller
                                 ]);
     }
 
-    public function search(Request $request)
-    {
-        $valid = TRUE;
-        // dd($cust);
-        foreach ($request->serial as $key => $val) {
-            $serialtrack = SlipNumbers::where('tracking_number', $val['tracking_number'])->count();
-            if ($serialtrack == 1) {
-                $valid = FALSE;
-            } else {
-                $valid = TRUE;
-            }
-            return response()->json(['valid' => $valid]);
-        }
-    }
 }

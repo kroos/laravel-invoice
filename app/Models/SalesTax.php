@@ -1,0 +1,44 @@
+<?php
+namespace App\Models;
+
+// use Illuminate\Database\Eloquent\Model;
+use App\Models\Model;
+
+use Illuminate\Database\Eloquent\SoftDeletes;
+// use Illuminate\Database\Eloquent\Relations\HasOne;
+// use Illuminate\Database\Eloquent\Relations\HasOneThrough;
+// use Illuminate\Database\Eloquent\Relations\HasOneOrMany;
+// use Illuminate\Database\Eloquent\Relations\HasMany;
+// use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+// use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+
+// load helper
+use Illuminate\Support\Str;
+
+class SalesTax extends Model
+{
+	use SoftDeletes;
+	protected $casts = [
+		// 'commission' => 'decimal:2',
+		// 'retail' => 'decimal:2',
+		// 'quantity' => 'decimal:0',
+	];
+
+#####################################################################################
+	public function setproduct_categoryAttribute($value)
+	{
+		$this->attributes['product_category'] = Str::title(Str::lower($value));
+	}
+
+#####################################################################################
+	public function salestax(): BelongsTo
+	{
+		return $this->belongsTo(\App\Models\Sales::class, 'id_sales');
+	}
+
+	public function tax(): BelongsTo
+	{
+		return $this->belongsTo(\App\Models\Taxes::class, 'id_tax');
+	}
+}

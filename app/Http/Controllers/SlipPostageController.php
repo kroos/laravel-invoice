@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\SlipPostage;
+use App\Models\SlipPostage;
 use Illuminate\Http\Request;
 
 use Session;

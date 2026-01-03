@@ -1,21 +1,21 @@
 <?php
 
 // load model
-use App\Sales;
-use App\SalesItems;
-use App\SlipPostage;
-use App\Customers;
-use App\Product;
-use App\ProductCategory;
-use App\ProductImage;
-use App\Payments;
-use App\SlipNumbers;
-use App\SalesTax;
-use App\SalesCustomers;
-use App\Preferences;
-use App\Taxes;
-use App\Banks;
-use App\User;
+use \App\Models\Sales;
+use \App\Models\SalesItems;
+use \App\Models\SlipPostage;
+use \App\Models\Customers;
+use \App\Models\Product;
+use \App\Models\ProductCategory;
+use \App\Models\ProductImage;
+use \App\Models\Payments;
+use \App\Models\SlipNumbers;
+use \App\Models\SalesTax;
+use \App\Models\SalesCustomers;
+use \App\Models\Preferences;
+use \App\Models\Taxes;
+use \App\Models\Banks;
+use \App\Models\User;
 
 use Crabbly\Fpdf\Fpdf as Fpdf;
 use Carbon\Carbon;
@@ -138,13 +138,13 @@ foreach ($request->user as $l) {
 		foreach ($inv as $in) {
 
 			///////////////////////////////////////////////////////////////////////////////////////////////
-			$ttax = App\SalesTax::where(['id_sales' => $in->id, 'deleted_at' => NULL])->get();
+			$ttax = \App\Models\SalesTax::where(['id_sales' => $in->id, 'deleted_at' => NULL])->get();
 			$tcharge = 0;
 			foreach ($ttax as $k) {
-				$tcharge += App\Taxes::findOrFail($k->id_tax)->amount;
+				$tcharge += \App\Models\Taxes::findOrFail($k->id_tax)->amount;
 			}
 			///////////////////////////////////////////////////////////////////////////////////////////////
-			$tinv = App\SalesItems::where(['id_sales' => $in->id, 'deleted_at' => NULL])->get();
+			$tinv = \App\Models\SalesItems::where(['id_sales' => $in->id, 'deleted_at' => NULL])->get();
 			$tamo = 0;
 			foreach ($tinv as $tin) {
 				// echo $tin->retail.'&nbsp;'.$tin->quantity.'<br />';
@@ -161,7 +161,7 @@ foreach ($request->user as $l) {
 				// echo $tcomm.' total amount<br />';
 			}
 			///////////////////////////////////////////////////////////////////////////////////////////////
-			$pay = App\Payments::where(['id_sales' => $in->id, 'deleted_at' => NULL])->get();
+			$pay = \App\Models\Payments::where(['id_sales' => $in->id, 'deleted_at' => NULL])->get();
 			$paya = 0;
 			foreach ($pay as $py) {
 				$paya += $py->amount;

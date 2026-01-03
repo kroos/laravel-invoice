@@ -1,4 +1,4 @@
-@extends('layout.master')
+@extends('layouts.app')
 
 @section('content')
 <form method="POST" action="{{ route('sales.store') }}" accept-charset="UTF-8" id="form" autocomplete="off" class="needs-validation" enctype="multipart/form-data">
@@ -17,6 +17,6 @@
 </form>
 @endsection
 
-@section('jquery')
+@section('js')
 	@include('sales._js')
 @endsection

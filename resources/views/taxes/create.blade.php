@@ -1,4 +1,4 @@
-@extends('layout.master')
+@extends('layouts.app')
 
 @section('content')
 <form method="POST" action="{{ route('taxes.store') }}" accept-charset="UTF-8" id="form" autocomplete="off" class="needs-validation" enctype="multipart/form-data">
@@ -18,6 +18,5 @@
 </form>
 @endsection
 
-
-@section('jquery')
+@section('js')
 @endsection

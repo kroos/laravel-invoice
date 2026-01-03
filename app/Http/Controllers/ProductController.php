@@ -5,9 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 // load model
-use App\Product;
-use App\ProductCategory;
-use App\ProductImage;
+use App\Models\Product;
+use App\Models\ProductCategory;
+use App\Models\ProductImage;
 
 // load validation
 use App\Http\Requests\ProductFormRequest;
@@ -25,31 +25,25 @@ use File;
 
 class ProductController extends Controller
 {
-	function __construct()
-	{
-		$this->middleware('auth');
-		$this->middleware('admin', ['except' => ['create', 'store']]);
-	}
-
 	public function index()
 	{
-		return view('product.index');
+		return view('products.index');
 	}
 
 	public function create()
 	{
-		return view('product.create');
+		return view('products.create');
 	}
 
 	public function store(ProductFormRequest $request)
 	{
 		// dd($request->all());
 		$prdt1 = new Product(request([
-				'product', 'id_category', 'retail', 'commission', 'active'
+				'products', 'id_category', 'retail', 'commission', 'active'
 		]));
 		$prdt = \Auth::user()->createdby()->save($prdt1);
 		// $prdt = Product::create(request([
-		// 		'id_user', 'product', 'id_category', 'retail', 'commission', 'active'
+		// 		'id_user', 'products', 'id_category', 'retail', 'commission', 'active'
 		// 	]));
 
 		foreach($request->file('image') as $file){
@@ -88,7 +82,7 @@ class ProductController extends Controller
 			}
 		}
 		// info when update success
-		Session::flash('flash_message', 'Data successfully added!');
+		Session::flash('success', 'Data successfully added!');
 		return redirect()->back();		// redirect back to original route
 	}
 
@@ -99,14 +93,14 @@ class ProductController extends Controller
 
 	public function edit(Product $product)
 	{
-		return view('product.edit');
+		return view('products.edit', ['product' => $product]);
 	}
 
 	public function update(ProductFormRequest $request, Product $product)
 	{
 		$product->update([
 						'id_user' => auth()->user()->id,
-						'product' => request('product'),
+						'products' => request('products'),
 						'id_category' => request('id_category'),
 						'retail' => request('retail'),
 						'commission' => request('commission'),
@@ -115,9 +109,9 @@ class ProductController extends Controller
 					]);
 
 		// info when update success
-		Session::flash('flash_message', 'Data successfully edited!');
+		Session::flash('success', 'Data successfully edited!');
 
-		return redirect(route('product.edit', $product->slug));      // redirect back to original route
+		return redirect(route('products.edit', $product->slug));      // redirect back to original route
 	}
 
 	public function destroy(Product $product)

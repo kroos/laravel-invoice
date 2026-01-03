@@ -1,9 +1,9 @@
-@extends('layout.master')
+@extends('layouts.app')
 
 @section('content')
 <div class="card">
 	<div class="card-header d-flex justify-content-between">
-		<h3 class="my-auto">Invoice</h3>
+		<h3 class="my-auto">Invoice List</h3>
 		<a href="{!! route('sales.create') !!}" class="btn btn-sm btn-outline-info my-auto">New Invoice</a>
 	</div>
 	<div class="card-body">
@@ -14,19 +14,19 @@
 </div>
 @endsection
 
-@section('jquery')
+@section('js')
 /////////////////////////////////////////////////////////////////////////////////////////
 var table = $('#at').DataTable({
 	"lengthMenu": [ [10, 25, 50, 100, -1], [10, 25, 50, 100, "All"] ],
-	// columnDefs: [
-	// 	{ type: 'date', 'targets': [4,5,6] },
+	columnDefs: [
+		{ type: 'date', 'targets': [1] },
 	// 	// { type: 'time', 'targets': [6] },
-	// ],
+	],
 	order: [[0, 'asc'], [1, 'asc']],
 	responsive: true,
 	autoWidth: true,
 	fixedHeader: true,
-	dom: 'Bfrtip',
+	// dom: 'Bfrtip',
 	ajax: {
 		type: 'GET',
 		url: '{{ route('geSales') }}',
@@ -45,10 +45,10 @@ var table = $('#at').DataTable({
 			title: 'Date',
 			defaultContent: '-',
 			render: function(data){
-				return moment(data).format('DD-MM-YYYY');
+				return moment(data).format('D MMM YYYY');
 			}
 		},
-		{ data: 'slipnumber[0].tracking_number', title: 'Tracking No', defaultContent: '-', },
+		{ data: 'invuser.name', title: 'Name', defaultContent: '-', },
 		{
 			data: null,
 			 title: 'Total Commission',
@@ -134,7 +134,7 @@ var table = $('#at').DataTable({
 			render: function(data){
 				return `
 					<div class="btn-group btn-group-sm" role="group">
-						<a href="{{ url('sales') }}/edit/${data}" class="btn btn-sm btn-outline-info" title="Edit">
+						<a href="{{ url('sales') }}/${data}/edit" class="btn btn-sm btn-outline-info" title="Edit">
 							<i class="fa-regular fa-pen-to-square"></i>
 						</a>
 
@@ -184,7 +184,7 @@ function SwalDelete(productId){
 			return new Promise(function(resolve) {
 				$.ajax({
 					headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-					url: `{{ url('sales.destroy' )}}/${productId}`,
+					url: `{{ url('sales')}}/${productId}`,
 					type: 'delete',
 					data:	{
 						id: productId,

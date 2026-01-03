@@ -3,16 +3,16 @@
 namespace App\Http\Controllers;
 
 // load model
-use App\Sales;
-use App\SalesItems;
-use App\SlipPostage;
-use App\Customers;
-use App\Product;
-use App\ProductCategory;
-use App\Payments;
-use App\SlipNumbers;
-use App\SalesTax;
-use App\SalesCustomers;
+use App\Models\Sales;
+use App\Models\SalesItems;
+use App\Models\SlipPostage;
+use App\Models\Customers;
+use App\Models\Product;
+use App\Models\ProductCategory;
+use App\Models\Payments;
+use App\Models\SlipNumbers;
+use App\Models\SalesTax;
+use App\Models\SalesCustomers;
 
 // for manipulating image
 // http://image.intervention.io/
@@ -30,12 +30,6 @@ use App\Http\Requests\SalesFormRequest;
 
 class SalesController extends Controller
 {
-	function __construct()
-	{
-		$this->middleware('auth');
-		$this->middleware('notowned', ['only' => ['edit', 'update', 'destroy']]);
-	}
-
 	public function index()
 	{
 		return view('sales.index');
@@ -176,28 +170,28 @@ class SalesController extends Controller
 
 		###################################################
 		// info when update success
-		Session::flash('flash_message', 'Data successfully added!');
+		Session::flash('success', 'Data successfully added!');
 
 		return redirect()->back();      // redirect back to original route
 	}
 
-	public function show(Sales $sales)
+	public function show(Sales $sale)
 	{
 		//
 	}
 
-	public function edit(Sales $sales)
+	public function edit(Sales $sale)
 	{
-		return view('sales.edit', compact(['sales']));
+		return view('sales.edit', ['sale' => $sale]);
 	}
 
-	public function update(SalesFormRequest $request, Sales $sales)
+	public function update(SalesFormRequest $request, Sales $sale)
 	{
 		// dd($request->tax);
 		// dd($request->all());
 		####################################################
 		// invoice part
-		$inv = $sales->update(request([
+		$inv = $sale->update(request([
 							'id_user', 'date_sale',
 						]));
 
@@ -207,7 +201,7 @@ class SalesController extends Controller
 			foreach ($request->serial as $key => $val) {
 				$serialtrack = SlipNumbers::updateOrCreate(['id' => $val['id']],
 					[
-						'id_sales' => $sales->id,
+						'id_sales' => $sale->id,
 						'tracking_number' => $val['tracking_number'],
 					]);
 			}
@@ -230,9 +224,9 @@ class SalesController extends Controller
 
 				// if image already existed in the database
 				if($imh->count() < 1) {
-					$img = SlipPostage::updateOrCreate(['id_sales' => $sales->id],
+					$img = SlipPostage::updateOrCreate(['id_sales' => $sale->id],
 							[
-								'id_sales' => $sales->id,
+								'id_sales' => $sale->id,
 								'image' => base64_encode( file_get_contents( storage_path().'/uploads/'.$filename ) ),
 								'mime' => $mime,
 							]);
@@ -254,9 +248,9 @@ class SalesController extends Controller
 
 		###################################################
 		// customers part
-		// $cust = Customers::updateOrCreate(['id_sales' => $sales->id, 'deleted_at' => null],
+		// $cust = Customers::updateOrCreate(['id_sales' => $sale->id, 'deleted_at' => null],
 		// 		[
-		// 			'id_sales' => $sales->id,
+		// 			'id_sales' => $sale->id,
 		// 			'client' => $request->client,
 		// 			'client_address' => $request->client_address,
 		// 			'client_poskod' => $request->client_poskod,
@@ -294,7 +288,7 @@ class SalesController extends Controller
 			foreach ($request->inv as $key => $val) {
 				$invoice = SalesItems::updateOrCreate(['id' => $val['id'], 'deleted_at' => null],
 					[
-						'id_sales' => $sales->id,
+						'id_sales' => $sale->id,
 						'id_product' => $val['id_product'],
 						'commission' => $val['commission'],
 						'retail' => $val['retail'],
@@ -306,16 +300,16 @@ class SalesController extends Controller
 		###################################################
 		// tax part
 		if ($request->tax != NULL) {
-			SalesTax::where(['id_sales' => $sales->id])->delete();
+			SalesTax::where(['id_sales' => $sale->id])->delete();
 			foreach ($request->tax as $y) {
 
 				$invoice = SalesTax::create([
-						'id_sales' => $sales->id,
+						'id_sales' => $sale->id,
 						'id_tax' => $y,
 					]);
 			}
 		} else {
-			SalesTax::where(['id_sales' => $sales->id])->delete();
+			SalesTax::where(['id_sales' => $sale->id])->delete();
 		}
 
 		##################################################
@@ -324,7 +318,7 @@ class SalesController extends Controller
 			foreach ($request->pay as $key => $val) {
 				$invoice = Payments::updateOrCreate(['id' => $val['id'], 'deleted_at' => null],
 					[
-						'id_sales' => $sales->id,
+						'id_sales' => $sale->id,
 						'id_bank' => $val['id_bank'],
 						'date_payment' => $val['date_payment'],
 						'amount' => $val['amount'],
@@ -334,12 +328,12 @@ class SalesController extends Controller
 
 		##################################################
 		// info when update success
-		Session::flash('flash_message', 'Data successfully update!');
+		Session::flash('success', 'Data successfully update!');
 
 		return redirect(route('sales.index'));      // redirect back to original route
 	}
 
-	public function destroy(Sales $sales)
+	public function destroy(Sales $sale)
 	{
 		$sale->slippostageimage()->delete();
 		$sale->customer()->delete();

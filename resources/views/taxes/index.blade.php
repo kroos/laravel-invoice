@@ -1,4 +1,4 @@
-@extends('layout.master')
+@extends('layouts.app')
 
 @section('content')
 <div class="card">
@@ -14,7 +14,7 @@
 </div>
 @endsection
 
-@section('jquery')
+@section('js')
 /////////////////////////////////////////////////////////////////////////////////////////
 var table = $('#at').DataTable({
 	// columnDefs: [
@@ -46,7 +46,7 @@ var table = $('#at').DataTable({
 			render: function(data,type,row){
 				return `
 					<div class="btn-group btn-group-sm" role="group">
-						<a href="{{ url('taxes') }}/edit/${row.slug}" class="btn btn-sm btn-outline-info" title="Edit">
+						<a href="{{ url('taxes') }}/${row.slug}/edit" class="btn btn-sm btn-outline-info" title="Edit">
 							<i class="fa-regular fa-pen-to-square"></i>
 						</a>
 

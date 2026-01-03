@@ -1,4 +1,4 @@
-@extends('layout.master')
+@extends('layouts.app')
 
 @section('content')
 <div class="card">
@@ -171,7 +171,7 @@
 @endsection
 
 
-@section('jquery')
+@section('js')
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 $(`#seller,#seller1,#seller2`).select2({

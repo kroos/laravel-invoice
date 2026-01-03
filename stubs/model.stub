@@ -14,13 +14,20 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 // use Illuminate\Database\Eloquent\Relations\BelongsTo;
 // use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
+// load column name attribute
+use Illuminate\Database\Eloquent\Casts\Attribute;
+
 // load helper
 use Illuminate\Support\Str;
+
+// load sluggable
+// use Cviebrock\EloquentSluggable\Sluggable;
+// use Cviebrock\EloquentSluggable\SluggableScopeHelpers;
 
 class {{ class }} extends Model
 {
 	{{ factory }}
-	use SoftDeletes;
+	use SoftDeletes/*, Sluggable*/;
 	// protected $connection = '';
 	// protected $table = '';
 	// protected $primaryKey = '';
@@ -34,11 +41,30 @@ class {{ class }} extends Model
 	// 	'is_active' => 'boolean',
 	// ];
 
+	// public function sluggable(): array
+	// {
+	// 	return [
+	// 		'slug' => ['source' => 'UniqueColumnName']
+	// 	];
+	// }
+
+	// public function getRouteKeyName()
+	// {
+	// 	return 'slug';
+	// }
+
 	/////////////////////////////////////////////////////////////////////////////////////////////////////
 	// set column attribute
-	// public function setNameAttribute($value)
+	// protected function ColumnName(): Attribute
 	// {
-	//     $this->attributes['name'] = ucwords(Str::lower($value));
+	// 	return Attribute::make(
+	// 		set: fn ($value) => Str::slug($value),
+	// 	);
+	// }
+
+	// protected function setColumnNameAttribute($value)
+	// {
+	//     $this->attributes['ColumnName'] = ucwords(Str::lower($value));
 	// }
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Taxes;
+use App\Models\Taxes;
 use Illuminate\Http\Request;
 
 use App\Http\Requests\TaxesFormRequest;
@@ -11,12 +11,6 @@ use Session;
 
 class TaxesController extends Controller
 {
-    function __construct()
-    {
-        $this->middleware('auth');
-        $this->middleware('admin');
-   }
-
     public function index()
     {
         return view('taxes.index');
@@ -30,32 +24,31 @@ class TaxesController extends Controller
     public function store(TaxesFormRequest $request)
     {
         Taxes::create(request(['tax', 'amount']));
-        Session::flash('flash_message', 'Data successfully added!');
+        Session::flash('success', 'Data successfully added!');
         return redirect(route('taxes.index'));      // redirect back to original route
     }
 
-    public function show(Taxes $taxes)
+    public function show(Taxes $tax)
     {
         //
     }
 
-    public function edit(Taxes $taxes)
+    public function edit(Taxes $tax)
     {
-        return view('taxes.edit', ['taxes' => $taxes]);
+        return view('taxes.edit', ['tax' => $tax]);
     }
 
-    public function update(TaxesFormRequest $request, Taxes $taxes)
+    public function update(TaxesFormRequest $request, Taxes $tax)
     {
-        $taxes->update(request(['tax', 'amount']));
-        Session::flash('flash_message', 'Data successfully update!');
+        $tax->update(request(['tax', 'amount']));
+        Session::flash('success', 'Data successfully update!');
 
         return redirect(route('taxes.index'));      // redirect back to original route
     }
 
-    public function destroy(Taxes $taxes)
+    public function destroy(Taxes $tax)
     {
-        $taxes->delete();
-        Session::flash('flash_message', 'Data successfully delete!');
+        $tax->delete();
         return response()->json([
             'status' => 'success',
             'message' => 'Success Delete',

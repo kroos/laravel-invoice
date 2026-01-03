@@ -8,18 +8,13 @@ use Illuminate\Http\Request;
 use App\Http\Requests\UserGroupFormRequest;
 
 // load model
-use App\UserGroup;
+use App\Models\UserGroup;
 
 // load session
 use Session;
 
 class UserGroupController extends Controller
 {
-	function __construct()
-	{
-		$this->middleware('auth');
-		$this->middleware('admin');
-	}
 	 /**
 	 * Display a listing of the resource.
 	 *
@@ -54,7 +49,7 @@ class UserGroupController extends Controller
 			'group' => request('group'),
 			]);
 
-		Session::flash('flash_message', 'Data successfully added!');
+		Session::flash('success', 'Data successfully added!');
 
 		return redirect()->back();      // redirect back to original route
 	}

@@ -2,8 +2,8 @@
 namespace App\Http\Controllers;
 
 // load model
-use App\User;
-use App\UserGroup;
+use App\Models\User;
+use App\Models\UserGroup;
 
 // load session
 use Session;
@@ -15,12 +15,6 @@ use App\Http\Requests\UserFormRequest;
 
 class UserController extends Controller
 {
-	function __construct()
-	{
-		$this->middleware('auth');
-		$this->middleware('admin', ['only' => ['create', 'store', 'destroy']]);
-		$this->middleware('userown', ['only' => ['edit', 'update', 'show']]);
-	}
 	 /**
 	 * Display a listing of the resource.
 	 *
@@ -28,8 +22,7 @@ class UserController extends Controller
 	 */
 	public function index()
 	{
-		// echo auth()->user()->id_group;
-		return view('user.index');
+		return view('users.index');
 	}
 
 	 /**
@@ -39,7 +32,7 @@ class UserController extends Controller
 	 */
 	public function create()
 	{
-		return view('user.create');
+		return view('users.create');
 	}
 
 	 /**
@@ -58,12 +51,7 @@ class UserController extends Controller
 			'id_group' => request('id_group'),
 			'color' => request('color'),
 			]);
-
-		// message to confirm storing data
-		Session::flash('flash_message', 'Data successfully added!');
-
-		// redirect back to original route
-		return redirect()->back();
+		return redirect()->back()->with('success', 'Success added data');
 	}
 
 	 /**
@@ -85,7 +73,7 @@ class UserController extends Controller
 	 */
 	public function edit(User $user)
 	{
-		return view('user.edit', ['user' => $user]);
+		return view('users.edit', ['user' => $user]);
 	}
 
 	 /**
@@ -109,9 +97,9 @@ class UserController extends Controller
 					]);
 		// $user->touch();
 		// info when update success
-		Session::flash('flash_message', 'Data successfully edited!');
+		Session::flash('success', 'Data successfully edited!');
 
-		return redirect(route('user.edit', $user->slug));      // redirect back to original route
+		return redirect(route('users.edit', $user->slug));      // redirect back to original route
 	}
 
 	 /**
@@ -122,12 +110,7 @@ class UserController extends Controller
 	 */
 	public function destroy(User $user)
 	{
-		//
-		User::destroy($user->id);
-		// info when update success
-		// Session::flash('flash_message', 'Data successfully deleted!');
-
-		// return redirect(route('user.create'));		// redirect back to original route
+		$user->delete();
 		return response()->json([
 									'message' => 'Data deleted',
 									'status' => 'success'

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Preferences;
+use App\Models\Preferences;
 use Illuminate\Http\Request;
 
 // for manipulating image
@@ -19,45 +19,40 @@ use App\Http\Requests\PreferencesFormRequest;
 
 class PreferencesController extends Controller
 {
-	function __construct()
-	{
-	    $this->middleware('auth');
-	    $this->middleware('admin');
-	}
-
 	public function index()
 	{
-	    //
+			//
 	}
 
 	public function create()
 	{
-	    //
+			//
 	}
 
 	public function store(PreferencesFormRequest $request)
 	{
-	    //
+			//
 	}
 
-	public function show(Preferences $preferences)
+	public function show(Preferences $preference)
 	{
-	    //
+			//
 	}
 
-	public function edit(Preferences $preferences)
+	public function edit()
 	{
-	    return view('preferences.edit', compact(['preferences']));
+		$preference =	Preferences::find(1);
+		return view('preferences.edit', ['preference' => $preference]);
 	}
 
-	public function update(PreferencesFormRequest $request, Preferences $preferences)
+	public function update(PreferencesFormRequest $request, Preferences $preference)
 	{
 		$option = Preferences::updateOrCreate(
-	    		['id' => $preferences->id],
-	    		request([
-	    				'company_name', 'company_address', 'company_postcode', 'company_tagline', 'company_fixed_line', 'company_mobile', 'company_registration', 'company_owner', 'company_email', 'company_person_in-charge'
-	    			])
-	    	);
+			['id' => $preference->id],
+			request([
+				'company_name', 'company_address', 'company_postcode', 'company_tagline', 'company_fixed_line', 'company_mobile', 'company_registration', 'company_owner', 'company_email', 'company_person_in-charge'
+			])
+		);
 
 		if ($request->file('logo') != NULL) {
 			foreach($request->file('logo') as $file)
@@ -65,7 +60,7 @@ class PreferencesController extends Controller
 				$mime = $file->getMimeType();
 				$filename = $file->store('images');
 				$imag = Image::make(storage_path().'/uploads/'.$filename);
-	
+
 				// // resize the image to a height of 100 and constrain aspect ratio (auto width)
 				$imag->resize
 				(
@@ -74,11 +69,11 @@ class PreferencesController extends Controller
 						$constraint->aspectRatio();
 					}
 				);
-	
+
 				$imag->save();
-	
+
 				$img = Preferences::updateOrCreate(
-						['id' => $preferences->id], [
+					['id' => $preference->id], [
 						'company_logo_image' => base64_encode( file_get_contents( storage_path().'/uploads/'.$filename ) ),
 						'company_logo_mime' => $mime,
 					]);
@@ -97,12 +92,12 @@ class PreferencesController extends Controller
 		}
 
 		// info when update success
-		Session::flash('flash_message', 'Data successfully save!');
+		Session::flash('success', 'Data successfully save!');
 		return redirect()->back();		// redirect back to original route
 	}
 
-	public function destroy(Preferences $preferences)
+	public function destroy(Preferences $preference)
 	{
-	    //
+			//
 	}
 }

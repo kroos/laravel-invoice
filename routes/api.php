@@ -1,28 +1,25 @@
 <?php
+use Illuminate\Support\Facades\Route;
 
-use Illuminate\Http\Request;
+// read API from files
+use Illuminate\Support\Facades\Storage;
 
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
-|
-*/
 use App\Http\Controllers\API\ModelAjaxSupportController;
 
 Route::middleware(['auth', 'auth:sanctum'])->group(function () {
-
-	// Route::controller(ModelAjaxSupportController::class)->group(function () {
-	// 	Route::get('/getProducts', 'getProducts')->name('getProducts');
-	// 	Route::get('/getUser', 'getUser')->name('getUser');
-	// 	Route::get('/geSales', 'geSales')->name('geSales');
-	// });
-
-
+	Route::controller(ModelAjaxSupportController::class)->group(function () {
+		Route::get('/getActivityLogs', 'getActivityLogs')->name('getActivityLogs');
+		Route::get('/getProducts', 'getProducts')->name('getProducts');
+		Route::get('/getProductsdT', 'getProductsdT')->name('getProductsdT');
+		Route::get('/getUser', 'getUser')->name('getUser');
+		Route::get('/getCustomers', 'getCustomers')->name('getCustomers');
+		Route::get('/getBanks', 'getBanks')->name('getBanks');
+		Route::get('/getBanksT', 'getBanksT')->name('getBanksT');
+		Route::get('/geSales', 'geSales')->name('geSales');
+		Route::get('/getTaxes', 'getTaxes')->name('getTaxes');
+		Route::get('/remoteusers', 'remoteusers')->name('remote.user');
+		Route::get('/customersearch', 'customersearch')->name('customers.search');
+		Route::post('/slipnumbersearch', 'slipnumbersearch')->name('slipnumbers.search');
+	});
 });
-
 

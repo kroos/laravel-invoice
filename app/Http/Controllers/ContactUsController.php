@@ -1,6 +1,4 @@
 <?php
-
-
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -10,7 +8,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\ContactUs;
 
 // load model
-use App\Preferences;
+use App\Models\Preferences;
 
 // load session
 use Session;
@@ -19,7 +17,7 @@ class ContactUsController extends Controller
 {
 	public function email(Request $request)
 	{
-		$re = \App\Preferences::find(1);
+		$re = Preferences::find(1);
 
 		// validation
 		$this->validate($request, [
@@ -42,7 +40,7 @@ class ContactUsController extends Controller
     	// ->bcc($evenMoreUsers)
 		->send(new ContactUs($request));
 
-		Session::flash('flash_message', 'Done send email.');
+		Session::flash('success', 'Done send email.');
 		return redirect()->back();		// redirect back to original route
 	}
 }

@@ -12,7 +12,7 @@ use Illuminate\Http\JsonResponse;
 
 // models
 use App\Models\{
-	YesNoOption, ActivityLog, JobBatch, FileEntry
+	ActivityLog, ProductCategory, Product, UserGroup, Sales, Customers, Banks, Taxes, User, SlipNumbers
 };
 
 // load db facade
@@ -53,9 +53,25 @@ use Log;
 
 class ModelAjaxSupportController extends Controller
 {
+	// this 1 need chunks sooner or later
+	public function getActivityLogs(Request $request): JsonResponse
+	{
+		$values = ActivityLog::with('belongstouser')
+											->when($request->search, function(Builder $query) use ($request){
+												$query->where('model_type','LIKE','%'.$request->search.'%')
+												->orWhere('ip_address','LIKE','%'.$request->search.'%');
+											})
+											->when($request->id, function($query) use ($request){
+												$query->where('id', $request->id);
+											})
+											->orderBy('created_at', 'DESC')
+											->get();
+		return response()->json($values);
+	}
+
 	public function getProducts(Request $request): JsonResponse
 	{
-		$values = \App\ProductCategory::query()
+		$values = ProductCategory::query()
 								->with(['product' => function ($q) use ($request) {
 									$q->with('productimage');
 
@@ -88,7 +104,7 @@ class ModelAjaxSupportController extends Controller
 
 	public function getProductsdT(Request $request)
 	{
-		$values = \App\Product::with(['category', 'productimage'])
+		$values = Product::with(['category', 'productimage'])
 														->when($request->id, function ($query) use ($request) {
 															$query->where('id', $request->id);
 														})
@@ -101,41 +117,21 @@ class ModelAjaxSupportController extends Controller
 
 	public function getUser(Request $request)
 	{
-		// dd(auth()->user(), session()->all(), auth('web')->check());
-		$userId = auth()->user()->id_group == 1
-							? $request->id
-							: auth()->user()->id;
-
-		$values = \App\UserGroup::when($userId, function($query) use ($userId) {
-														$query->whereHas('users', fn ($q) =>
-															$q->where('id', $userId)
-												    );
-													})
-													->when($request->search, function($query) use ($request) {
-														$query->whereHas('users', function ($q)  use ($request) {
-															$q->where('name', 'LIKE', '%'.$request->search.'%');
-														});
-													})
-
-											    ->with('users', function ($q1) use ($userId) {
-											    	$q1->when($userId, function($q2) use ($userId) {
-											        $q2->where('id', $userId);
-											    	});
-											    })
-
-											    ->with('users', function ($q1) use ($request) {
-											    	$q1->when($request->search, function($q2) use ($request) {
-											    		$q2->where('name', 'LIKE', '%'.$request->search.'%');
-											    	});
-											    })
-
-													->get();
+		$values = UserGroup::with(['users' => function ($q) use ($request) {
+													$q->when($request->id, function ($q1) use ($request) {
+														$q1->where('id', $request->id);
+													});
+													$q->when($request->search, function ($q1) use ($request) {
+														$q1->where('name', 'LIKE', '%'.$request->search.'%');
+													});
+												}])
+												->get();
 		return response()->json($values);
 	}
 
 	public function geSales(Request $request)
 	{
-		$values = \App\Sales::query()
+		$values = Sales::query()
 								->with([
 									'slippostageimage',
 									'customer',
@@ -162,7 +158,7 @@ class ModelAjaxSupportController extends Controller
 
 	public function getCustomers(Request $request)
 	{
-		$values = \App\Customers::when($request->search, function($q) use ($request) {
+		$values = Customers::when($request->search, function($q) use ($request) {
 															$q->where('client', 'LIKE', '%'.$request->search.'%');
 														})
 														->when($request->id, function($q) use ($request) {
@@ -174,7 +170,7 @@ class ModelAjaxSupportController extends Controller
 
 	public function getBanks(Request $request)
 	{
-		$values = \App\Banks::where('active', 1)
+		$values = Banks::where('active', 1)
 													->when($request->search, function($q) use ($request) {
 															$q->where('bank', 'LIKE', '%'.$request->search.'%');
 														})
@@ -191,7 +187,7 @@ class ModelAjaxSupportController extends Controller
 
 	public function getBanksT(Request $request)
 	{
-		$values = \App\Banks::when($request->search, function($q) use ($request) {
+		$values = Banks::when($request->search, function($q) use ($request) {
 															$q->where('bank', 'LIKE', '%'.$request->search.'%');
 														})
 														->when($request->id, function($q) use ($request) {
@@ -207,7 +203,7 @@ class ModelAjaxSupportController extends Controller
 
 	public function getTaxes(Request $request)
 	{
-		$values = \App\Taxes::when($request->search, function($q) use ($request) {
+		$values = Taxes::when($request->search, function($q) use ($request) {
 															$q->where('tax', 'LIKE', '%'.$request->search.'%');
 														})
 														->when($request->id, function($q) use ($request) {
@@ -220,5 +216,79 @@ class ModelAjaxSupportController extends Controller
 
 		return response()->json($values);
 	}
+
+	public function remoteusers(Request $request, User $user)
+	{
+		$valid = true;
+
+		$users1 = User::all();
+		foreach($users1 as $wer) {
+			$users[$wer['username']] = $wer['email'];
+		}
+
+		if (request('username') && array_key_exists(request('username'), $users)) {
+			$valid = false;
+		} else if (request('email')) {
+			$email = request('email');
+
+			foreach ($users as $k => $v) {
+				if ($email == $v) {
+					$valid = false;
+					break;
+				}
+			}
+		}
+		return response()->json([
+			'valid' => $valid
+		]);
+	}
+
+	public function customersearch(Request $request)
+	{
+		$valid = TRUE;
+		$cust = Customers::where('client', $request->client)->count();
+		$cust_email = Customers::where('client_email', $request->client_email)->count();
+		$cust_phone = Customers::where('client_phone', $request->client_phone)->count();
+		// dd($cust);
+
+		if ($cust == 1)
+		{
+			$valid = FALSE;
+		}
+		else
+		{
+			if ($cust_phone == 1)
+			{
+				$valid = FALSE;
+			}
+			else
+			{
+				if ($cust_email == 1)
+				{
+					$valid = FALSE;
+				} else {
+					$valid = TRUE;
+				}
+			}
+		}
+
+		return response()->json(['valid' => $valid]);
+	}
+
+	public function slipnumbersearch(Request $request)
+	{
+		$valid = TRUE;
+        // dd($cust);
+		foreach ($request->serial as $key => $val) {
+			$serialtrack = SlipNumbers::where('tracking_number', $val['tracking_number'])->count();
+			if ($serialtrack == 1) {
+				$valid = FALSE;
+			} else {
+				$valid = TRUE;
+			}
+			return response()->json(['valid' => $valid]);
+		}
+	}
+
 
 }

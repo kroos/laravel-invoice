@@ -3,10 +3,9 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
-
-
-// must update this class in Kernel.php
 class RedirectIfNotAnAdmin
 {
     /**
@@ -19,8 +18,8 @@ class RedirectIfNotAnAdmin
     public function handle($request, Closure $next)
     {
         // create this method on a User model => isAnAdmin
-        if ( ! $request->user()->isAnAdmin() ) {
-            return redirect()->back();
+        if ( ! $request->user()->isAdmin() ) {
+            return abort(403, 'Unauthorized');
         }
         return $next($request);
     }

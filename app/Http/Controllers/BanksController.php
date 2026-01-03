@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Banks;
+use App\Models\Banks;
 use Illuminate\Http\Request;
 
 // load validation
@@ -12,12 +12,6 @@ use Session;
 
 class BanksController extends Controller
 {
-	function __construct()
-	{
-		$this->middleware('auth');
-		$this->middleware('admin');
-	}
-
 	public function index()
 	{
 		return view('banks.index');
@@ -40,52 +34,52 @@ class BanksController extends Controller
 				'account' => $request->account,
 				'active' => $request->active,
 			]);
-		Session::flash('flash_message', 'Data successfully edited!');
+		Session::flash('success', 'Data successfully edited!');
 		return redirect(route('banks.index'));
 	}
 
-	public function show(Banks $banks)
+	public function show(Banks $bank)
 	{
 		//
 	}
 
-	public function edit(Banks $banks)
+	public function edit(Banks $bank)
 	{
-		return view('banks.edit', compact(['banks']));
+		return view('banks.edit', ['bank' => $bank]);
 	}
 
-	public function update(BanksFormRequest $request, Banks $banks)
+	public function update(BanksFormRequest $request, Banks $bank)
 	{
 		// dd(request()->all());
-		$duit = $banks->update(request([
+		$duit = $bank->update(request([
 						'bank', 'city', 'swift_code', 'account',
 					]));
-		$banks->touch();
+		$bank->touch();
 		// info when update success
-		Session::flash('flash_message', 'Data successfully edited!');
+		Session::flash('success', 'Data successfully edited!');
 		return redirect(route('banks.index'));
 	}
 
-	public function destroy(Banks $banks)
+	public function destroy(Banks $bank)
 	{
 		//
 	}
 
-	public function active(Banks $banks)
+	public function active(Banks $bank)
 	{
 		// get active value
-		if($banks->active == 1) {
-			$banks->update([
+		if($bank->active == 1) {
+			$bank->update([
 					'active' => 0,
 				]);
 			// info when update success
-			Session::flash('flash_message', 'Successfully deactivate '.$banks->bank);
+			Session::flash('success', 'Successfully deactivate '.$bank->bank);
 		} else {
-			$banks->update([
+			$bank->update([
 					'active' => 1,
 				]);
 			// info when update success
-			Session::flash('flash_message', 'Successfully activate '.$banks->bank);
+			Session::flash('success', 'Successfully activate '.$bank->bank);
 		}
 		return redirect()->back();
 	}

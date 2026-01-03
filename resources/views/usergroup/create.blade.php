@@ -1,7 +1,7 @@
-@extends('layout.master')
+@extends('layouts.app')
 
 @section('content')
-<form method="POST" action="{{ route('usergroup.store') }}" accept-charset="UTF-8" id="form" autocomplete="off" class="needs-validation" enctype="multipart/form-data">
+<form method="POST" action="{{ route('usergroups.store') }}" accept-charset="UTF-8" id="form" autocomplete="off" class="needs-validation" enctype="multipart/form-data">
 	@csrf
 	<div class="card mb-3">
 		<div class="card-head">Add User Group</div>
@@ -23,7 +23,7 @@
 		<div class="card-footer d-flex justify-content-end">
 			<button type="submit" class="btn btn-sm btn-outline-primary me-1">
 				<i class="fa-regular fa-floppy-disk"></i> Submit</button>
-			<a href="{{ route('user.create') }}" class="btn btn-sm btn-outline-secondary me-1">Cancel</a>
+			<a href="{{ route('usergroups.create') }}" class="btn btn-sm btn-outline-secondary me-1">Cancel</a>
 		</div>
 	</div>
 </form>
@@ -42,7 +42,7 @@
 @endsection
 
 
-@section('jquery')
+@section('js')
 /////////////////////////////////////////////////////////////////////////////////////////
 var table = $('#at').DataTable({
 	"lengthMenu": [ [10, 25, 50, 100, -1], [10, 25, 50, 100, "All"] ],
@@ -79,7 +79,7 @@ var table = $('#at').DataTable({
 						</a>
 
 						<button type="button" data-id="${data}" title="Delete" class="delete_button btn btn-sm btn-danger">
-							<i class="fas fa-trash fa-lg"></i>
+							<i class="fas fa-trash"></i>
 						</button>
 					</div>
 				`
@@ -114,7 +114,7 @@ function SwalDelete(productId){
 		preConfirm: function(){
 			return new Promise(function(resolve) {
 				$.ajax({
-					url: '{{ url('usergroup') }}/${productId}',
+					url: '{{ url('usergroups') }}/${productId}',
 					type: 'DELETE',
 					data:	{
 								id: productId,

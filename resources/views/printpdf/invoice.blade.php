@@ -1,20 +1,20 @@
 <?php
 
 // load model
-use App\Sales;
-use App\SalesItems;
-use App\SlipPostage;
-use App\Customers;
-use App\Product;
-use App\ProductCategory;
-use App\ProductImage;
-use App\Payments;
-use App\SlipNumbers;
-use App\SalesTax;
-use App\SalesCustomers;
-use App\Preferences;
-use App\Taxes;
-use App\Banks;
+use \App\Models\Sales;
+use \App\Models\SalesItems;
+use \App\Models\SlipPostage;
+use \App\Models\Customers;
+use \App\Models\Product;
+use \App\Models\ProductCategory;
+use \App\Models\ProductImage;
+use \App\Models\Payments;
+use \App\Models\SlipNumbers;
+use \App\Models\SalesTax;
+use \App\Models\SalesCustomers;
+use \App\Models\Preferences;
+use \App\Models\Taxes;
+use \App\Models\Banks;
 
 use Crabbly\Fpdf\Fpdf as Fpdf;
 use Carbon\Carbon;
@@ -183,7 +183,7 @@ $pdf->SetFont('Arial','',8);
 $lipro = SalesItems::where(['id_sales' => $sales->id])->get();
 $gt = 0;
 foreach ($lipro as $ke) {
-	$pdf->Cell(70, 27, App\Product::findOrFail($ke->id_product)->product, 1, 0, 'C');
+	$pdf->Cell(70, 27, \App\Models\Product::findOrFail($ke->id_product)->product, 1, 0, 'C');
 	$pdf->Cell(30, 27, number_format($ke->retail, 2), 1, 0, 'C');
 	$pdf->Cell(30, 27, $ke->quantity, 1, 0, 'C');
 	$pdf->Cell(30, 27, number_format(($ke->retail * $ke->quantity), 2), 1, 0, 'C');

@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\ProductImage;
+use App\Models\ProductImage;
+
 use Illuminate\Http\Request;
 
 // load validation
@@ -21,12 +22,6 @@ use File;
 
 class ProductImageController extends Controller
 {
-	function __construct()
-	{
-		$this->middleware('auth');
-		$this->middleware('admin');
-	}
-
 	public function index()
 	{
 		//
@@ -43,38 +38,33 @@ class ProductImageController extends Controller
 	}
 
 
-	public function show(ProductImage $productImage)
+	public function show(ProductImage $productimage)
 	{
 		//
 	}
 
-	public function edit(ProductImage $productImage)
+	public function edit(ProductImage $productimage)
 	{
-		return view('productimage.edit', compact(['productImage']));
+		return view('productimages.edit', ['productimage' => $productimage]);
 	}
 
-	public function update(ProductImageFormRequest $request, ProductImage $productImage)
+	public function update(ProductImageFormRequest $request, ProductImage $productimage)
 	{
 		$file = $request->file('image');
-echo 'test';
 			$mime = $file->getMimeType();
-
 			$filename = $file->store('images');
-
 			$imag = Image::make(storage_path().'/uploads/'.$filename);
-
 			// // resize the image to a height of 100 and constrain aspect ratio (auto width)
 			$imag->resize(null, 100, function ($constraint) {
 				$constraint->aspectRatio();
 			});
-
 			$imag->save();
 
 			$imh = ProductImage::where('image', base64_encode( file_get_contents( storage_path().'/uploads/'.$filename ) ));
 
 			// if image already existed in the database
 			if($imh->count() < 1) {
-				$img = ProductImage::where(['id' => $productImage->id])
+				$img = ProductImage::where(['id' => $productimage->id])
 				->update([
 					'image' => base64_encode( file_get_contents( storage_path().'/uploads/'.$filename ) ),
 					'mime' => $mime,
@@ -90,11 +80,11 @@ echo 'test';
 			}
 		}
 		// info when update success
-		Session::flash('flash_message', 'Image successfully updated!');
-		return redirect(route('product.edit', $productImage->id_product));		// redirect back to original route
+		Session::flash('success', 'Image successfully updated!');
+		return redirect(route('product.edit', $productimage->id_product));		// redirect back to original route
 	}
 
-	public function destroy(Request $request, ProductImage $productImage)
+	public function destroy(Request $request, ProductImage $productimage)
 	{
 		$prod = ProductImage::destroy($request->id);
 

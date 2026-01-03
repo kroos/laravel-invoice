@@ -1,8 +1,8 @@
-@extends('layout.master')
+@extends('layouts.app')
 
 @section('content')
-	@include('layout.errorform')
-	@include('layout.info')
+	@include('layouts.errorform')
+	@include('layouts.info')
 
 
 <div class="col-lg-12">
@@ -14,7 +14,7 @@
 			{!! Form::open(['route' => 'sales.store', 'class' => 'form-horizontal', 'autocomplete' => 'off', 'files' => true, 'id' => 'form']) !!}
 				@if( auth()->user()->id_group == 1 )
 					<?php
-					$user = App\User::all();
+					$user = \App\Models\User::all();
 					foreach ($user as $key) {
 						$k[$key->id] = $key->name;
 					}
@@ -39,13 +39,13 @@
 				@else
 				{!! Form::hidden('id_user' , auth()->user()->id) !!}
 				@endif
-				
+
 				<div class="row">
 				<div class="col-md-6">
 					<div class="panel panel-default">
 						<div class="panel-heading">Postage Slip</div>
 						<div class="panel-body">
-				
+
 							<div class="form-group {!! ( count($errors->get('date_sale')) ) >0 ? 'has-error' : '' !!}">
 								{!! Form::label('da', 'Date :', ['class' => 'col-sm-5 control-label']) !!}
 								<div class="col-sm-7">
@@ -74,7 +74,7 @@
 									{!! Form::file('image[]', ['id' => 'img', 'multiple' => 'multiple']) !!}
 								</div>
 							</div>
-				
+
 						</div>
 					</div>
 				</div>
@@ -94,7 +94,7 @@
 												<div class="col-sm-9">
 													<select name="repeatcust" id="custsel" class="form-control">
 														<option value="" data-client="" data-client_address="" data-client_poskod="" data-client_email="" data-client_phone="" >Choose Customer</option>
-														<?php $rc = \App\Customers::all() ?>
+														<?php $rc = \App\Models\Customers::all() ?>
 														@if( $rc->count() > 0 )
 														@foreach( $rc as $ec ) :
 															<option value="{!! $ec->id !!}" data-client="{!! $ec->client !!}" data-client_address="{!! $ec->client_address !!}" data-client_poskod="{!! $ec->client_poskod !!}" data-client_email="{!! $ec->client_email !!}" data-client_phone="{!! $ec->client_phone !!}" {!! ( $ec->id == old('repeatcust') )? 'selected="selected"' : '' !!} >{!! $ec->client !!}</option>
@@ -168,13 +168,13 @@
 					</div>
 				</div>
 				</div>
-				
+
 				<div class="row">
 				<div class="col-lg-12">
 					<div class="panel panel-default">
 						<div class="panel-heading">Add Invoice Item</div>
 						<div class="panel-body">
-				
+
 							<div class="col-lg-12 input_fields_wrap">
 
 		<div class="row rowinvoice">
@@ -194,10 +194,10 @@
 							<select name="inv[1][id_product]" class="series form-control">
 								<option value="">Choose Product</option>
 
-								<?php $cate = App\ProductCategory::where(['active' => 1])->get(); ?>
+								<?php $cate = \App\Models\ProductCategory::where(['active' => 1])->get(); ?>
 								@foreach ($cate as $key)
 									<optgroup label="{!! $key->product_category !!}">
-										<?php $pro = App\Product::where(['id_category' => $key->id, 'active' => 1])->get() ?>
+										<?php $pro = \App\Models\Product::where(['id_category' => $key->id, 'active' => 1])->get() ?>
 										@foreach($pro as $r)
 											<option value="{!! $r->id !!}" data-commission="{!! $r->commission !!}" data-retail="{!! $r->retail !!}">{!! $r->product !!}</option>
 										@endforeach
@@ -239,7 +239,7 @@
 		</div>
 
 							</div>
-				
+
 							<div class="col-lg-12">
 								<div class="row">
 									<div class="col-sm-12 col-md-4 col-md-offset-8">
@@ -253,7 +253,7 @@
 													<p>
 														<select name="tax[]" id="taxs" multiple="multiple">
 															<option value="">Choose Tax</option>
-															@foreach(App\Taxes::all() as $r) :
+															@foreach(\App\Models\Taxes::all() as $r) :
 															<option value="{!! $r->id !!}" data-amount="{!! $r->amount !!}" >{!! $r->tax !!}</option>
 															@endforeach
 														</select>
@@ -316,7 +316,7 @@
 						<div class="col-sm-12 form-group <?php echo ( count($errors->get('pay.*.id_bank')) ) >0 ? 'has-error' : '' ?>">
 							<select name="pay[1][id_bank]" class="form-control bank">
 								<option value="">Choose Bank</option>
-								<?php $ba = App\Banks::where(['active' => 1])->get(); ?>
+								<?php $ba = \App\Models\Banks::where(['active' => 1])->get(); ?>
 								@foreach ($ba as $r)
 								<option value="{!! $r->id !!}" >{!! $r->bank !!}</option>
 								@endforeach
@@ -416,7 +416,7 @@ $(document).on('keyup', '#apel, #catel', function () {
 	})
 	.on('changeDate show', function(e) {
 		$('#form').bootstrapValidator('revalidateField', 'date_sale');
-	});	
+	});
 
 ////////////////////////////////////////////////////////////////////////////////////
 // date input payment
@@ -461,7 +461,7 @@ $(wrappers).on("click",".remove_serial", function(e){
 })
 
 ////////////////////////////////////////////////////////////////////////////////////
-// helper tax 
+// helper tax
 $(document).on('change', '#taxs', function () {
 	var se=0;
 	var arr = [];
@@ -533,10 +533,10 @@ $(add_button).click(function(){
 							'<select name="inv[' + x + '][id_product]" class="series form-control">' +
 								'<option value="">Choose Product</option>' +
 
-								<?php $cate = App\ProductCategory::where(['active' => 1])->get(); ?>
+								<?php $cate = \App\Models\ProductCategory::where(['active' => 1])->get(); ?>
 								@foreach ($cate as $key)
 									'<optgroup label="{!! $key->product_category !!}">' +
-										<?php $pro = App\Product::where(['id_category' => $key->id, 'active' => 1])->get() ?>
+										<?php $pro = \App\Models\Product::where(['id_category' => $key->id, 'active' => 1])->get() ?>
 										@foreach($pro as $r)
 											'<option value="{!! $r->id !!}" data-commission="{!! $r->commission !!}" data-retail="{!! $r->retail !!}">{!! $r->product !!}</option>' +
 										@endforeach
@@ -661,7 +661,7 @@ $(add_buttonp).click(function(){
 						'<div class="col-sm-12 form-group <?php echo ( count($errors->get('pay.*.id_bank')) ) >0 ? 'has-error' : '' ?>">' +
 							'<select name="pay[' + xp + '][id_bank]" class="form-control bank">' +
 								'<option value="">Choose Bank</option>' +
-								<?php $ba = App\Banks::where(['active' => 1])->get(); ?>
+								<?php $ba = \App\Models\Banks::where(['active' => 1])->get(); ?>
 								@foreach ($ba as $r)
 								'<option value="{!! $r->id !!}" >{!! $r->bank !!}</option>' +
 								@endforeach
@@ -705,7 +705,7 @@ $(add_buttonp).click(function(){
 $(wrapperp).on("click",".remove_payment", function(e){
 	//user click on remove text
 	e.preventDefault();
-	
+
 
 	var $row = $(this).parent().parent().parent().parent().parent('.rowpayment');
 
@@ -805,7 +805,7 @@ function update_balance() {
 	var ta = $('#total_amount');	// amount invoice
 	var tp = $('#total_payment');
 	var bal = ( ( $(tp).text() * 10000 ) - ( $(ta).text() * 10000 ) )/10000;
-	
+
 	// console.log($(tp).text());
 	if (bal == 0) {
 		$('#balance').text( bal.toFixed(2) ).css({"color": "blue"});

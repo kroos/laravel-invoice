@@ -1,8 +1,8 @@
 <?php
 if(\Auth::user()->id_group == 1) {
-	$user = \App\User::all();
+	$user = \App\Models\User::all();
 } else {
-	$user = \App\User::find(Auth::user()->id);
+	$user = \App\Models\User::find(Auth::user()->id);
 }
 ?>
 <div class="card mb-2">
@@ -29,7 +29,7 @@ if(\Auth::user()->id_group == 1) {
 		<div class="form-group row m-1 @error('date_sale') has-error @enderror">
 			<label for="da" class="col-form-label col-sm-2">Date : </label>
 			<div class="col-sm-6 my-auto">
-				<input type="text" name="date_sale" value="{{ old('date_sale', @$sales->date_sale?->format('Y-m-d')) }}" id="da" class="form-control form-control-sm @error('date_sale') is-invalid @enderror" placeholder="Date">
+				<input type="text" name="date_sale" value="{{ old('date_sale', @$sale->date_sale?->format('Y-m-d')) }}" id="da" class="form-control form-control-sm @error('date_sale') is-invalid @enderror" placeholder="Date">
 				@error('date_sale')
 				<div class="invalid-feedback">
 					{{ $message }}
@@ -50,7 +50,7 @@ if(\Auth::user()->id_group == 1) {
 		<div class="form-group row m-1 @error('image.*') has-error @enderror">
 			<label for="img" class="col-form-label col-sm-2">Image : </label>
 			<div class="col-sm-6 my-auto">
-				<input type="file" name="image[]" value="{{ old('image', @$sales->image) }}" id="img" class="form-control form-control-sm @error('image.*') is-invalid @enderror" placeholder="Image" multiple>
+				<input type="file" name="image[]" value="{{ old('image', @$sale->image) }}" id="img" class="form-control form-control-sm @error('image.*') is-invalid @enderror" placeholder="Image" multiple>
 				@error('image.*')
 				<div class="invalid-feedback">
 					{{ $message }}
@@ -103,7 +103,7 @@ if(\Auth::user()->id_group == 1) {
 				<div class="form-group row m-1 @error('client') has-error @enderror">
 					<label for="pel" class="col-form-label col-sm-2">Customer : </label>
 					<div class="col-sm-6 my-auto">
-						<input type="text" name="client" value="{{ old('client', @$sales->client) }}" id="pel" class="form-control form-control-sm @error('client') is-invalid @enderror" placeholder="Customer">
+						<input type="text" name="client" value="{{ old('client', @$sale->client) }}" id="pel" class="form-control form-control-sm @error('client') is-invalid @enderror" placeholder="Customer">
 						@error('client')
 						<div class="invalid-feedback">
 							{{ $message }}
@@ -115,7 +115,7 @@ if(\Auth::user()->id_group == 1) {
 				<div class="form-group row m-1 @error('client_address') has-error @enderror">
 					<label for="apel" class="col-form-label col-sm-2">Customer Address : </label>
 					<div class="col-sm-6 my-auto">
-						<textarea name="client_address" id="apel" class="form-control form-control-sm col-sm-12 @error('client_address') is-invalid @enderror" placeholder="Customer Address">{{ old('client_address', @$sales->client_address) }}</textarea>
+						<textarea name="client_address" id="apel" class="form-control form-control-sm col-sm-12 @error('client_address') is-invalid @enderror" placeholder="Customer Address">{{ old('client_address', @$sale->client_address) }}</textarea>
 						@error('client_address')
 						<div class="invalid-feedback">
 							{{ $message }}
@@ -127,7 +127,7 @@ if(\Auth::user()->id_group == 1) {
 				<div class="form-group row m-1 @error('client_poskod') has-error @enderror">
 					<label for="pos" class="col-form-label col-sm-2">Postcode : </label>
 					<div class="col-sm-6 my-auto">
-						<input type="text" name="client_poskod" value="{{ old('client_poskod', @$sales->client_poskod) }}" id="pos" class="form-control form-control-sm @error('client_poskod') is-invalid @enderror" placeholder="Postcode">
+						<input type="text" name="client_poskod" value="{{ old('client_poskod', @$sale->client_poskod) }}" id="pos" class="form-control form-control-sm @error('client_poskod') is-invalid @enderror" placeholder="Postcode">
 						@error('client_poskod')
 						<div class="invalid-feedback">
 							{{ $message }}
@@ -139,7 +139,7 @@ if(\Auth::user()->id_group == 1) {
 				<div class="form-group row m-1 @error('client_phone') has-error @enderror">
 					<label for="tel" class="col-form-label col-sm-2">Phone : </label>
 					<div class="col-sm-6 my-auto">
-						<input type="text" name="client_phone" value="{{ old('client_phone', @$sales->client_phone) }}" id="tel" class="form-control form-control-sm @error('client_phone') is-invalid @enderror" placeholder="Phone">
+						<input type="text" name="client_phone" value="{{ old('client_phone', @$sale->client_phone) }}" id="tel" class="form-control form-control-sm @error('client_phone') is-invalid @enderror" placeholder="Phone">
 						@error('client_phone')
 						<div class="invalid-feedback">
 							{{ $message }}
@@ -151,7 +151,7 @@ if(\Auth::user()->id_group == 1) {
 				<div class="form-group row m-1 @error('client_email') has-error @enderror">
 					<label for="tela" class="col-form-label col-sm-2">Email : </label>
 					<div class="col-sm-6 my-auto">
-						<input type="text" name="client_email" value="{{ old('client_email', @$sales->client_email) }}" id="tela" class="form-control form-control-sm @error('client_email') is-invalid @enderror" placeholder="Email">
+						<input type="text" name="client_email" value="{{ old('client_email', @$sale->client_email) }}" id="tela" class="form-control form-control-sm @error('client_email') is-invalid @enderror" placeholder="Email">
 						@error('client_email')
 						<div class="invalid-feedback">
 							{{ $message }}
@@ -183,8 +183,8 @@ if(\Auth::user()->id_group == 1) {
 					<div class="col-sm-5 m-0">
 						<select name="tax" id="taxs" multiple="multiple">
 							<option value="">Choose Tax</option>
-							@foreach(App\Taxes::all() as $r) :
-							<option value="{!! $r->id !!}" data-amount="{!! $r->amount !!}" {{ (old('tax', @$sales?->salestaxes()->first()->id_tax) == $r->id)?'selected':NULL }}>{!! $r->tax !!}</option>
+							@foreach(\App\Models\Taxes::all() as $r) :
+							<option value="{!! $r->id !!}" data-amount="{!! $r->amount !!}" {{ (old('tax', @$sale?->salestaxes()->first()->id_tax) == $r->id)?'selected':NULL }}>{!! $r->tax !!}</option>
 							@endforeach
 						</select>
 					</div>
@@ -209,7 +209,6 @@ if(\Auth::user()->id_group == 1) {
 				<i class="fas fa-plus"></i>&nbsp;Add Products
 			</button>
 	</div>
-</div>
 </div>
 
 

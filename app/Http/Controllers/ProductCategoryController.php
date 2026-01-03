@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 // load model
-use App\ProductCategory;
+use App\Models\ProductCategory;
 
 use Illuminate\Http\Request;
 
@@ -14,12 +14,6 @@ use Session;
 
 class ProductCategoryController extends Controller
 {
-	function __construct()
-	{
-		$this->middleware('auth');
-		$this->middleware('admin', ['except' => ['create', 'store']]);
-	}
-
 	/**
 	 * Display a listing of the resource.
 	 *
@@ -27,7 +21,7 @@ class ProductCategoryController extends Controller
 	 */
 	public function index()
 	{
-		//
+		return view('productcategories.index');
 	}
 
 	/**
@@ -37,7 +31,7 @@ class ProductCategoryController extends Controller
 	 */
 	public function create()
 	{
-		return view('category.create');
+		return view('productcategories.create');
 	}
 
 	/**
@@ -56,7 +50,7 @@ class ProductCategoryController extends Controller
 			'id_user' => auth()->id(),
 		]);
 
-		Session::flash('flash_message', 'Data successfully added!');
+		Session::flash('success', 'Data successfully added!');
 
 		return redirect()->back();		// redirect back to original route
 	}
@@ -64,10 +58,10 @@ class ProductCategoryController extends Controller
 	/**
 	 * Display the specified resource.
 	 *
-	 * @param  \App\ProductCategory  $productCategory
+	 * @param  \App\ProductCategory  $productcategory
 	 * @return \Illuminate\Http\Response
 	 */
-	public function show(ProductCategory $productCategory)
+	public function show(ProductCategory $productcategory)
 	{
 	    //
 	}
@@ -75,26 +69,26 @@ class ProductCategoryController extends Controller
 	/**
 	 * Show the form for editing the specified resource.
 	 *
-	 * @param  \App\ProductCategory  $productCategory
+	 * @param  \App\ProductCategory  $productcategory
 	 * @return \Illuminate\Http\Response
 	 */
-	public function edit(ProductCategory $productCategory)
+	public function edit(ProductCategory $productcategory)
 	{
-		return view('category.edit');
+		return view('productcategories.edit', ['productcategory' => $productcategory]);
 	}
 
 	/**
 	 * Update the specified resource in storage.
 	 *
 	 * @param  \Illuminate\Http\Request  $request
-	 * @param  \App\ProductCategory  $productCategory
+	 * @param  \App\ProductCategory  $productcategory
 	 * @return \Illuminate\Http\Response
 	 */
-	public function update(ProductCategoryFormRequest $request, ProductCategory $productCategory)
+	public function update(ProductCategoryFormRequest $request, ProductCategory $productcategory)
 	{
 		// return $categories;
 		// form process for id - update database
-		ProductCategory::where('id', $productCategory->id)
+		ProductCategory::where('id', $productcategory->id)
 					-> update([
 						'product_category' => request('category'),
 						'active' => request('active'),
@@ -102,24 +96,24 @@ class ProductCategoryController extends Controller
 					]);
 		// $productCategory->touch();
 		// info when update success
-		Session::flash('flash_message', 'Data successfully edited!');
+		Session::flash('success', 'Data successfully edited!');
 
-		return redirect(route('category.index'));      // redirect back to original route
+		return redirect(route('productcategoriesindex'));      // redirect back to original route
 	}
 
 	/**
 	 * Remove the specified resource from storage.
 	 *
-	 * @param  \App\ProductCategory  $productCategory
+	 * @param  \App\ProductCategory  $productcategory
 	 * @return \Illuminate\Http\Response
 	 */
-	public function destroy(ProductCategory $productCategory)
+	public function destroy(ProductCategory $productcategory)
 	{
-		ProductCategory::destroy($productCategory->id);
+		ProductCategory::destroy($productcategory->id);
 		// info when update success
 		// Session::flash('flash_message', 'Data successfully deleted!');
 
-		// return redirect(route('category.create'));		// redirect back to original route
+		// return redirect(route('productcategoriescreate'));		// redirect back to original route
 		return response()->json([
 									'message' => 'Data deleted',
 									'status' => 'success'
