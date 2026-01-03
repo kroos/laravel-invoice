@@ -55,7 +55,7 @@ $('#logs-table').DataTable({
 					<a href="{{ url('activity-logs') }}/${id}" class="btn btn-outline-primary">
 						<i class="fa-regular fa-eye"></i>
 					</a>
-					<button type="button" class="btn btn-outline-danger btn-del" data-id="${id}">
+					<button type="button" class="btn btn-outline-danger remove" data-id="${id}">
 						<i class="fa-regular fa-trash-can"></i>
 					</button>
 				</div>
@@ -68,7 +68,7 @@ $('#logs-table').DataTable({
 	}
 });
 
-$('.btn-del').off('click').on('click',function(){
+$(document).on('click', '.remove', function(e){
 	const id = $(this).data('id');
 	Swal.fire({
 		title: 'Delete Log?',
