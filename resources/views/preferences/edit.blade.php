@@ -13,9 +13,9 @@
 				<div class="col-sm-6 my-auto">
 					<input type="text" name="company_name" value="{{ old('company_name', @$preference->company_name) }}" id="cn" class="form-control form-control-sm @error('company_name') is-invalid @enderror" placeholder="Company Name">
 					@error('company_name')
-						<div class="invalid-feedback">
-							{{ $message }}
-						</div>
+					<div class="invalid-feedback">
+						{{ $message }}
+					</div>
 					@enderror
 				</div>
 			</div>
@@ -25,9 +25,9 @@
 				<div class="col-sm-6 my-auto">
 					<input type="text" name="company_registration" value="{{ old('company_registration', @$preference->company_registration) }}" id="compreg" class="form-control form-control-sm @error('company_registration') is-invalid @enderror" placeholder="Company Registration No.">
 					@error('company_registration')
-						<div class="invalid-feedback">
-							{{ $message }}
-						</div>
+					<div class="invalid-feedback">
+						{{ $message }}
+					</div>
 					@enderror
 				</div>
 			</div>
@@ -37,9 +37,9 @@
 				<div class="col-sm-6 my-auto">
 					<input type="file" name="logo" value="{{ old('logo', @$preference->logo) }}" id="clofo" class="form-control form-control-sm @error('logo') is-invalid @enderror">
 					@error('logo')
-						<div class="invalid-feedback">
-							{{ $message }}
-						</div>
+					<div class="invalid-feedback">
+						{{ $message }}
+					</div>
 					@enderror
 				</div>
 				<img src="data:{!! $preference->company_logo_mime !!};base64,{!! $preference->company_logo_image !!}" width="50%" class="img-responsive img-rounded">
@@ -50,9 +50,9 @@
 				<div class="col-sm-6 my-auto">
 					<input type="text" name="company_tagline" value="{{ old('company_tagline', @$preference->company_tagline) }}" id="comptag" class="form-control form-control-sm @error('company_tagline') is-invalid @enderror" placeholder="Company Tagline">
 					@error('company_tagline')
-						<div class="invalid-feedback">
-							{{ $message }}
-						</div>
+					<div class="invalid-feedback">
+						{{ $message }}
+					</div>
 					@enderror
 				</div>
 			</div>
@@ -62,9 +62,9 @@
 				<div class="col-sm-6 my-auto">
 					<textarea name="company_address" id="add" class="form-control form-control-sm col-sm-12 @error('company_address') is-invalid @enderror" placeholder="Comapny Address">{{ old('company_address', @$preference->company_address) }}</textarea>
 					@error('company_address')
-						<div class="invalid-feedback">
-							{{ $message }}
-						</div>
+					<div class="invalid-feedback">
+						{{ $message }}
+					</div>
 					@enderror
 				</div>
 			</div>
@@ -74,9 +74,9 @@
 				<div class="col-sm-6 my-auto">
 					<input type="text" name="company_postcode" value="{{ old('company_postcode', @$preference->company_postcode) }}" id="post" class="form-control form-control-sm @error('company_postcode') is-invalid @enderror" placeholder="Company Postcode">
 					@error('company_postcode')
-						<div class="invalid-feedback">
-							{{ $message }}
-						</div>
+					<div class="invalid-feedback">
+						{{ $message }}
+					</div>
 					@enderror
 				</div>
 			</div>
@@ -86,9 +86,9 @@
 				<div class="col-sm-6 my-auto">
 					<input type="text" name="company_fixed_line" value="{{ old('company_fixed_line', @$preference->company_fixed_line) }}" id="flpn" class="form-control form-control-sm @error('company_fixed_line') is-invalid @enderror" placeholder="Fixed Line Phone Number">
 					@error('company_fixed_line')
-						<div class="invalid-feedback">
-							{{ $message }}
-						</div>
+					<div class="invalid-feedback">
+						{{ $message }}
+					</div>
 					@enderror
 				</div>
 			</div>
@@ -98,9 +98,9 @@
 				<div class="col-sm-6 my-auto">
 					<input type="text" name="company_mobile" value="{{ old('company_mobile', @$preference->company_mobile) }}" id="mobile" class="form-control form-control-sm @error('company_mobile') is-invalid @enderror" placeholder="Company Mobile">
 					@error('company_mobile')
-						<div class="invalid-feedback">
-							{{ $message }}
-						</div>
+					<div class="invalid-feedback">
+						{{ $message }}
+					</div>
 					@enderror
 				</div>
 			</div>
@@ -110,9 +110,9 @@
 				<div class="col-sm-6 my-auto">
 					<input type="text" name="company_email" value="{{ old('company_email', @$preference->company_email) }}" id="email" class="form-control form-control-sm @error('company_email') is-invalid @enderror" placeholder="Company Email">
 					@error('company_email')
-						<div class="invalid-feedback">
-							{{ $message }}
-						</div>
+					<div class="invalid-feedback">
+						{{ $message }}
+					</div>
 					@enderror
 				</div>
 			</div>
@@ -122,9 +122,9 @@
 				<div class="col-sm-6 my-auto">
 					<select name="company_owner" id="own" class="form-select form-select-sm col-sm-12 @error('company_owner') is-invalid @enderror"></select>
 					@error('company_owner')
-						<div class="invalid-feedback">
-							{{ $message }}
-						</div>
+					<div class="invalid-feedback">
+						{{ $message }}
+					</div>
 					@enderror
 				</div>
 			</div>
@@ -134,9 +134,9 @@
 				<div class="col-sm-6 my-auto">
 					<select name="company_person_in_charge" id="cpic" class="form-select form-select-sm col-sm-12 @error('company_person_in_charge') is-invalid @enderror"></select>
 					@error('company_person_in_charge')
-						<div class="invalid-feedback">
-							{{ $message }}
-						</div>
+					<div class="invalid-feedback">
+						{{ $message }}
+					</div>
 					@enderror
 				</div>
 			</div>
@@ -239,45 +239,45 @@ $(`#cpic`).select2({
 
 @if(old('company_person_in_charge', @$preference->company_person_in_charge))
 $.ajax({
-    url: `{{ route('getUser') }}`,
-    data: {
-        _token: '{!! csrf_token() !!}',
-        id: `{{ old('company_person_in_charge', @$preference->company_person_in_charge) }}`
-    },
-    dataType: 'json'
+	url: `{{ route('getUser') }}`,
+	data: {
+		_token: '{!! csrf_token() !!}',
+		id: `{{ old('company_person_in_charge', @$preference->company_person_in_charge) }}`
+	},
+	dataType: 'json'
 }).then(data => {
-    const selectedId = `{{ old('company_person_in_charge', @$preference->company_person_in_charge) }}`;
+	const selectedId = `{{ old('company_person_in_charge', @$preference->company_person_in_charge) }}`;
 
-    data.forEach(group => {
-        group.users?.forEach(user => {
-            if (String(user.id) === String(selectedId)) {
-                const option = new Option(user.name, user.id, true, true);
-                $('#cpic').append(option).trigger('change');
-            }
-        });
-    });
+	data.forEach(group => {
+		group.users?.forEach(user => {
+			if (String(user.id) === String(selectedId)) {
+				const option = new Option(user.name, user.id, true, true);
+				$('#cpic').append(option).trigger('change');
+			}
+		});
+	});
 });
 @endif
 
 @if(old('company_owner', @$preference->company_owner))
 $.ajax({
-    url: `{{ route('getUser') }}`,
-    data: {
-        _token: '{!! csrf_token() !!}',
-        id: `{{ old('company_owner', @$preference->company_owner) }}`
-    },
-    dataType: 'json'
+	url: `{{ route('getUser') }}`,
+	data: {
+		_token: '{!! csrf_token() !!}',
+		id: `{{ old('company_owner', @$preference->company_owner) }}`
+	},
+	dataType: 'json'
 }).then(data => {
-    const selectedId = `{{ old('company_owner', @$preference->company_owner) }}`;
+	const selectedId = `{{ old('company_owner', @$preference->company_owner) }}`;
 
-    data.forEach(group => {
-        group.users?.forEach(user => {
-            if (String(user.id) === String(selectedId)) {
-                const option = new Option(user.name, user.id, true, true);
-                $('#own').append(option).trigger('change');
-            }
-        });
-    });
+	data.forEach(group => {
+		group.users?.forEach(user => {
+			if (String(user.id) === String(selectedId)) {
+				const option = new Option(user.name, user.id, true, true);
+				$('#own').append(option).trigger('change');
+			}
+		});
+	});
 });
 @endif
 

@@ -1,147 +1,13 @@
 /*!
- * BootstrapValidator (http://bootstrapvalidator.com)
- * The best jQuery plugin to validate form fields. Designed to use with Bootstrap 3
+ * BootstrapValidator v0.5.3 Bootstrap 5 Compatible Version
+ * Form validation plugin designed for Bootstrap 5
  *
- * @version     v0.5.3, built on 2014-11-05 9:14:18 PM
- * @author      https://twitter.com/nghuuphuoc
- * @copyright   (c) 2013 - 2014 Nguyen Huu Phuoc
- * @license     Commercial: http://bootstrapvalidator.com/license/
- *              Non-commercial: http://creativecommons.org/licenses/by-nc-nd/3.0/
+ * Based on original BootstrapValidator (http://bootstrapvalidator.com)
+ * Adapted for Bootstrap 5 compatibility
  */
-/*!
- * ------------------------------------------------------------------------
- * Custom Modified Version of bootstrapValidator.js
- * ------------------------------------------------------------------------
- * Original: BootstrapValidator (for Bootstrap 3.x)
- * Customized by: [Your Name or Team]
- * Date: [Insert date]
- * ------------------------------------------------------------------------
- * Purpose:
- *   To modernize the original BootstrapValidator plugin so that it works
- *   seamlessly with Bootstrap 5.3 while keeping backward compatibility
- *   with Bootstrap 3 markup.
- *
- * ------------------------------------------------------------------------
- * Full Change Log & Customization Summary
- * ------------------------------------------------------------------------
- *
- * 1. Error Feedback Structure Modernized
- *    -----------------------------------
- *    • Original behavior:
- *        <i class="form-control-feedback ..."></i>
- *        <div class="help-block">Please insert password</div>
- *
- *    • Modified behavior:
- *        <div class="invalid-feedback" data-bv-validator="..." data-bv-for="..." data-bv-result="INVALID">
- *            <i class="form-control-feedback fas fa-sharp fa-light fa-xmark" data-bv-icon-for="..."></i>
- *            Please insert password
- *        </div>
- *
- *    • Changes made:
- *        - Removed separate <i> element after the input.
- *        - Moved icon <i> inside the feedback <div>.
- *        - Added space between icon and text for readability.
- *        - Ensures all feedback text/icons are encapsulated in the same block.
- *
- * ------------------------------------------------------------------------
- *
- * 2. Removed Deprecated `.help-block` Class
- *    --------------------------------------
- *    • Bootstrap 5 dropped `.help-block`.
- *    • All `.help-block` class references replaced with `.invalid-feedback` or `.valid-feedback`.
- *    • Search selectors (e.g., `.find('.help-block[...])`) updated accordingly.
- *    • Creation of message divs now uses `.invalid-feedback` or `.valid-feedback` only.
- *
- * ------------------------------------------------------------------------
- *
- * 3. Fixed Icon Placement Logic
- *    ---------------------------
- *    • The plugin originally inserted icons after input if `.help-block` not found.
- *    • Updated logic to always prepend the icon inside `.invalid-feedback`.
- *    • Prevented fallback to `.insertAfter($field)` unless absolutely required.
- *
- * ------------------------------------------------------------------------
- *
- * 4. Consistent Message Element Selection
- *    ------------------------------------
- *    • Replaced all selectors:
- *        `.help-block[data-bv-validator][data-bv-for="..."]`
- *      with:
- *        `.invalid-feedback[data-bv-validator][data-bv-for="..."]`
- *
- *    • Updated functions:
- *        - `_initField()`
- *        - `updateStatus()`
- *        - `isValidContainer()`
- *        - `updateMessage()`
- *        - `destroy()`
- *        - `getMessages()`
- *
- * ------------------------------------------------------------------------
- *
- * 5. Added Bootstrap 5 Input Validation Classes
- *    ------------------------------------------
- *    • When a field becomes invalid:
- *        - Adds `.has-error` to parent (Bootstrap 3)
- *        - Adds `.is-invalid` to the input (Bootstrap 5)
- *
- *    • When a field becomes valid:
- *        - Adds `.has-success` to parent (Bootstrap 3)
- *        - Adds `.is-valid` to the input (Bootstrap 5)
- *
- *    • When reset or “not validated”:
- *        - Removes `.has-success`, `.has-error`, `.is-valid`, and `.is-invalid`
- *
- *    • Applied in `updateStatus()` for all field states.
- *
- * ------------------------------------------------------------------------
- *
- * 6. Input Detection Enhancement
- *    ----------------------------
- *    • Handles wrapped or grouped inputs correctly.
- *    • `$field` sometimes refers to a container; the code now finds the real input:
- *        var $targetField = $field.is(':input') ? $field : $field.find(':input');
- *        $targetField.addClass('is-invalid' or 'is-valid');
- *
- * ------------------------------------------------------------------------
- *
- * 7. Backward Compatibility Maintained
- *    ---------------------------------
- *    • `.has-error` / `.has-success` still used for legacy layouts.
- *    • All original data-bv-* attributes preserved.
- *    • Works on forms built with both Bootstrap 3 and Bootstrap 5.3.
- *
- * ------------------------------------------------------------------------
- *
- * 8. Styling and Readability
- *    ------------------------
- *    • Kept plain, unminified JavaScript for easy future maintenance.
- *    • Developers can easily adjust classes for future Bootstrap versions.
- *
- * ------------------------------------------------------------------------
- *
- * 9. Recommended Future Maintenance
- *    -------------------------------
- *    • If Bootstrap 6+ changes validation class names:
- *        - Replace `.is-valid` / `.is-invalid` accordingly.
- *    • If feedback markup changes (e.g., new `.feedback-*` structure),
- *      only adjust the feedback-creation block and selectors.
- *
- * ------------------------------------------------------------------------
- * End of Change Log
- * ------------------------------------------------------------------------
- */
-
 if (typeof jQuery === 'undefined') {
     throw new Error('BootstrapValidator requires jQuery');
 }
-
-(function($) {
-    var version = $.fn.jquery.split(' ')[0].split('.');
-    if ((+version[0] < 2 && +version[1] < 9) || (+version[0] === 1 && +version[1] === 9 && +version[2] < 1)) {
-        throw new Error('BootstrapValidator requires jQuery version 1.9.1 or higher');
-    }
-}(window.jQuery));
 
 (function($) {
     var BootstrapValidator = function(form, options) {
@@ -161,8 +27,6 @@ if (typeof jQuery === 'undefined') {
         // Determine the event that is fired when user change the field value
         // Most modern browsers supports input event except IE 7, 8.
         // IE 9 supports input event but the event is still not fired if I press the backspace key.
-        // Get IE version
-        // https://gist.github.com/padolsey/527683/#comment-7595
         var ieVersion = (function() {
             var v = 3, div = document.createElement('div'), a = div.all || [];
             while (div.innerHTML = '<!--[if gt IE '+(++v)+']><br><![endif]-->', a[0]) {}
@@ -212,6 +76,7 @@ if (typeof jQuery === 'undefined') {
                         validating: this.$form.attr('data-bv-feedbackicons-validating')
                     },
                     group:          this.$form.attr('data-bv-group'),
+                    input:          this.$form.attr('data-bv-input'),
                     live:           this.$form.attr('data-bv-live'),
                     message:        this.$form.attr('data-bv-message'),
                     onError:        this.$form.attr('data-bv-onerror'),
@@ -234,8 +99,8 @@ if (typeof jQuery === 'undefined') {
                 })
                 .on('click.bv', this.options.submitButtons, function() {
                     that.$submitButton  = $(this);
-					// The user just click the submit button
-					that._submitIfValid = true;
+                    // The user just click the submit button
+                    that._submitIfValid = true;
                 })
                 // Find all fields which have either "name" or "data-bv-field" attribute
                 .find('[name], [data-bv-field]')
@@ -352,6 +217,7 @@ if (typeof jQuery === 'undefined') {
                     excluded:      $field.attr('data-bv-excluded'),
                     feedbackIcons: $field.attr('data-bv-feedbackicons'),
                     group:         $field.attr('data-bv-group'),
+                    input:         $field.attr('data-bv-input'),
                     message:       $field.attr('data-bv-message'),
                     onError:       $field.attr('data-bv-onerror'),
                     onStatus:      $field.attr('data-bv-onstatus'),
@@ -449,13 +315,24 @@ if (typeof jQuery === 'undefined') {
                     $field.data('bv.result.' + validatorName, this.STATUS_NOT_VALIDATED);
 
                     if (!updateAll || i === total - 1) {
-                        $('<div/>')
+                        var $messageDiv = $('<div/>')
                             .css('display', 'none')
                             .addClass('invalid-feedback')
                             .attr('data-bv-validator', validatorName)
                             .attr('data-bv-for', field)
-                            .attr('data-bv-result', this.STATUS_NOT_VALIDATED)
-                            .html(this._getMessage(field, validatorName))
+                            .attr('data-bv-result', this.STATUS_NOT_VALIDATED);
+
+                        // Add icon if available
+                        var iconClass = this._getIconClass(field, validatorName, this.STATUS_NOT_VALIDATED);
+                        if (iconClass) {
+                            $('<i/>')
+                                .addClass(iconClass)
+                                .appendTo($messageDiv);
+                        }
+
+                        // Add message text
+                        $messageDiv
+                            .append(this._getMessage(field, validatorName))
                             .appendTo($message);
                     }
 
@@ -465,94 +342,8 @@ if (typeof jQuery === 'undefined') {
                     }
                 }
 
-                // Prepare the feedback icons
-                // Available from Bootstrap 3.1 (http://getbootstrap.com/css/#forms-control-validation)
-                if (this.options.fields[field].feedbackIcons !== false && this.options.fields[field].feedbackIcons !== 'false'
-                    && this.options.feedbackIcons
-                    && this.options.feedbackIcons.validating && this.options.feedbackIcons.invalid && this.options.feedbackIcons.valid
-                    && (!updateAll || i === total - 1))
-                {
-                    // $parent.removeClass('has-success').removeClass('has-error').addClass('has-feedback');
-                    // Keep error messages which are populated from back-end
-                    $parent.addClass('has-feedback');
-                    // Create feedback icon safely (prevent FA auto-replace)
-var iconElement = document.createElement('i');
-var $icon = $(iconElement)
-    .css('display', 'none')
-    .addClass('form-control-feedback')
-    .attr('data-bv-icon-for', field);
-
-// Find related help-block and insert icon inside it
-var $helpBlock = $message.find('.invalid-feedback[data-bv-for="' + field + '"]').first();
-if ($helpBlock.length) {
-    $helpBlock.prepend(' ');
-    $helpBlock.prepend($icon);
-} else {
-    $icon.insertAfter($field);
-}
-
-                    // Place it after the container of checkbox/radio
-                    // so when clicking the icon, it doesn't effect to the checkbox/radio element
-                    if ('checkbox' === type || 'radio' === type) {
-                        var $fieldParent = $field.parent();
-                        if ($fieldParent.hasClass(type)) {
-                            $icon.insertAfter($fieldParent);
-                        } else if ($fieldParent.parent().hasClass(type)) {
-                            $icon.insertAfter($fieldParent.parent());
-                        }
-                    }
-
-                    // The feedback icon does not render correctly if there is no label
-                    // https://github.com/twbs/bootstrap/issues/12873
-                    if ($parent.find('label').length === 0) {
-                        $icon.addClass('bv-no-label');
-                    }
-                    // Fix feedback icons in input-group
-                    if ($parent.find('.input-group').length !== 0) {
-                        $icon.addClass('bv-icon-input-group')
-                             .insertAfter($parent.find('.input-group').eq(0));
-                    }
-
-                    // Store the icon as a data of field element
-                    if (!updateAll) {
-                        $field.data('bv.icon', $icon);
-                    } else if (i === total - 1) {
-                        // All fields with the same name have the same icon
-                        fields.data('bv.icon', $icon);
-                    }
-
-                    if (container) {
-                        $field
-                            // Show tooltip/popover message when field gets focus
-                            .off('focus.container.bv')
-                            .on('focus.container.bv', function() {
-                                switch (container) {
-                                    case 'tooltip':
-                                        $(this).data('bv.icon').tooltip('show');
-                                        break;
-                                    case 'popover':
-                                        $(this).data('bv.icon').popover('show');
-                                        break;
-                                    default:
-                                        break;
-                                }
-                            })
-                            // and hide them when losing focus
-                            .off('blur.container.bv')
-                            .on('blur.container.bv', function() {
-                                switch (container) {
-                                    case 'tooltip':
-                                        $(this).data('bv.icon').tooltip('hide');
-                                        break;
-                                    case 'popover':
-                                        $(this).data('bv.icon').popover('hide');
-                                        break;
-                                    default:
-                                        break;
-                                }
-                            });
-                    }
-                }
+                // Prepare the feedback icons - REMOVED for Bootstrap 5 compatibility
+                // We no longer add icons to input fields, only to messages
             }
 
             // Prepare the events
@@ -617,6 +408,31 @@ if ($helpBlock.length) {
         },
 
         /**
+         * Get the icon class for a specific status
+         *
+         * @param {String} field The field name
+         * @param {String} validatorName The validator name
+         * @param {String} status The status
+         * @returns {String}
+         */
+        _getIconClass: function(field, validatorName, status) {
+            if (!this.options.feedbackIcons) {
+                return null;
+            }
+
+            switch (status) {
+                case this.STATUS_VALID:
+                    return this.options.feedbackIcons.valid;
+                case this.STATUS_INVALID:
+                    return this.options.feedbackIcons.invalid;
+                case this.STATUS_VALIDATING:
+                    return this.options.feedbackIcons.validating;
+                default:
+                    return null;
+            }
+        },
+
+        /**
          * Get the error message for given field and validator
          *
          * @param {String} field The field name
@@ -664,7 +480,7 @@ if ($helpBlock.length) {
             cssClasses = cssClasses.split(' ');
             var n = cssClasses.length;
             for (var i = 0; i < n; i++) {
-                if (/^col-(xs|sm|md|lg|auto)-\d+$/.test(cssClasses[i]) || /^col-(xs|sm|md|lg|auto)-offset-\d+$/.test(cssClasses[i])) {
+                if (/^col-(xs|sm|md|lg)-\d+$/.test(cssClasses[i]) || /^col-(xs|sm|md|lg)-offset-\d+$/.test(cssClasses[i])) {
                     return $parent;
                 }
             }
@@ -1123,7 +939,7 @@ if ($helpBlock.length) {
             }
 
             $fields.each(function() {
-                $(this).data('bv.messages').find('.help-block[data-bv-validator="' + validator + '"][data-bv-for="' + field + '"]').html(message);
+                $(this).data('bv.messages').find('.invalid-feedback[data-bv-validator="' + validator + '"][data-bv-for="' + field + '"]').html(message);
             });
         },
 
@@ -1158,6 +974,7 @@ if ($helpBlock.length) {
             var that  = this,
                 type  = fields.attr('type'),
                 group = this.options.fields[field].group || this.options.group,
+                input = this.options.fields[field].input || this.options.input,
                 total = ('radio' === type || 'checkbox' === type) ? 1 : fields.length;
 
             for (var i = 0; i < total; i++) {
@@ -1170,7 +987,6 @@ if ($helpBlock.length) {
                     $message     = $field.data('bv.messages'),
                     $allErrors   = $message.find('.invalid-feedback[data-bv-validator][data-bv-for="' + field + '"]'),
                     $errors      = validatorName ? $allErrors.filter('[data-bv-validator="' + validatorName + '"]') : $allErrors,
-                    $icon        = $field.data('bv.icon'),
                     container    = ('function' === typeof (this.options.fields[field].container || this.options.container)) ? (this.options.fields[field].container || this.options.container).call(this, $field, this) : (this.options.fields[field].container || this.options.container),
                     isValidField = null;
 
@@ -1193,14 +1009,34 @@ if ($helpBlock.length) {
                     $tab = $('a[href="#' + tabId + '"][data-toggle="tab"]').parent();
                 }
 
+                // Update icon in message
+                $errors.each(function() {
+                    var $error = $(this);
+                    var iconClass = that._getIconClass(field, $error.attr('data-bv-validator'), status);
+
+                    // Remove existing icon
+                    $error.find('i').remove();
+
+                    // Add new icon if available
+                    if (iconClass) {
+                        $('<i/>')
+                            .addClass(iconClass)
+                            .prependTo($error);
+                    }
+                });
+
+                // Apply Bootstrap 5 validation classes to input
+                if (input) {
+                    $field.removeClass('is-valid is-invalid');
+                }
+
                 switch (status) {
                     case this.STATUS_VALIDATING:
                         isValidField = null;
                         this.disableSubmitButtons(true);
-                        $parent.removeClass('has-success has-error');
-                        $field.removeClass('is-valid is-invalid');
-                        if ($icon) {
-                            $icon.removeClass(this.options.feedbackIcons.valid).removeClass(this.options.feedbackIcons.invalid).addClass(this.options.feedbackIcons.validating).show();
+                        $parent.removeClass('has-success').removeClass('has-error');
+                        if (input) {
+                            $field.removeClass('is-valid is-invalid');
                         }
                         if ($tab) {
                             $tab.removeClass('bv-tab-success').removeClass('bv-tab-error');
@@ -1212,8 +1048,8 @@ if ($helpBlock.length) {
                         this.disableSubmitButtons(true);
                         $parent.removeClass('has-success').addClass('has-error');
                         $field.removeClass('is-valid').addClass('is-invalid');
-                        if ($icon) {
-                            $icon.removeClass(this.options.feedbackIcons.valid).removeClass(this.options.feedbackIcons.validating).addClass(this.options.feedbackIcons.invalid).show();
+                        if (input) {
+                            $field.addClass('is-invalid');
                         }
                         if ($tab) {
                             $tab.removeClass('bv-tab-success').addClass('bv-tab-error');
@@ -1225,18 +1061,20 @@ if ($helpBlock.length) {
                         isValidField = ($allErrors.filter('[data-bv-result="' + this.STATUS_NOT_VALIDATED +'"]').length === 0)
                                      ? ($allErrors.filter('[data-bv-result="' + this.STATUS_VALID +'"]').length === $allErrors.length)  // All validators are completed
                                      : null;                                                                                            // There are some validators that have not done
+                         if (this.isValidContainer($parent)) {
+                            $field.removeClass('is-invalid').addClass('is-valid');
+                        } else {
+                            $field.removeClass('is-valid').addClass('is-invalid');
+                        }
+
                         if (isValidField !== null) {
                             this.disableSubmitButtons(this.$submitButton ? !this.isValid() : !isValidField);
-                            if ($icon) {
-                                $icon
-                                    .removeClass(this.options.feedbackIcons.invalid).removeClass(this.options.feedbackIcons.validating).removeClass(this.options.feedbackIcons.valid)
-                                    .addClass(isValidField ? this.options.feedbackIcons.valid : this.options.feedbackIcons.invalid)
-                                    .show();
-                            }
                         }
 
                         $parent.removeClass('has-error has-success').addClass(this.isValidContainer($parent) ? 'has-success' : 'has-error');
-                        $field.removeClass('is-invalid').addClass('is-valid');
+                        if (input && isValidField === true) {
+                            $field.addClass('is-valid');
+                        }
                         if ($tab) {
                             $tab.removeClass('bv-tab-success').removeClass('bv-tab-error').addClass(this.isValidContainer($tabPane) ? 'bv-tab-success' : 'bv-tab-error');
                         }
@@ -1248,9 +1086,9 @@ if ($helpBlock.length) {
                         isValidField = null;
                         this.disableSubmitButtons(false);
                         $parent.removeClass('has-success').removeClass('has-error');
-                        $field.removeClass('is-valid is-invalid');
-                        if ($icon) {
-                            $icon.removeClass(this.options.feedbackIcons.valid).removeClass(this.options.feedbackIcons.invalid).removeClass(this.options.feedbackIcons.validating).hide();
+                        $field.removeClass('is-valid').removeClass('is-invalid');
+                        if (input) {
+                            $field.removeClass('is-valid is-invalid');
                         }
                         if ($tab) {
                             $tab.removeClass('bv-tab-success').removeClass('bv-tab-error');
@@ -1260,27 +1098,12 @@ if ($helpBlock.length) {
 
                 switch (true) {
                     // Only show the first error message if it is placed inside a tooltip ...
-                    case ($icon && 'tooltip' === container):
-                        (isValidField === false)
-                                ? $icon.css('cursor', 'pointer').tooltip('destroy').tooltip({
-                                    container: 'body',
-                                    html: true,
-                                    placement: 'auto top',
-                                    title: $allErrors.filter('[data-bv-result="' + that.STATUS_INVALID + '"]').eq(0).html()
-                                })
-                                : $icon.css('cursor', '').tooltip('destroy');
+                    case ('tooltip' === container):
+                        // Tooltip handling removed for Bootstrap 5
                         break;
                     // ... or popover
-                    case ($icon && 'popover' === container):
-                        (isValidField === false)
-                                ? $icon.css('cursor', 'pointer').popover('destroy').popover({
-                                    container: 'body',
-                                    content: $allErrors.filter('[data-bv-result="' + that.STATUS_INVALID + '"]').eq(0).html(),
-                                    html: true,
-                                    placement: 'auto top',
-                                    trigger: 'hover click'
-                                })
-                                : $icon.css('cursor', '').popover('destroy');
+                    case ('popover' === container):
+                        // Popover handling removed for Bootstrap 5
                         break;
                     default:
                         (status === this.STATUS_INVALID) ? $errors.show() : $errors.hide();
@@ -1475,7 +1298,7 @@ if ($helpBlock.length) {
                 messages = messages.concat(
                     $(this)
                         .data('bv.messages')
-                        .find('.help-block[data-bv-for="' + $(this).attr('data-bv-field') + '"][data-bv-result="' + that.STATUS_INVALID + '"]' + filter)
+                        .find('.invalid-feedback[data-bv-for="' + $(this).attr('data-bv-field') + '"][data-bv-result="' + that.STATUS_INVALID + '"]' + filter)
                         .map(function() {
                             var v = $(this).attr('data-bv-validator'),
                                 f = $(this).attr('data-bv-for');
@@ -1772,7 +1595,7 @@ if ($helpBlock.length) {
          * It will remove all error messages, feedback icons and turn off the events
          */
         destroy: function() {
-            var field, fields, $field, validator, $icon, group;
+            var field, fields, $field, validator, group;
             for (field in this.options.fields) {
                 fields    = this.getFieldElements(field);
                 group     = this.options.fields[field].group || this.options.group;
@@ -1788,27 +1611,11 @@ if ($helpBlock.length) {
                         .parents(group)
                             .removeClass('has-feedback has-error has-success')
                             .end()
+                        // Remove Bootstrap 5 validation classes
+                        .removeClass('is-valid is-invalid')
                         // Turn off events
                         .off('.bv')
                         .removeAttr('data-bv-field');
-
-                    // Remove feedback icons, tooltip/popover container
-                    $icon = $field.data('bv.icon');
-                    if ($icon) {
-                        var container = ('function' === typeof (this.options.fields[field].container || this.options.container)) ? (this.options.fields[field].container || this.options.container).call(this, $field, this) : (this.options.fields[field].container || this.options.container);
-                        switch (container) {
-                            case 'tooltip':
-                                $icon.tooltip('destroy').remove();
-                                break;
-                            case 'popover':
-                                $icon.popover('destroy').remove();
-                                break;
-                            default:
-                                $icon.remove();
-                                break;
-                        }
-                    }
-                    $field.removeData('bv.icon');
 
                     for (validator in this.options.fields[field].validators) {
                         if ($field.data('bv.dfs.' + validator)) {
@@ -1935,9 +1742,9 @@ if ($helpBlock.length) {
         //      validating: 'fa fa-refresh'
         //  }
         feedbackIcons: {
-					valid: 'fas fa-light fa-check',
-					invalid: 'fas fa-sharp fa-light fa-xmark',
-					validating: 'fas fa-duotone fa-spinner-third'
+            valid: 'fa-solid fa-check',
+            invalid: 'fa-solid fa-xmark',
+            validating: 'fa-solid fa-spinner'
         },
 
         // Map the field name with validator rules
@@ -1946,8 +1753,11 @@ if ($helpBlock.length) {
         // The CSS selector for indicating the element consists the field
         // By default, each field is placed inside the <div class="form-group"></div>
         // You should adjust this option if your form group consists of many fields which not all of them need to be validated
-        // group: '.form-group , .form-check, .form-row, .form-inline, form-select',
-        group: '.form-group , .form-check, .form-row, .form-inline, form-select',
+        group: '.form-group, .form-check, .input-group',
+
+        // The CSS selector for indicating input elements
+        // Used to apply Bootstrap 5 validation classes (is-valid, is-invalid)
+        input: '.form-control, .form-select, .form-check-input',
 
         // Live validating option
         // Can be one of 3 values:
@@ -2140,6 +1950,10 @@ if ($helpBlock.length) {
         }
     };
 }(window.jQuery));
+
+// Note: The validator definitions (base64, between, blank, callback, etc.) should be included after this
+// They remain largely unchanged except for any Bootstrap 5-specific adjustments needed
+
 ;(function($) {
     $.fn.bootstrapValidator.i18n.base64 = $.extend($.fn.bootstrapValidator.i18n.base64 || {}, {
         'default': 'Please enter a valid base 64 encoded'

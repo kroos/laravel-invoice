@@ -6,7 +6,7 @@
 	<div class="card-body">
 		<div class="col-sm-12 row">
 
-			<form method="POST" action="{{ route('printreport.store') }}" accept-charset="UTF-8" id="form" autocomplete="off" class="needs-validation" enctype="multipart/form-data">
+			<form method="POST" action="{{ route('printreport.store') }}" accept-charset="UTF-8" id="salesform" autocomplete="off" class="needs-validation" enctype="multipart/form-data">
 				@csrf
 				<div class="card">
 					<div class="card-header">Sales Report</div>
@@ -60,7 +60,7 @@
 
 
 
-			<form method="POST" action="{{ route('printreport.audit') }}" accept-charset="UTF-8" id="form" autocomplete="off" class="needs-validation" enctype="multipart/form-data">
+			<form method="POST" action="{{ route('printreport.audit') }}" accept-charset="UTF-8" id="auditsales" autocomplete="off" class="needs-validation" enctype="multipart/form-data">
 				@csrf
 				<div class="card">
 					<div class="card-header">Audit</div>
@@ -246,8 +246,7 @@ $('#from1').datepicker({
 	showButtonPanel: true
 }).on('change', function () {
 	$('#salesform').bootstrapValidator('revalidateField', 'from');
-	var minDate = $(this).datepicker('getDate');
-	$('#to1').datepicker('option', 'minDate', minDate);
+	$('#to1').datepicker('option', 'minDate', this.value);
 });
 
 $('#to1').datepicker({
@@ -256,10 +255,9 @@ $('#to1').datepicker({
 	changeYear: true,    // year dropdown
 	showButtonPanel: true
 })
-.on('changeDate show', function(e) {
+.on('change', function(e) {
 	$('#salesform').bootstrapValidator('revalidateField', 'to');
-	var maxDate = $(this).datepicker('getDate');
-	$('#from1').datepicker('option', 'maxDate', maxDate);
+	$('#from1').datepicker('option', 'maxDate', this.value);
 });
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -306,10 +304,9 @@ $('#from2').datepicker({
 	changeYear: true,    // year dropdown
 	showButtonPanel: true
 })
-.on('changeDate show', function(e) {
+.on('change', function(e) {
 	$('#auditsales').bootstrapValidator('revalidateField', 'from1');
-	var minDate = $(this).datepicker('getDate');
-	$('#to2').datepicker('option', 'minDate', minDate);
+	$('#to2').datepicker('option', 'minDate', this.value);
 });
 
 $('#to2').datepicker({
@@ -318,10 +315,9 @@ $('#to2').datepicker({
 	changeYear: true,    // year dropdown
 	showButtonPanel: true
 })
-.on('changeDate show', function(e) {
+.on('change', function(e) {
 	$('#auditsales').bootstrapValidator('revalidateField', 'to1');
-	var maxDate = $(this).datepicker('getDate');
-	$('#from2').datepicker('option', 'maxDate', maxDate);
+	$('#from2').datepicker('option', 'minDate', this.value);
 });
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -368,10 +364,9 @@ $('#from3').datepicker({
 	changeYear: true,    // year dropdown
 	showButtonPanel: true
 })
-.on('changeDate show', function(e) {
+.on('change', function(e) {
 	$('#incomesales').bootstrapValidator('revalidateField', 'from2');
-	var minDate = $(this).datepicker('getDate');
-	$('#to3').datepicker('option', 'minDate', minDate);
+	$('#to3').datepicker('option', 'minDate', this.value);
 });
 
 $('#to3').datepicker({
@@ -380,10 +375,9 @@ $('#to3').datepicker({
 	changeYear: true,    // year dropdown
 	showButtonPanel: true
 })
-.on('changeDate show', function(e) {
+.on('change', function(e) {
 	$('#incomesales').bootstrapValidator('revalidateField', 'to2');
-	var maxDate = $(this).datepicker('getDate');
-	$('#from3').datepicker('option', 'maxDate', maxDate);
+	$('#from3').datepicker('option', 'minDate', this.value);
 });
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
