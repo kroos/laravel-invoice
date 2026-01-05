@@ -491,7 +491,7 @@ $("#payment_wrap").remAddRow({
 			},
 		});
 
-		$(`#datep${i}`).datepicker({
+		$(`.datep`).datepicker({
 			dateFormat: 'yy-mm-dd',
 		})
 		.on('change', function(e) {
