@@ -1,11 +1,9 @@
 ////////////////////////////////////////////////////////////////////////////////////
 // date input helper
 	$('#da').datepicker({
-		autoclose:true,
-		format:'yyyy-mm-dd',
-		todayHighlight : true,
+		dateFormat: 'yy-mm-dd',
 	})
-	.on('changeDate show', function(e) {
+	.on('change', function(e) {
 		$('#form').bootstrapValidator('revalidateField', 'date_sale');
 	});
 
@@ -149,14 +147,21 @@ $("#serial_wrap").remAddRow({
 	`,
 	onAdd: (i, $r) => {
 		// console.log('Personnel added', i, $r)
-		$('#form').bootstrapValidator('addField',$r.find('[name="serial[${i}][tracking_number]"]'));
+		const $field = $r.find(`[name="serial[${i}][tracking_number]"]`);
+		$('#form').bootstrapValidator('addField', $field, {
+			validators: {
+				notEmpty: {
+					message: 'Please insert tracking number/bill number/receipt number. '
+				}
+			}
+		});
 	},
 	onRemove: (i, event, $row, name) => {
 		event.preventDefault();
 		// console.log('Personnel removed', i, event, $row)
 		const idv = $row.find(`input[name="${name}[${i}][id]"]`).val();
 		if (!idv) {
-			var $option = $row.find('[name="serial[${i}][tracking_number]"]');
+			var $option = $row.find(`[name="serial[${i}][tracking_number]"]`);
 			$('#form').bootstrapValidator('removeField', $option);
 			$row.remove();
 			return;
@@ -176,6 +181,8 @@ $("#serial_wrap").remAddRow({
 					data: { _token: '{{ csrf_token() }}' },
 					success: response => {
 						swal.fire('Deleted!', response.message, 'success');
+						var $option = $row.find(`[name="serial[${i}][tracking_number]"]`);
+						$('#form').bootstrapValidator('removeField', $option);
 						$row.remove();  // remove only after DB deletion
 					},
 					error: xhr => {
@@ -281,10 +288,51 @@ $("#invItems_wrap").remAddRow({
 		// console.log('Personnel added', i, $r)
 		getSelectedProductIds();
 
-		$('#form').bootstrapValidator('addField', $r.find('[name="inv[${i}][id_product]"]') );
-		$('#form').bootstrapValidator('addField', $r.find('[name="inv[${i}][commission]"]') );
-		$('#form').bootstrapValidator('addField', $r.find('[name="inv[${i}][retail]"]') );
-		$('#form').bootstrapValidator('addField', $r.find('[name="inv[${i}][quantity]"]') );
+		const $field1 = $r.find(`[name="inv[${i}][id_product]"]`);
+		const $field2 = $r.find(`[name="inv[${i}][commission]"]`);
+		const $field3 = $r.find(`[name="inv[${i}][retail]"]`);
+		const $field4 = $r.find(`[name="inv[${i}][quantity]"]`);
+
+		$('#form').bootstrapValidator('addField', $field1, {
+			validators: {
+				notEmpty: {
+					message: 'Please choose an item. '
+				}
+			}
+		});
+		$('#form').bootstrapValidator('addField', $field2, {
+			validators: {
+				notEmpty: {
+					message: 'Please insert commission for this item. '
+				},
+				greaterThan: {
+					value: 0,
+					message: 'Commission must be equal or greater than 0. '
+				},
+			},
+		});
+		$('#form').bootstrapValidator('addField', $field3, {
+			validators: {
+				notEmpty: {
+					message: 'Please insert retail price for this item. '
+				},
+				greaterThan: {
+					value: 0,
+					message: 'Retail price must be equal or greater than 0. '
+				},
+			},
+		});
+		$('#form').bootstrapValidator('addField', $field4, {
+			validators: {
+				notEmpty: {
+					message: 'Please insert quantity for this item. '
+				},
+				greaterThan: {
+					value: 0,
+					message: 'Quantity must be equal or greater than 0. '
+				},
+			},
+		});
 
 	},
 	onRemove: (i, event, $row, name) => {
@@ -294,18 +342,18 @@ $("#invItems_wrap").remAddRow({
 
 		const idv = $row.find(`input[name="${name}[${i}][id]"]`).val();
 		if (!idv) {
-		var $option1 = $row.find('[name="inv[${i}][id_product]"]');
-		var $option2 = $row.find('[name="inv[${i}][commission]"]');
-		var $option3 = $row.find('[name="inv[${i}][retail]"]');
-		var $option4 = $row.find('[name="inv[${i}][quantity]"]');
-		$('#form').bootstrapValidator('removeField', $option1);
-		$('#form').bootstrapValidator('removeField', $option2);
-		$('#form').bootstrapValidator('removeField', $option3);
-		$('#form').bootstrapValidator('removeField', $option4);
+			var $option1 = $row.find(`[name="inv[${i}][id_product]"]`);
+			var $option2 = $row.find(`[name="inv[${i}][commission]"]`);
+			var $option3 = $row.find(`[name="inv[${i}][retail]"]`);
+			var $option4 = $row.find(`[name="inv[${i}][quantity]"]`);
+			$('#form').bootstrapValidator('removeField', $option1);
+			$('#form').bootstrapValidator('removeField', $option2);
+			$('#form').bootstrapValidator('removeField', $option3);
+			$('#form').bootstrapValidator('removeField', $option4);
 
-		// update total amount
-		update_tamount();
-		update_balance();
+			// update total amount
+			update_tamount();
+			update_balance();
 
 			$row.remove();
 			return;
@@ -327,10 +375,10 @@ $("#invItems_wrap").remAddRow({
 						swal.fire('Deleted!', response.message, 'success');
 						$row.remove();  // remove only after DB deletion
 
-						var $option1 = $row.find('[name="inv[${i}][id_product]"]');
-						var $option2 = $row.find('[name="inv[${i}][commission]"]');
-						var $option3 = $row.find('[name="inv[${i}][retail]"]');
-						var $option4 = $row.find('[name="inv[${i}][quantity]"]');
+						var $option1 = $row.find(`[name="inv[${i}][id_product]"]`);
+						var $option2 = $row.find(`[name="inv[${i}][commission]"]`);
+						var $option3 = $row.find(`[name="inv[${i}][retail]"]`);
+						var $option4 = $row.find(`[name="inv[${i}][quantity]"]`);
 						$('#form').bootstrapValidator('removeField', $option1);
 						$('#form').bootstrapValidator('removeField', $option2);
 						$('#form').bootstrapValidator('removeField', $option3);
@@ -397,7 +445,7 @@ $("#payment_wrap").remAddRow({
 				<select name="${name}[${i}][id_bank]" class="form-control bank"></select>
 			</div>
 			<div class="col-sm-3 form-group m-0 my-auto @error('pay.*.date_payment') has-error @enderror">
-				<input type="text" name="${name}[${i}][date_payment]" class="form-control datep" id="datep" placeholder="Date Payment"/>
+				<input type="text" name="${name}[${i}][date_payment]" class="form-control datep" id="datep${i}" placeholder="Date Payment"/>
 			</div>
 			<div class="col-sm-2 form-group m-0 my-auto @error('pay.*.amount') has-error @enderror">
 				<input type="text" name="${name}[${i}][amount]" class="pamount form-control" placeholder="Amount (RM)"/>
@@ -408,19 +456,47 @@ $("#payment_wrap").remAddRow({
 		// console.log('Personnel added', i, $r)
 		getSelectedBanks();
 
-		$('.datep').datepicker({
-			autoclose:true,
-			format:'yyyy-mm-dd',
-			todayHighlight : true
-		})
-		.on('changeDate show', function(e) {
-			$('#form').bootstrapValidator('revalidateField', $r.find('[name="pay[${i}][date_payment]"]') );
-		});
+		const $field1 = $r.find(`[name="pay[${i}][id_bank]"]`);
+		const $field2 = $r.find(`[name="pay[${i}][date_payment]"]`);
+		const $field3 = $r.find(`[name="pay[${i}][amount]"]`);
 
 		// bootstrap validate
-		$('#form').bootstrapValidator('addField', $r.find('[name="pay[${i}][id_bank]"]') );
-		$('#form').bootstrapValidator('addField', $r.find('[name="pay[${i}][date_payment]"]') );
-		$('#form').bootstrapValidator('addField', $r.find('[name="pay[${i}][amount]"]') );
+		$('#form').bootstrapValidator('addField', $field1, {
+			validators: {
+				notEmpty: {
+					message: 'Please choose payment bank. '
+				},
+			},
+		});
+		$('#form').bootstrapValidator('addField', $field2, {
+			validators: {
+				notEmpty: {
+					message: 'Please insert payment date. '
+				},
+				date: {
+					format: 'YYYY-MM-DD',
+					message: 'The date format is not valid. '
+				}
+			},
+		});
+		$('#form').bootstrapValidator('addField', $field3, {
+			validators: {
+				notEmpty: {
+					message: 'Please insert payment amount. '
+				},
+				greaterThan: {
+					value: 1,
+					message: 'Amount must be equal or greater than 1. '
+				},
+			},
+		});
+
+		$(`#datep${i}`).datepicker({
+			dateFormat: 'yy-mm-dd',
+		})
+		.on('change', function(e) {
+			$('#form').bootstrapValidator('revalidateField', $field2 );
+		});
 
 		// update total amount
 		update_tamount();
@@ -431,14 +507,15 @@ $("#payment_wrap").remAddRow({
 		// console.log('Personnel removed', i, event, $row)
 		getSelectedBanks();
 
+		const $field1 = $r.find(`[name="pay[${i}][id_bank]"]`);
+		const $field2 = $r.find(`[name="pay[${i}][date_payment]"]`);
+		const $field3 = $r.find(`[name="pay[${i}][amount]"]`);
+
 		const idv = $row.find(`input[name="${name}[${i}][id]"]`).val();
 		if (!idv) {
-			var $option11 = $row.find('[name="${name}[${i}][id_bank]"]');
-			var $option21 = $row.find('[name="${name}[${i}][date_payment]"]');
-			var $option31 = $row.find('[name="${name}[${i}][amount]"]');
-			$('#form').bootstrapValidator('removeField', $option11);
-			$('#form').bootstrapValidator('removeField', $option21);
-			$('#form').bootstrapValidator('removeField', $option31);
+			$('#form').bootstrapValidator('removeField', $field1);
+			$('#form').bootstrapValidator('removeField', $field2);
+			$('#form').bootstrapValidator('removeField', $field3);
 
 			// update total amount
 			update_tamount();
@@ -462,12 +539,10 @@ $("#payment_wrap").remAddRow({
 					data: { _token: '{{ csrf_token() }}' },
 					success: response => {
 						swal.fire('Deleted!', response.message, 'success');
-						var $option11 = $row.find('[name="${name}[${i}][id_bank]"]');
-						var $option21 = $row.find('[name="${name}[${i}][date_payment]"]');
-						var $option31 = $row.find('[name="${name}[${i}][amount]"]');
-						$('#form').bootstrapValidator('removeField', $option11);
-						$('#form').bootstrapValidator('removeField', $option21);
-						$('#form').bootstrapValidator('removeField', $option31);
+
+						$('#form').bootstrapValidator('removeField', $field1);
+						$('#form').bootstrapValidator('removeField', $field2);
+						$('#form').bootstrapValidator('removeField', $field3);
 
 						$row.remove();  // remove only after DB deletion
 
@@ -858,33 +933,6 @@ $('#form').bootstrapValidator({
 				}
 			}
 		},
-<?php
-$vs1 = 9990;
-$ys1 = 0;
-// if($d->count() > 0):
-// foreach ($d as $e):
-// $vs1++;
-?>
-		'serial[{{ $vs1 }}][tracking_number]': {
-			validators: {
-				notEmpty: {
-					message: 'Please insert tracking number/bill number/receipt number. '
-				}
-			}
-		},
-<?php
-// endforeach;
-// endif;
-?>
-// @--for ($ie = 1; $ie < 1000; $ie++)
-		'serial[{{-- $ie --}}][tracking_number]': {
-			validators: {
-				notEmpty: {
-					message: 'Please insert tracking number/bill number/receipt number. '
-				}
-			}
-		},
-// @--endfor
 		'image[]': {
 			validators: {
 				notEmpty: {
@@ -905,171 +953,6 @@ $ys1 = 0;
 				}
 			}
 		},
-<?php
-// $ty1 = \App\Models\SalesItems::where(['id_sales' => $sales->id, 'deleted_at' => null])->get();
-// $v1 = 9990;
-// $y1 = 0;
-// if($ty1->count() > 0):
-// foreach ($ty1 as $e):
-// $v1++;
-?>
-		'inv[][id_product]': {
-			validators: {
-				notEmpty: {
-					message: 'Please choose an item. '
-				}
-			}
-		},
-		'inv[][commission]': {
-			validators: {
-				notEmpty: {
-					message: 'Please insert commission for this item. '
-				},
-				greaterThan: {
-					value: 0,
-					message: 'Commission must be equal or greater than 0. '
-				},
-			},
-		},
-		'inv[][retail]': {
-			validators: {
-				notEmpty: {
-					message: 'Please insert retail price for this item. '
-				},
-				greaterThan: {
-					value: 0,
-					message: 'Retail price must be equal or greater than 0. '
-				},
-			},
-		},
-		'inv[][quantity]': {
-			validators: {
-				notEmpty: {
-					message: 'Please insert quantity for this item. '
-				},
-				greaterThan: {
-					value: 0,
-					message: 'Quantity must be equal or greater than 0. '
-				},
-			},
-		},
-<?php
-// endforeach;
-// endif;
-
-
-// $nm1 = \App\Models\Payments::where('id_sales', $sales->id)->get();
-// $z1 = 9990;
-// $m1 = 0;
-// if($nm1->count() > 0):
-// foreach($nm1 as $o):
-// $z1++;
-?>
-		'pay[][id_bank]': {
-			validators: {
-				notEmpty: {
-					message: 'Please choose payment bank. '
-				},
-			},
-		},
-		'pay[][date_payment]': {
-			validators: {
-				notEmpty: {
-					message: 'Please insert payment date. '
-				},
-				date: {
-					format: 'YYYY-MM-DD',
-					message: 'The date format is not valid. '
-				}
-			},
-		},
-		'pay[][amount]': {
-			validators: {
-				notEmpty: {
-					message: 'Please insert payment amount. '
-				},
-				greaterThan: {
-					value: 1,
-					message: 'Amount must be equal or greater than 1. '
-				},
-			},
-		},
-<?php
-// endforeach;
-// endif;
-?>
-@for ($i = 1; $i < 1000; $i++)
-
-		'inv[{{ $i }}][id_product]': {
-			validators: {
-				notEmpty: {
-					message: 'Please choose an item. '
-				}
-			}
-		},
-		'inv[{{ $i }}][commission]': {
-			validators: {
-				notEmpty: {
-					message: 'Please insert commission for this item. '
-				},
-				greaterThan: {
-					value: 0,
-					message: 'Commission must be equal or greater than 0. '
-				},
-			},
-		},
-		'inv[{{ $i }}][retail]': {
-			validators: {
-				notEmpty: {
-					message: 'Please insert retail price for this item. '
-				},
-				greaterThan: {
-					value: 0,
-					message: 'Retail price must be equal or greater than 0. '
-				},
-			},
-		},
-		'inv[{{ $i }}][quantity]': {
-			validators: {
-				notEmpty: {
-					message: 'Please insert quantity for this item. '
-				},
-				greaterThan: {
-					value: 0,
-					message: 'Quantity must be equal or greater than 0. '
-				},
-			},
-		},
-		'pay[{{ $i }}][id_bank]': {
-			validators: {
-				notEmpty: {
-					message: 'Please choose payment bank. '
-				},
-			},
-		},
-		'pay[{{ $i }}][date_payment]': {
-			validators: {
-				notEmpty: {
-					message: 'Please insert payment date. '
-				},
-				date: {
-					format: 'YYYY-MM-DD',
-					message: 'The date format is not valid. '
-				}
-			},
-		},
-		'pay[{{ $i }}][amount]': {
-			validators: {
-				notEmpty: {
-					message: 'Please insert payment amount. '
-				},
-				greaterThan: {
-					value: 1,
-					message: 'Amount must be equal or greater than 1. '
-				},
-			},
-		},
-@endfor
 	}
 });
 
