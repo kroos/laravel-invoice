@@ -114,15 +114,13 @@
 			}
 		});
 
-
-
 		const $wrapper = this;
 		let i = settings.startRow;
 
 		// Initialize
 		function init() {
 			// Count existing rows (0-based index)
-			i = $wrapper.find(`.${settings.rowSelector}`).length;
+			i = $wrapper.find(`.${settings.rowSelector}`).length ?? $wrapper.find(`#${settings.rowSelector}_${i}`).length ;
 
 			// Attach click event to add button
 			if (settings.addBtn) {
@@ -207,7 +205,7 @@
 		// Remove a row
 		const removeRow = function(e) {
 			const $button = $(this);
-			const idIndex = $button.data('index');
+			const idIndex = $button.data('index')??$button.data('id');
 			let $row = $(`#${settings.rowSelector}_${idIndex}`, $wrapper);
 
 			// Fallback: try to find row by traversing DOM
