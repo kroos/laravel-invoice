@@ -146,7 +146,7 @@
 
 				// Callback with your signature: (index, event, $row, name)
 				if (typeof settings.onAdd === 'function') {
-					const $newRow = $(`#${settings.fieldName}_${currentIndex}`, $wrapper);
+					const $newRow = $(`#${settings.rowSelector}_${currentIndex}`, $wrapper);
 					settings.onAdd(currentIndex, e, $newRow, settings.fieldName);
 				}
 
