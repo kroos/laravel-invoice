@@ -205,34 +205,41 @@
 		// Remove a row
 		const removeRow = function(e) {
 			const $button = $(this);
-			const idIndex = $button.data('index')??$button.data('id');
+			const idIndex = $button.data('index') ?? $button.data('id');
 			let $row = $(`#${settings.rowSelector}_${idIndex}`, $wrapper);
 
-			// Fallback: try to find row by traversing DOM
 			if (!$row.length) {
 				$row = $button.closest(`.${settings.rowSelector}`);
 			}
 
 			if ($row.length) {
-				// Callback with your signature: (index, event, $row, name)
-				// Return false to PREVENT removal, true to ALLOW removal
+
 				if (typeof settings.onRemove === 'function') {
-					if (settings.onRemove(idIndex, e, $row, settings.fieldName) === false) {
-						console.log(`Removal blocked by onRemove callback for row ${idIndex}`);
-						return false; // ❌ BLOCK removal
+					const result = settings.onRemove(idIndex, e, $row, settings.fieldName);
+
+					if (result && typeof result.then === 'function') {
+						result.then(allow => {
+							if (allow === false) return;
+
+							$row.remove();
+							i--;
+							reindexRowAll();
+						});
+
+						return false;
+					}
+
+					if (result === false) {
+						return false;
 					}
 				}
 
-				// ✅ ALLOW removal
 				$row.remove();
 				i--;
-				reindexRowAll(); // This runs only if removal is allowed
-				console.log(`Row ${idIndex} removed, reindexing triggered`);
+				reindexRowAll();
 			}
 
-			if (e && e.preventDefault) {
-				e.preventDefault();
-			}
+			if (e && e.preventDefault) e.preventDefault();
 			return false;
 		};
 
@@ -251,9 +258,9 @@
 						const match = attrValue.match(regex);
 						if (match && match[1]) {
 							const newValue = attrValue.replace(
-							                                   new RegExp(`${settings.fieldName}\\[${match[1]}\\]`, 'g'),
-							                                 `${settings.fieldName}[${newPosition}]`
-							                                 );
+																								 new RegExp(`${settings.fieldName}\\[${match[1]}\\]`, 'g'),
+																							 `${settings.fieldName}[${newPosition}]`
+																							 );
 							$element.attr(attrName, newValue);
 						}
 					});
@@ -398,33 +405,33 @@
 				reindexRowID: ['data-id-id'],		// pattern => userdefined_${i}
 				reindexRowIndex: ['row-id'],		// pattern => ${i}
 				rowTemplate: (i, name) => `
-	        <div id="${name}_${i}" class="row m-0 rowserial" data-index="${i}">
-	            <div class="col-sm-5">
-	                <input type="text"
-	                       name="${name}[${i}][product]"
-	                       placeholder="Product name"
-	                       class="form-control"
+					<div id="${name}_${i}" class="row m-0 rowserial" data-index="${i}">
+							<div class="col-sm-5">
+									<input type="text"
+												 name="${name}[${i}][product]"
+												 placeholder="Product name"
+												 class="form-control"
 												 data-name="${name}[${i}][product]"
 												 data-id-id="exp_${i}"
 												 row-id="${i}"
-	                       required>
-	            </div>
-	            <div class="col-sm-5">
-	                <input type="number"
-	                       name="${name}[${i}][quantity]"
-	                       placeholder="Quantity"
-	                       class="form-control"
-	                       min="1"
-	                       value="1">
-	            </div>
-	            <div class="col-sm-2">
-	                <button type="button"
-	                        class="btn btn-danger serial_remove"
-	                        data-index="${i}">
-	                    ×
-	                </button>
-	            </div>
-	        </div>
+												 required>
+							</div>
+							<div class="col-sm-5">
+									<input type="number"
+												 name="${name}[${i}][quantity]"
+												 placeholder="Quantity"
+												 class="form-control"
+												 min="1"
+												 value="1">
+							</div>
+							<div class="col-sm-2">
+									<button type="button"
+													class="btn btn-danger serial_remove"
+													data-index="${i}">
+											×
+									</button>
+							</div>
+					</div>
 					`,
 				onAdd: (index, event, $row, name) => {
 					console.log(`✅ Added row ${index} with field name: ${name}`);
