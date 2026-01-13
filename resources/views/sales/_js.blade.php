@@ -720,49 +720,52 @@ function update_balance() {
 // 	});
 //
 // 	function SwalDelete4(productId){
-// 		swal.fire({
-// 			title: 'Are you sure?',
-// 			text: "It will be deleted permanently!",
-// 			type: 'warning',
-// 			showCancelButton: true,
-// 			confirmButtonColor: '#3085d6',
-// 			cancelButtonColor: '#d33',
-// 			confirmButtonText: 'Yes, delete it!',
-// 			showLoaderOnConfirm: true,
-// 			allowOutsideClick: false,
-//
-// 			preConfirm: function() {
-// 				return new Promise(function(resolve) {
-// 					$.ajax({
-// 						headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-// 						url: '<?=route('payments.destroy')?>',
-// 						type: 'DELETE',
-// 						data:	{
-// 									id: productId,
-// 									_token : $('meta[name=csrf-token]').attr('content')
-// 								},
-// 						dataType: 'json'
-// 					})
-// 					.done(function(response){
-// 						swal.fire('Deleted!', response.message, response.status);
-// 						// $('#remove_payment_' + productId).text('imhere').css({"color": "red"});
-// 						$('#remove_payment_' + productId).parent().parent().parent().parent().parent().remove();
-//
-// 						// update total payment
-// 						update_tpayment();
-// 						update_balance();
-// 					})
-// 					.fail(function(){
-// 						swal.fire('Oops...', 'Something went wrong with ajax !', 'error');
-// 					});
-// 				});
-// 			},
-// 		})
-// 		.then((result) => {
-// 			if (result.dismiss === swal.DismissReason.cancel) {
-// 				swal.fire('Cancelled', 'Your data is safe from delete', 'info')
-// 			}
-// 		});
+
+//		swal.fire({
+//			title: 'Are you sure?',
+//			text: "It will be deleted permanently!",
+//			type: 'warning',
+//			showCancelButton: true,
+//			allowOutsideClick: false,
+//			showLoaderOnConfirm: true,
+//			confirmButtonColor: '#3085d6',
+//			cancelButtonColor: '#d33',
+//			confirmButtonText: 'Yes, delete it!',
+//			preConfirm: function() {
+//				return new Promise(function(resolve) {
+//					$.ajax({
+//						type: 'DELETE',
+//						url: `${url}/${dbId}`,
+//						data: {
+//								_token : `{{ csrf_token() }}`,
+//								id: dbId,
+//						},
+//						dataType: 'json'
+//					})
+//					.done(function(response){
+//						swal.fire('Deleted!', response.message, response.status)
+//						.then(function(){
+//							// window.location.reload(true);
+//							var $option = $row.find(`[name="serial[${i}][tracking_number]"]`);
+//							$('#form').bootstrapValidator('removeField', $option);
+//							return  true;  // remove only after DB deletion
+//							return true;
+//						});
+//					})
+//					.fail(function(){
+//						swal.fire('Ajax Error', 'Something went wrong with ajax !', 'error');
+//						return false;
+//					})
+//				});
+//			},
+//		})
+//		.then((result) => {
+//			if (result.dismiss === swal.DismissReason.cancel) {
+//				swal.fire('Cancelled', 'Your data is safe from delete', 'info');
+//				return false;
+//			}
+		});
+
 // 	};
 
 ////////////////////////////////////////////////////////////////////////////////////
