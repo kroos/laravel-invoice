@@ -139,7 +139,13 @@
      * ====================== */
 
     function init() {
-      i = $wrapper.find(`.${settings.rowSelector}`).length;
+
+      const y = Number(settings.startRow);
+      const x = Number($wrapper.find(`.${settings.rowSelector}`).length ?? $wrapper.find(`#${settings.rowSelector}_${i}`).length );
+      const i = y + x;
+      // console.log(i);
+
+      // const i = $wrapper.find(`.${settings.rowSelector}`).length ?? $wrapper.find(`#${settings.rowSelector}_${i}`).length ;
 
       if (settings.addBtn) {
         $(settings.addBtn)
@@ -159,7 +165,13 @@
      * ====================== */
 
     function addRow(e) {
-      if (i >= settings.maxRows) return false;
+      const a = Number(settings.startRow);
+      const b = Number(settings.maxRows);
+      const totalRows = a + b;
+
+      if (i >= totalRows) return false;
+
+      // if (i >= settings.maxRows) return false;
 
       const index = i;
       const html = createRowHTML(index);
@@ -226,7 +238,10 @@
 
     async function removeRow(e) {
       const $btn = $(this);
-      const index = $btn.data('index') ?? $btn.data('id');
+      // const index = $btn.data('index') ?? $btn.data('id');
+
+     const index = $btn.attr('data-index') ?? $btn.attr('data-id');
+      // console.log(index);
 
       let $row = $(`#${settings.rowSelector}_${index}`, $wrapper);
       if (!$row.length) {
@@ -308,22 +323,37 @@
     function reindexRowNamePattern() {
       if (!settings.reindexRowName.length) return;
 
+      const start = Number(settings.startRow);
+
       $wrapper.find(`.${settings.rowSelector}`).each(function (newIndex) {
         const $row = $(this);
+        const d = start + newIndex;
+
         settings.reindexRowName.forEach(attr => {
-          $row.find(`[${attr}*="${settings.fieldName}"]`).each(function () {
+          $row.find(`[${attr}]`).each(function () {
             const $el = $(this);
             const val = $el.attr(attr);
-            const match = val?.match(new RegExp(`${settings.fieldName}\\[(\\d+)\\]`));
-            if (match) {
-              $el.attr(
-                attr,
-                val.replace(
-                  new RegExp(`${settings.fieldName}\\[${match[1]}\\]`, 'g'),
-                  `${settings.fieldName}[${newIndex}]`
-                )
-              );
+
+            if (!val) return;
+
+            // special simple case
+            if (attr === 'index_pattern') {
+              $el.attr(attr, d);
+              return;
             }
+
+            // Match ALL [...] segments
+            const matches = [...val.matchAll(/\[([^\]]+)\]/g)];
+            if (matches.length < 2) return;
+
+            // index of 2nd last []
+            const target = matches[matches.length - 2];
+
+            // Replace ONLY that occurrence
+            const before = val.slice(0, target.index);
+            const after  = val.slice(target.index + target[0].length);
+
+            $el.attr(attr, `${before}[${d}]${after}`);
           });
         });
       });
@@ -332,17 +362,29 @@
     function reindexRowIDPattern() {
       if (!settings.reindexRowID.length) return;
 
+      const start = Number(settings.startRow);
+
       $wrapper.find(`.${settings.rowSelector}`).each(function (newIndex) {
         const $row = $(this);
-        $row.attr('id', `${settings.rowSelector}_${newIndex}`);
+
+        const e = start + newIndex;
+
+        // reindex row id itself
+        $row.attr('id', `${settings.rowSelector}_${e}`);
 
         settings.reindexRowID.forEach(attr => {
-          $row.find(`[${attr}*="_"]`).each(function () {
+          $row.find(`[${attr}]`).each(function () {
             const $el = $(this);
             const val = $el.attr(attr);
-            if (val?.match(/_\d+$/)) {
-              $el.attr(attr, val.replace(/_\d+$/, `_${newIndex}`));
-            }
+
+
+            if (!val) return;
+
+            // Replace ONLY last "_<number>"
+            $el.attr(
+                     attr,
+                     val.replace(/_(\d+)$/, `_${e}`)
+                     );
           });
         });
       });
@@ -351,14 +393,24 @@
     function reindexRowIndexPattern() {
       if (!settings.reindexRowIndex.length) return;
 
+      const start = Number(settings.startRow);
+
       $wrapper.find(`.${settings.rowSelector}`).each(function (newIndex) {
+
         settings.reindexRowIndex.forEach(attr => {
           $(this).find(`[${attr}]`).each(function () {
-            if (/^\d+$/.test($(this).attr(attr))) {
-              $(this).attr(attr, newIndex);
-            }
-          });
+
+        const f = start + newIndex;   // 🔥 move inside scope
+
+        const $el = $(this);
+        const val = $el.attr(attr);
+
+        if (!val) return;
+
+        $el.attr(attr, val.replace(/(\d+)$/, f));
+      });
         });
+
       });
     }
 
