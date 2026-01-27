@@ -62,7 +62,8 @@ function getSelectedProductIds() {
 
 }
 
-////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+/////
 function getSelectedBanks() {
 	let ids = [];
 
@@ -123,16 +124,45 @@ $("#serial_wrap").remAddRow({
 	removeClass: "serial_remove",
 	fieldName: "serial",
 	rowSelector: "serial",
-	// rowTemplate must use the same removeSelector class so delegated handler fires:
+
+	swal: {
+		options: {
+			title: 'Are you sure?',
+			text: 'It will be deleted permanently!',
+		},
+		ajax: {
+			url: `{{ url('slippostage') }}`,
+			method: 'DELETE',
+			dataType: 'json',
+			data: {
+				_token: `{{ csrf_token() }}`,
+			},
+		}
+	},
+
+	validator: {
+		form: '#form',
+		fields: {
+			'[tracking_number]': {
+				validator: {
+					notEmpty: {
+						message: 'Please insert tracking number/bill number/receipt number.'
+					}
+				}
+			},
+
+		},
+	},
+
 	rowTemplate: (i, name) => `
-		<div class="serial row" id="serial_${i}">
-			<div class="col-sm-1 m-0 my-auto">
+		<div class="my-1 serial row" id="serial_${i}">
+			<div class="col-sm-1 m-0 ">
 				<input type="hidden" name="${name}[${i}][id]" value="">
-				<button type="button" class="btn btn-sm btn-danger serial_remove" data-id="${i}">
+				<button type="button" class="btn btn-sm btn-outline-danger serial_remove" data-id="${i}">
 					<i class="fas fa-trash"></i>
 				</button>
 			</div>
-			<div class="form-group col-sm-11 row m-0 my-auto @error('serial.*.tracking_number') has-error @enderror">
+			<div class="form-group col-sm-11 row m-0 @error('serial.*.tracking_number') has-error @enderror">
 				<label for="catel${i}" class="col-form-label col-sm-5">Receipt Or Tracking Postage : </label>
 				<div class="col-sm-7 my-auto">
 					<input type="text" name="${name}[${i}][tracking_number]" value="" id="catel${i}" class="form-control form-control-sm @error('serial.*.tracking_number') is-invalid @enderror" placeholder="Receipt Or Tracking Postage">
@@ -146,78 +176,8 @@ $("#serial_wrap").remAddRow({
 		</div>
 	`,
 	onAdd: (i, e, $r, name) => {
-		// console.log('Personnel added', i, $r)
-		const $field = $r.find(`[name="serial[${i}][tracking_number]"]`);
-		$('#form').bootstrapValidator('addField', $field, {
-			validators: {
-				notEmpty: {
-					message: 'Please insert tracking number/bill number/receipt number. '
-				}
-			}
-		});
 	},
 	onRemove: async (i, event, $row, name) => {
-
-		const idv = $row.find(`input[name="${name}[${i}][id]"]`).val();
-
-			var $option = $row.find(`[name="serial[${i}][tracking_number]"]`);
-
-		if (!idv) {
-			$('#form').bootstrapValidator('removeField', $option);
-			return true;
-		}
-		let url = `{{ url('slippostage') }}`;
-		let dbId = idv;
-		const result = await swal.fire({
-			title: 'Are you sure?',
-			text: "It will be deleted permanently!",
-			type: 'warning',
-			showCancelButton: true,
-			allowOutsideClick: false,
-			showLoaderOnConfirm: true,
-			confirmButtonColor: '#3085d6',
-			cancelButtonColor: '#d33',
-			confirmButtonText: 'Yes, delete it!'
-		});
-
-		// ❌ Cancel clicked
-		if (result.isDismissed) {
-			await swal.fire(
-			'Cancelled',
-			'Your data is safe from delete',
-			'info'
-			);
-			return false;
-		}
-
-		// 2️⃣ Perform AJAX delete
-		try {
-			const response = await $.ajax({
-				type: 'DELETE',
-				url: `${url}/${dbId}`,
-				data: {
-					_token: `{{ csrf_token() }}`,
-					id: dbId
-				},
-				dataType: 'json'
-			});
-
-			await swal.fire('Deleted!', response.message, response.status);
-
-			$('#form').bootstrapValidator('removeField', $option);
-
-			return true; // ✅ ALLOW plugin to remove row
-
-		} catch (e) {
-			await swal.fire(
-			'Ajax Error',
-			'Something went wrong with ajax!',
-			'error'
-			);
-			return false; // ❌ BLOCK removal
-		}
-
-
 	}
 });
 
@@ -243,7 +203,8 @@ $(document).on('change', '#taxs', function () {
 	update_balance();
 });
 
-////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+//////////
 // selecting series will auto populate comm and rate
 $(document).on('select2:select', '#custsel', function (e) {
 	const data = e.params.data; // ✅ Select2 selected item
@@ -271,7 +232,8 @@ function num(obj) {
 	return mystring;
 }
 
-////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+//////////
 // adding and removing invoice
 $("#invItems_wrap").remAddRow({
 	addBtn: "#invItems_add",
@@ -279,13 +241,76 @@ $("#invItems_wrap").remAddRow({
 	removeClass: "invItems_remove",
 	fieldName: "inv",
 	rowSelector: "invItems",
-	// rowTemplate must use the same removeSelector class so delegated handler fires:
+
+	swal: {
+		options: {
+			title: 'Are you sure?',
+			text: 'It will be deleted permanently!',
+		},
+		ajax: {
+			url: `{{ url('salesitems') }}`,
+			method: 'DELETE',
+			dataType: 'json',
+			data: {
+				_token: `{{ csrf_token() }}`,
+			},
+		}
+	},
+
+	validator: {
+		form: '#form',
+		fields: {
+
+			'[id_product]': {
+				validator: {
+					notEmpty: {
+						message: 'Please choose an item. '
+					}
+				}
+			},
+			'[commission]': {
+				validator: {
+					notEmpty: {
+						message: 'Please insert commission for this item. '
+					},
+					greaterThan: {
+						value: 0,
+						message: 'Commission must be equal or greater than 0. '
+					},
+				}
+			},
+			'[retail]': {
+				validator: {
+					notEmpty: {
+						message: 'Please insert retail price for this item. '
+					},
+					greaterThan: {
+						value: 0,
+						message: 'Retail price must be equal or greater than 0. '
+					},
+				}
+			},
+			'[quantity]': {
+				validator: {
+					notEmpty: {
+						message: 'Please insert quantity for this item. '
+					},
+					greaterThan: {
+						value: 0,
+						message: 'Quantity must be equal or greater than 0. '
+					},
+				}
+			},
+
+		},
+	},
+
 	rowTemplate: (i, name) => `
-		<div class="col-sm-12 row m-0 invItems" id="invItems_${i}">
+		<div class="col-sm-12 row m-0 my-1 invItems" id="invItems_${i}">
 
 			<div class="col-sm-1 m-0 my-auto">
 				<input type="hidden" name="${name}[${i}][id]" value="">
-				<button class="btn btn-danger remove_field invItems_remove" data-id="0" type="button"><i class="fas fa-trash"></i></button>
+				<button class="btn btn-sm btn-outline-danger remove_field invItems_remove" data-id="0" type="button"><i class="fas fa-trash"></i></button>
 			</div>
 
 			<div class="col-sm-5 m-0 my-auto @error('inv.*.id_product') has-error @enderror">
@@ -312,133 +337,14 @@ $("#invItems_wrap").remAddRow({
 		</div>
 	`,
 	onAdd: (i, e, $r, name) => {
-		// console.log('Personnel added', i, $r)
 		getSelectedProductIds();
-
-		const $field1 = $r.find(`[name="inv[${i}][id_product]"]`);
-		const $field2 = $r.find(`[name="inv[${i}][commission]"]`);
-		const $field3 = $r.find(`[name="inv[${i}][retail]"]`);
-		const $field4 = $r.find(`[name="inv[${i}][quantity]"]`);
-
-		$('#form').bootstrapValidator('addField', $field1, {
-			validators: {
-				notEmpty: {
-					message: 'Please choose an item. '
-				}
-			}
-		});
-		$('#form').bootstrapValidator('addField', $field2, {
-			validators: {
-				notEmpty: {
-					message: 'Please insert commission for this item. '
-				},
-				greaterThan: {
-					value: 0,
-					message: 'Commission must be equal or greater than 0. '
-				},
-			},
-		});
-		$('#form').bootstrapValidator('addField', $field3, {
-			validators: {
-				notEmpty: {
-					message: 'Please insert retail price for this item. '
-				},
-				greaterThan: {
-					value: 0,
-					message: 'Retail price must be equal or greater than 0. '
-				},
-			},
-		});
-		$('#form').bootstrapValidator('addField', $field4, {
-			validators: {
-				notEmpty: {
-					message: 'Please insert quantity for this item. '
-				},
-				greaterThan: {
-					value: 0,
-					message: 'Quantity must be equal or greater than 0. '
-				},
-			},
-		});
-
 	},
 	onRemove: async (i, event, $row, name) => {
-		// console.log('Personnel removed', i, event, $row);
-
-		var $option1 = $row.find(`[name="inv[${i}][id_product]"]`);
-		var $option2 = $row.find(`[name="inv[${i}][commission]"]`);
-		var $option3 = $row.find(`[name="inv[${i}][retail]"]`);
-		var $option4 = $row.find(`[name="inv[${i}][quantity]"]`);
-
-		const idv = $row.find(`input[name="${name}[${i}][id]"]`).val();
-
-		if (!idv) {
-			$('#form').bootstrapValidator('removeField', $option1);
-			$('#form').bootstrapValidator('removeField', $option2);
-			$('#form').bootstrapValidator('removeField', $option3);
-			$('#form').bootstrapValidator('removeField', $option4);
-
-			return true;
-
-			// update total amount
-			update_tamount();
-			update_balance();
-		}
-
-		let url = `{{ url('salesitems') }}`;
-		let dbId = idv;
-
-		const result = await swal.fire({
-			title: 'Are you sure?',
-			text: "It will be deleted permanently!",
-			type: 'warning',
-			showCancelButton: true,
-			allowOutsideClick: false,
-			showLoaderOnConfirm: true,
-			confirmButtonColor: '#3085d6',
-			cancelButtonColor: '#d33',
-			confirmButtonText: 'Yes, delete it!'
-		});
-
-		// ❌ Cancel clicked
-		if (result.isDismissed) {
-			await swal.fire(
-			'Cancelled',
-			'Your data is safe from delete',
-			'info'
-			);
-			return false;
-		}
-		// 2️⃣ Perform AJAX delete
-		try {
-			const response = await $.ajax({
-				type: 'DELETE',
-				url: `${url}/${dbId}`,
-				data: {
-					_token: `{{ csrf_token() }}`,
-					id: dbId
-				},
-				dataType: 'json'
-			});
-			await swal.fire('Deleted!', response.message, response.status);
-			$('#form').bootstrapValidator('removeField', $option1);
-			$('#form').bootstrapValidator('removeField', $option2);
-			$('#form').bootstrapValidator('removeField', $option3);
-			$('#form').bootstrapValidator('removeField', $option4);
-			return true; // ✅ ALLOW plugin to remove row
-		} catch (e) {
-			await swal.fire(
-			'Ajax Error',
-			'Something went wrong with ajax!',
-			'error'
-			);
-			return false; // ❌ BLOCK removal
-		}
-
+		// update total amount
+		update_tamount();
+		update_balance();
 	}
 });
-
-////////////////////////////////////////////////////////////////////////////////////
 
 ////////////////////////////////////////////////////////////////////////////////////
 // selecting series will auto populate comm and rate
@@ -465,7 +371,8 @@ $(document).on('select2:select', '.series', function (e) {
 	update_balance();
 });
 
-////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////
 // payment add and remove row
 $("#payment_wrap").remAddRow({
 	addBtn: "#payment_add",
@@ -473,12 +380,64 @@ $("#payment_wrap").remAddRow({
 	removeClass: "payment_remove",
 	fieldName: "pay",
 	rowSelector: "payment",
-	// rowTemplate must use the same removeSelector class so delegated handler fires:
+
+	swal: {
+		options: {
+			title: 'Are you sure?',
+			text: 'It will be deleted permanently!',
+		},
+		ajax: {
+			url: `{{ url('payments') }}`,
+			method: 'DELETE',
+			dataType: 'json',
+			data: {
+				_token: `{{ csrf_token() }}`,
+			},
+		}
+	},
+
+	validator: {
+		form: '#form',
+		fields: {
+
+			'[id_bank]': {
+				validator: {
+					notEmpty: {
+						message: 'Please choose payment bank. '
+					}
+				}
+			},
+			'[date_payment]': {
+				validator: {
+					notEmpty: {
+						message: 'Please insert payment date. '
+					},
+					date: {
+						format: 'YYYY-MM-DD',
+						message: 'The date format is not valid. '
+					},
+				}
+			},
+			'[amount]': {
+				validator: {
+					notEmpty: {
+						message: 'Please insert payment amount. '
+					},
+					greaterThan: {
+						value: 1,
+						message: 'Amount must be equal or greater than 1. '
+					},
+				}
+			},
+
+		},
+	},
+
 	rowTemplate: (i, name) => `
-		<div class="col-sm-12 row payment" id="payment_${i}">
+		<div class="col-sm-12 row my-1 payment" id="payment_${i}">
 			<div class="col-sm-1 m-0 my-auto">
 			<input type="hidden" name="${name}[${i}][id]" value="">
-				<button data-id="${i}" class="btn btn-sm btn-danger payment_remove" type="button">
+				<button data-id="${i}" class="btn btn-sm btn-outline-danger payment_remove" type="button">
 					<i class="fas fa-trash"></i>
 				</button>
 			</div>
@@ -497,129 +456,24 @@ $("#payment_wrap").remAddRow({
 		// console.log('Personnel added', i, $r)
 		getSelectedBanks();
 
-		const $field1 = $r.find(`[name="${name}[${i}][id_bank]"]`);
-		const $field2 = $r.find(`[name="${name}[${i}][date_payment]"]`);
-		const $field3 = $r.find(`[name="${name}[${i}][amount]"]`);
-
-		// bootstrap validate
-		$('#form').bootstrapValidator('addField', $field1, {
-			validators: {
-				notEmpty: {
-					message: 'Please choose payment bank. '
-				},
-			},
-		});
-		$('#form').bootstrapValidator('addField', $field2, {
-			validators: {
-				notEmpty: {
-					message: 'Please insert payment date. '
-				},
-				date: {
-					format: 'YYYY-MM-DD',
-					message: 'The date format is not valid. '
-				}
-			},
-		});
-		$('#form').bootstrapValidator('addField', $field3, {
-			validators: {
-				notEmpty: {
-					message: 'Please insert payment amount. '
-				},
-				greaterThan: {
-					value: 1,
-					message: 'Amount must be equal or greater than 1. '
-				},
-			},
-		});
-
 		$(`.datep`).datepicker({
 			dateFormat: 'yy-mm-dd',
 		})
 		.on('change', function(e) {
-			$('#form').bootstrapValidator('revalidateField', $field2 );
+			// $('#form').bootstrapValidator('revalidateField', $r.find(`name="${name}[${i}][date_payment]"`) );
 		});
-
-		// update total amount
 		update_tamount();
 		update_balance();
 	},
 	onRemove: async (i, event, $r, name) => {
-		// console.log('Personnel removed', i, event, $r)
 		getSelectedBanks();
-
-		const $field1 = $r.find(`[name="${name}[${i}][id_bank]"]`);
-		const $field2 = $r.find(`[name="${name}[${i}][date_payment]"]`);
-		const $field3 = $r.find(`[name="pay[${i}][amount]"]`);
-
-		const idv = $r.find(`input[name="${name}[${i}][id]"]`).val();
-		if (!idv) {
-			$('#form').bootstrapValidator('removeField', $field1);
-			$('#form').bootstrapValidator('removeField', $field2);
-			$('#form').bootstrapValidator('removeField', $field3);
-
-			return true;
-
-			// update total amount
-			update_tamount();
-			update_balance();
-		}
-
-		let url = `{{ url('payments') }}`;
-		let dbId = idv;
-
-		const result = await swal.fire({
-			title: 'Are you sure?',
-			text: "It will be deleted permanently!",
-			type: 'warning',
-			showCancelButton: true,
-			allowOutsideClick: false,
-			showLoaderOnConfirm: true,
-			confirmButtonColor: '#3085d6',
-			cancelButtonColor: '#d33',
-			confirmButtonText: 'Yes, delete it!'
-		});
-
-		// ❌ Cancel clicked
-		if (result.isDismissed) {
-			await swal.fire(
-			'Cancelled',
-			'Your data is safe from delete',
-			'info'
-			);
-			return false;
-		}
-		// 2️⃣ Perform AJAX delete
-		try {
-			const response = await $.ajax({
-				type: 'DELETE',
-				url: `${url}/${dbId}`,
-				data: {
-					_token: `{{ csrf_token() }}`,
-					id: dbId
-				},
-				dataType: 'json'
-			});
-			await swal.fire('Deleted!', response.message, response.status);
-			$('#form').bootstrapValidator('removeField', $field1);
-			$('#form').bootstrapValidator('removeField', $field2);
-			$('#form').bootstrapValidator('removeField', $field3);
-			return true; // ✅ ALLOW plugin to remove row
-			// update total payment
-			update_tpayment();
-			update_balance();
-		} catch (e) {
-			await swal.fire(
-			'Ajax Error',
-			'Something went wrong with ajax!',
-			'error'
-			);
-			return false; // ❌ BLOCK removal
-		}
-
+		update_tamount();
+		update_balance();
 	}
 });
 
-////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////
+///
 // keyup on input rate to sum up all the price
 $(document).on('keyup', '.rate', function () {
 	var comm = $(this).parent().parent().children().children('.comm');
@@ -764,7 +618,7 @@ function update_balance() {
 //				swal.fire('Cancelled', 'Your data is safe from delete', 'info');
 //				return false;
 //			}
-		});
+//		});
 
 // 	};
 
