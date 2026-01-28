@@ -384,14 +384,16 @@
 				const $row = $(this);
 				const e = start + newIndex;
 
-		// reindex row id itself
+				/* ================================
+				 * 1) Reindex row id itself
+				 * ================================ */
 				$row.attr('id', `${settings.rowSelector}_${e}`);
 
 				settings.reindexRowID.forEach(attr => {
 
-			/* ================================
-			 * OUTER PROCESS (NOT inside swrap)
-			 * ================================ */
+					/* ================================
+					 * 2) OUTER PROCESS
+					 * ================================ */
 					$row.find(`[${attr}]`)
 					.not($row.find(`${settings.nestedwrapper} *`))
 					.each(function () {
@@ -399,13 +401,23 @@
 						const val = $el.attr(attr);
 						if (!val) return;
 
-					// Replace ONLY last "_<number>"
 						$el.attr(attr, val.replace(/_(\d+)$/, `_${e}`));
 					});
 
-			/* ================================
-			 * INNER PROCESS (INSIDE swrap)
-			 * ================================ */
+					/* ================================
+					 * 3) Reindex nested wrapper id
+					 * ================================ */
+					const $nested = $row.find(settings.nestedwrapper);
+					if ($nested.length) {
+						const nid = $nested.attr(attr);
+						if (nid) {
+							$nested.attr(attr, nid.replace(/_(\d+)$/, `_${e}`));
+						}
+					}
+
+					/* ================================
+					 * 4) INNER PROCESS (IDs)
+					 * ================================ */
 					$row.find(settings.nestedwrapper)
 					.find(`[${attr}]`)
 					.each(function () {
@@ -413,14 +425,45 @@
 						const val = $el.attr(attr);
 						if (!val) return;
 
-					// Replace ONLY second-last "_<number>"
-					// pay_501_10  → pay_500_10
+										// rowserial_501_10 → rowserial_500_10
 						$el.attr(attr, val.replace(/_(\d+)(?=_(\d+)$)/, `_${e}`));
 					});
 
+
 				});
+
+				/* ================================
+				 * 5) NESTED CLASS FIX (CORRECT PLACE)
+				 * ================================ */
+
+				const $nestedWrap = $row.find(settings.nestedwrapper);
+
+				// rowserial_502 → rowserial_501
+				const rowRe = new RegExp(`${settings.rowSelector}_(\\d+)`, 'g');
+
+				$nestedWrap.find(`[class*="${settings.rowSelector}_"]`).each(function () {
+					const $el = $(this);
+					const cls = $el.attr('class');
+					if (!cls) return;
+
+					$el.attr('class', cls.replace(rowRe, `${settings.rowSelector}_${e}`));
+				});
+
+				// serial_remove_502 → serial_remove_501
+				const removeRe = new RegExp(`${settings.removeClass}_(\\d+)`, 'g');
+
+				$nestedWrap.find(`[class*="${settings.removeClass}_"]`).each(function () {
+					const $el = $(this);
+					const cls = $el.attr('class');
+					if (!cls) return;
+
+					$el.attr('class', cls.replace(removeRe, `${settings.removeClass}_${e}`));
+				});
+
+
 			});
 		}
+
 
 		function reindexRowIndexPattern() {
 			if (!settings.reindexRowIndex.length) return;
