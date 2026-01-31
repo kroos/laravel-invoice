@@ -35,11 +35,11 @@ try {
 	require('./minicolors');
 
 	require('./dataTable-any-number');
-	require('./datetime-moment');
+	require('./dataTable-moment');
 
-	require('./bootstrapValidator5');
+	require('bootstrapValidator5');
 
-	require('./addRemoveRowBootstrapValidatorSweetAlert2AjaxjQueryPlugin');
+	require('addremrow-validator5-swal2-ajax');
 
 	require('./bootstrap');
 
